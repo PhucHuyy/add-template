@@ -1,57 +1,36 @@
-import React, { useEffect } from 'react';
-import $ from 'jquery';
+import React, { useState } from 'react';
+import '../public/assets/css/style.css'; // Đảm bảo CSS được import đúng
 
-// Gọi plugin JS jQuery sau khi DOM đã load
-import '../public/assets/js/jQuery.style.switcher.js';
-import '../public/assets/js/custom.js';
+const LoginTest: React.FC = () => {
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [theme, setTheme] = useState('blue'); // Theme mặc định
 
-// Các JS plugin khác nếu cần sau:
-// import '../public/assets/plugins/js/bootstrap.min.js';
-// import '../public/assets/plugins/js/viewportchecker.js';
-// import ... (tùy bạn có dùng không)
+  // Danh sách theme
+  const themes = ['blue', 'red', 'purple', 'green'];
 
-// Nếu styleSwitcher là plugin gắn vào jQuery mà không có types
-// Có thể định nghĩa kiểu tạm hoặc dùng ép kiểu như bên dưới
+  // Hàm áp dụng theme
+  const applyTheme = (selectedTheme: string) => {
+    setTheme(selectedTheme);
+    // Áp dụng theme bằng cách thay đổi class trên body hoặc một container
+    document.body.className = `theme-${selectedTheme}`;
+  };
 
-const Login: React.FC = () => {
-    useEffect(() => {
-        const timeout = setTimeout(() => {
-          const styleOptions = $('#styleOptions') as JQuery & { styleSwitcher?: () => void };
-      
-          if (typeof styleOptions.styleSwitcher === 'function') {
-            styleOptions.styleSwitcher();
-          } else {
-            console.warn('styleSwitcher plugin not available yet.');
-          }
-        }, 3000); // Delay nhẹ giúp DOM và JS plugin load xong
-      
-        return () => clearTimeout(timeout); // Dọn dẹp khi unmount
-      }, []);
-      
-      const openRightMenu = () => {
-        document.getElementById('rightMenu')?.style.setProperty('display', 'block');
-        console.log('Right menu opened');
-        
-      };
-      
-      const closeRightMenu = () => {
-        document.getElementById('rightMenu')?.style.setProperty('display', 'none');
-        console.log('Right menu closed');
-      };
-      
+  // Hàm mở/đóng menu
+  const toggleMenu = () => {
+    setIsMenuOpen(!isMenuOpen);
+  };
 
   return (
     <div
-      className="simple-bg-screen"
-      style={{ backgroundImage: 'url(assets/img/banner-10.jpg)' }}
+      className={`simple-bg-screen theme-${theme}`}
+      style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}
     >
-      <div className="Loader"></div>
       <div className="wrapper">
         <section className="login-screen-sec">
           <div className="container">
             <div className="login-screen">
-              <a href="index-2.html">
-                <img src="assets/img/logo.png" className="img-responsive" alt="Logo" />
+              <a href="/">
+                <img src="/assets/img/logo.png" className="img-responsive" alt="Logo" />
               </a>
               <form>
                 <input type="text" className="form-control" placeholder="Username" />
@@ -60,52 +39,51 @@ const Login: React.FC = () => {
                   Login
                 </button>
                 <span>
-                  You Have No Account? <a href="signup.html"> Create An Account</a>
+                  You Have No Account? <a href="/signup">Create An Account</a>
                 </span>
                 <span>
-                  <a href="lost-password.html"> Forget Password</a>
+                  <a href="/lost-password">Forget Password</a>
                 </span>
               </form>
             </div>
           </div>
         </section>
 
-        <button className="w3-button w3-teal w3-xlarge w3-right" onClick={openRightMenu}>
+        <button
+          className="w3-button w3-teal w3-xlarge w3-right"
+          onClick={toggleMenu}
+        >
           <i className="spin fa fa-cog" aria-hidden="true"></i>
         </button>
 
-        <div
-          className="w3-sidebar w3-bar-block w3-card-2 w3-animate-right"
-          style={{ display: 'none', right: 0 }}
+        {/* <div
+          className={`w3-sidebar w3-bar-block w3-card-2 w3-animate-right ${
+            isMenuOpen ? 'w3-show' : 'w3-hide'
+          }`}
+          style={{ right: 0 }}
           id="rightMenu"
         >
-          <button onClick={closeRightMenu} className="w3-bar-item w3-button w3-large">
-            Close &times;
+          <button onClick={toggleMenu} className="w3-bar-item w3-button w3-large">
+            Close ×
           </button>
           <ul id="styleOptions" title="switch styling">
-            {[
-              'blue',
-              'red',
-              'purple',
-              'green',
-              'dark-red',
-              'orange',
-              'sea-blue',
-              'pink',
-            ].map((color) => (
+            {themes.map((color) => (
               <li key={color}>
                 <a
-                  href="javascript: void(0)"
+                  href="#"
                   className={`cl-box ${color}`}
-                  data-theme={`colors/${color}-style`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    applyTheme(color);
+                  }}
                 ></a>
               </li>
             ))}
           </ul>
-        </div>
+        </div> */}
       </div>
     </div>
   );
 };
 
-export default Login;
+export default LoginTest;
