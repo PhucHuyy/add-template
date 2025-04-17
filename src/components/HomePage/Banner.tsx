@@ -1,3 +1,5 @@
+import { brandImages } from '../../data/brandImages';
+
 export default function Banner() {
   //   useEffect(() => {
   //     const loadScripts = async () => {
@@ -69,62 +71,11 @@ export default function Banner() {
         <div className="company-brand">
           <div className="container">
             <div className="owl-carousel" id="company-brands">
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/microsoft-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/img-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/mothercare-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/paypal-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/serv-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/xerox-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/yahoo-home.png"
-                />
-              </div>
-              <div className="brand-img">
-                <img
-                  alt=""
-                  className="img-responsive"
-                  src="assets/img/mothercare-home.png"
-                />
-              </div>
+              {brandImages.map((src, index) => (
+                <div className="brand-img" key={index}>
+                  <img alt="" className="img-responsive" src={src} />
+                </div>
+              ))}
             </div>
           </div>
         </div>
