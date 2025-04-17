@@ -1,5 +1,3 @@
-import { ScriptProvider } from '../config/ScriptProvider';
-
 import Banner from '../components/HomePage/Banner';
 import Footer from '../components/layout/Footer';
 import RandomJobs from '../components/HomePage/RandomJobs';
@@ -10,13 +8,13 @@ import Header from '../components/layout/Header';
 export default function HomePage() {
   return (
     <>
-      <ScriptProvider />
-      <Header />
+      {/* <ScriptProvider /> */}
+      {/* <Header /> */}
       <Banner />
       <RandomJobs />
       <VideoHome />
       <WorkingProcess />
-      <Footer />
+      {/* <Footer /> */}
     </>
   );
 }

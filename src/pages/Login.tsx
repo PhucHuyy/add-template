@@ -1,6 +1,6 @@
 import React from 'react';
-import '../public/assets/css/style.css';
-import '../public/assets/css/colors/green-style.css';
+// import '../public/assets/css/style.css';
+// import '../public/assets/css/colors/green-style.css';
 
 const Login: React.FC = () => {
   return (
