@@ -6,6 +6,7 @@ import SignUp from '../pages/SignUp';
 import DefaultLayout from '../components/layout/DefaultLayout';
 import AuthLayout from '../components/layout/AuthLayout';
 import { JSX } from 'react';
+import ForgetPassword from '../pages/ForgetPassword';
 
 interface RouteConfig {
   path: string;
@@ -32,6 +33,11 @@ const routes: RouteConfig[] = [
   {
     path: '/signup',
     element: <SignUp />,
+    layout: AuthLayout,
+  },
+  {
+    path: '/forget-password',
+    element: <ForgetPassword />,
     layout: AuthLayout,
   },
 ];
