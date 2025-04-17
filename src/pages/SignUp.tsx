@@ -1,5 +1,3 @@
-import React from 'react';
-
 export default function SignUp() {
   return (
     <>
@@ -15,7 +13,7 @@ export default function SignUp() {
           <section className="signup-screen-sec">
             <div className="container">
               <div className="signup-screen">
-                <a href="index-2.html">
+                <a href="/">
                   <img
                     alt=""
                     className="img-responsive"
@@ -47,7 +45,7 @@ export default function SignUp() {
                     Sign Up
                   </button>
                   <span>
-                    Have You Account? <a href="login.html"> Login</a>
+                    Have You Account? <a href="/login"> Login</a>
                   </span>
                 </form>
               </div>

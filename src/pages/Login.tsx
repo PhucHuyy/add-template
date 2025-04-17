@@ -48,7 +48,7 @@ const Login: React.FC = () => {
                   You Have No Account? <a href="/signup">Create An Account</a>
                 </span>
                 <span>
-                  <a href="/lost-password">Forget Password</a>
+                  <a href="/forget-password">Forget Password</a>
                 </span>
               </form>
             </div>
