@@ -1,4 +1,4 @@
-import { ScriptProvider } from '../components/HomePage/ScriptProvider';
+import { ScriptProvider } from '../config/ScriptProvider';
 
 import Banner from '../components/HomePage/Banner';
 import Footer from '../components/layout/Footer';
