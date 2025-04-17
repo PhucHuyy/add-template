@@ -1,6 +1,4 @@
-import React from 'react';
-
-export default function Error404Test() {
+export default function Error404() {
   return (
     <>
       <section className="simple-bg-screen big-wrap">

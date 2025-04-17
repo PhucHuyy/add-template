@@ -1,30 +1,6 @@
-import './Footer.css';
-import '../src/config/scriptConfig';
-export default function HeaderTest() {
-  // useEffect (()=>{loadScript(“assets/js/‘main.js”},[])
-  // function reload(script: string) {
-  //   const jqueryScript = document.createElement('script');
-  //   jqueryScript.src = script;
-  //   jqueryScript.async = true;
-  //   document.body.appendChild(jqueryScript);
-  // }
+import '../../config/scriptConfig';
 
-  // useEffect(() => {
-  //   const loadScripts = async () => {
-  //     const scripts = [
-  //       '/assets/plugins/js/jquery.min.js',
-  //       '/assets/js/custom.js',
-  //       '/assets/plugins/js/bootsnav.js',
-  //       '/assets/plugins/js/loader.js',
-  //     ];
-
-  //     for (const script of scripts) {
-  //       await loadScript(script);
-  //     }
-  //   };
-  //   loadScripts();
-  // }, []);
-
+export default function Header() {
   return (
     <>
       <nav className="navbar navbar-default navbar-fixed navbar-transparent white bootsnav">
