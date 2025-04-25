@@ -12,7 +12,7 @@ export default function DefaultLayout({
     <>
       <ScriptProvider />
       <Header />
-      {children}
+      <main>{children}</main>
       <Footer />
     </>
   );
