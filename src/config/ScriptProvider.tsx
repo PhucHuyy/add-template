@@ -46,5 +46,5 @@ export const ScriptProvider = () => {
     loadAllScripts();
   }, []);
 
-  return null; // Không render gì
+  return null;
 };
