@@ -6,9 +6,13 @@ import SignUp from '../pages/identity/register/SignUp';
 import DefaultLayout from '../components/layout/DefaultLayout';
 import AuthLayout from '../components/layout/AuthLayout';
 import { JSX } from 'react';
-import ForgetPassword from '../pages/ForgetPassword';
 import UserProfile from '../pages/identity/user/UserProfile';
 import RequireGuest from '../components/guards/RequireGuest';
+import SecuritySettings from '../pages/identity/user/setting/SecuritySetting';
+import RequireAuth from '../components/guards/RequireAuth';
+import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
+import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
+import Authenticate from '../pages/identity/login/authenticate';
 
 interface RouteConfig {
   path: string;
@@ -43,8 +47,24 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/profile',
-    element: <UserProfile />,
+    element: <RequireAuth><UserProfile /></RequireAuth>,
     layout: DefaultLayout,
-  }
+  },
+  {
+    path: '/settings/security',
+    element: <RequireAuth><SecuritySettings /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  
+    {
+      path: '/reset-password',
+      element: <RequireGuest><ResetPassword /></RequireGuest>,
+      layout: DefaultLayout,
+    },
+    {
+      path: '/authenticate',
+      element: <Authenticate></Authenticate>
+    },
+
 ];
 export default routes;

@@ -1,38 +1,21 @@
-import React, { useState } from "react";
-import { useDispatch, useSelector } from "react-redux";
-import { AppDispatch, RootState } from "../../../app/store";
-import { useNavigate } from "react-router-dom";
-import { register } from "../../../features/auth/authSlice";
+import { useSignUpForm } from "./useSignUpForm";
+
 
 export default function SignUp() {
-  const dispatch = useDispatch<AppDispatch>();
-  const navigate = useNavigate();
-  const {loading, error} = useSelector((state: RootState) => state.auth);
-
-  const [username, setUserName] = useState('');
-  const [email, setEmail] = useState('');
-  const[password, setPassword] = useState('');
-  const [repeatPassword, setRepeatPassword] = useState('');
-  const [successMessage, setSuccessMessage] = useState('');
-
-
-  const handleSubmit = async( e: React.FormEvent) =>{
-    e.preventDefault();
-
-    if(password !== repeatPassword){
-      alert("Password do not match")
-      return;
-    }
-
-    const result = await dispatch(register({username, email, password}));
-    if(register.fulfilled.match(result)){
-      setSuccessMessage(result.payload.message);
-      setUserName('');
-      setEmail('');
-      setPassword('');
-      setRepeatPassword('');
-    }
-  };
+  const {
+    username,
+    email,
+    password,
+    repeatPassword,
+    successMessage,
+    loading,
+    error,
+    setUsername,
+    setEmail,
+    setPassword,
+    setRepeatPassword,
+    handleSubmit,
+  } = useSignUpForm();
   
   return (
     <>
@@ -61,7 +44,7 @@ export default function SignUp() {
                     placeholder="Username"
                     type="text"
                     value={username}
-                    onChange={(e) => setUserName(e.target.value)}
+                    onChange={(e) => setUsername(e.target.value)}
                     required
                   />
                   <input
@@ -84,7 +67,7 @@ export default function SignUp() {
                   <input 
                     className="form-control"
                     placeholder="Repeat Password"
-                    type="Password"
+                    type="password"
                     value={repeatPassword}
                     onChange={(e) => setRepeatPassword(e.target.value)}
                     required
