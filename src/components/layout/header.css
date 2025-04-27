@@ -1,17 +1,125 @@
-.user-menu {
-    position: relative;
-  }
-  .user-menu .dropdown-menu {
-    position: absolute;
-    top: 100%;
-    right: 0;
-    display: none;
-    background-color: white;
-    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-    border: 1px solid #ddd;
-    z-index: 999;
-  }
-  .user-menu:hover .dropdown-menu {
-    display: block;
-  }
-  
+.user-menu .dropdown-menu {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  display: none;
+  background-color: white;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  border: 1px solid #ddd;
+  z-index: 999;
+  width: 320px;
+  padding: 20px;
+  text-align: left;
+  border-radius: 8px;
+}
+
+/* Danh sách các li */
+.dropdown-menu li {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+/* Các liên kết bên trong menu */
+.dropdown-menu li a {
+  display: flex;
+  align-items: center;
+  font-size: 14px;
+  color: #333;
+  text-decoration: none;
+  padding: 6px 16px;
+  transition: all 0.2s;
+}
+
+/* Icon trong item */
+.dropdown-menu li a i {
+  width: 20px;
+  margin-right: 10px;
+  color: #666;
+  text-align: center;
+}
+
+/* User info */
+.user-info-container {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 16px 12px;
+  border-bottom: 1px solid #eee;
+  margin-bottom: 12px;
+}
+
+.user-info-container img {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+.user-text .username {
+  font-weight: 600;
+  font-size: 15px;
+  margin: 0;
+  color: #333;
+}
+
+.user-text .email {
+  font-size: 13px;
+  margin: 0;
+  color: #777;
+}
+
+/* Section tiêu đề */
+.dropdown-section-title {
+  padding: 10px 16px 5px;
+  font-weight: 600;
+  font-size: 14px;
+  color: #444;
+  border-top: 1px solid #eee;
+  align-items:flex-start;
+  justify-content: space-between;
+}
+
+/* Bên trái của tiêu đề: icon + text */
+.dropdown-section-title span {
+  display: flex;
+  align-items: center;
+  margin-left: 3;
+}
+
+.dropdown-section-title i:first-child {
+  margin-right: 10px;
+  color: #333;
+  width: 20px;
+  text-align: center;
+}
+
+/* Mũi tên dropdown bên phải */
+.dropdown-section-title i:last-child {
+  color: #999;
+}
+
+/* Wrapper cho mỗi section */
+.dropdown-section-wrapper {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+/* List con ẩn/hiện mượt */
+.collapsible {
+  max-height: 0;
+  overflow: hidden;
+  opacity: 0;
+  padding-left: 32px;
+  transition:
+    max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1),
+    opacity 0.3s ease,
+    padding 0.3s ease;
+}
+
+.collapsible.open {
+  max-height: 500px; /* hoặc auto nếu dùng JS dynamic height */
+  opacity: 1;
+  padding-left: 32px;
+}

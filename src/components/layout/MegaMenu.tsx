@@ -1,4 +1,3 @@
-// Ví dụ: MegaMenu.tsx
 import { megaMenu } from '../../data/menuData';
 
 export default function MegaMenu() {

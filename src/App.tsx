@@ -1,27 +1,30 @@
-import { useSelector } from 'react-redux';
-import { RootState } from './app/store';
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
 import { Route, Routes } from "react-router-dom";
-import routes from './routes/RouterConfig';
+import routes from "./routes/RouterConfig";
 
 function App() {
-  const isRehydrated = useSelector((state: RootState) => state._persist?.rehydrated);
-
-if (!isRehydrated) {
-  return (
-    <div className="flex items-center justify-center h-screen bg-white">
-      <img
-        src="/assets/img/logo-white.png"
-        alt="Loading..."
-        className="animate-pulse w-20 h-20"
-      />
-    </div>
+  const isRehydrated = useSelector(
+    (state: RootState) => state._persist?.rehydrated
   );
-}
+
+  if (!isRehydrated) {
+    return (
+      <div className="flex items-center justify-center h-screen bg-white">
+        <img
+          src="/assets/img/logo-white.png"
+          alt="Loading..."
+          className="animate-pulse w-20 h-20"
+        />
+      </div>
+    );
+  }
 
   return (
     <>
       <div className="Loader" />
       <Routes>
+        
         {routes.map(({ path, element, layout: Layout }) => (
           <Route
             key={path}
@@ -30,6 +33,7 @@ if (!isRehydrated) {
           />
         ))}
       </Routes>
+
     </>
   );
 }

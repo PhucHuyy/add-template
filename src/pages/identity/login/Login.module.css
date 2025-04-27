@@ -1,4 +1,3 @@
-/* src/features/auth/Login.module.css */
 .simpleBgScreen {
   background-size: cover;
   background-position: center;
@@ -24,6 +23,8 @@
 
 .logo {
   margin-bottom: 20px;
+  justify-content: center;
+  align-items: center;
 }
 
 .formControl {

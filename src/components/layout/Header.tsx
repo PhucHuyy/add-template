@@ -6,16 +6,39 @@ import "../../config/scriptConfig";
 import MegaMenu from "./MegaMenu";
 import "./header.css";
 import { useAppDispatch } from "../../app/hook";
+import { useState } from "react";
 
 export default function Header() {
-    console.log('[App render]');
+  console.log("[App render]");
   const { user } = useSelector((state: RootState) => state.auth);
+  console.log("🧠 Header user:", user);
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
 
+  const [openSections, setOpenSections] = useState<{ [key: string]: boolean }>({
+    jobs: false,
+    cv: false,
+    settings: false,
+    privacy: false,
+  });
+
+  const toggleSection = (key: string) => {
+    setOpenSections((prev) => ({ ...prev, [key]: !prev[key] }));
+  };
+
+  const resetSections = () => {
+    setOpenSections({
+      jobs: false,
+      cv: false,
+      settings: false,
+      privacy: false,
+    });
+  };
+
   const handleLogout = async () => {
     await dispatch(logout());
-    navigate("/login");
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
@@ -40,6 +63,7 @@ export default function Header() {
                 className="logo logo-display"
                 src="/assets/img/logo-white.png"
               />
+
               <img
                 alt=""
                 className="logo logo-scrolled"
@@ -80,7 +104,7 @@ export default function Header() {
                     data-toggle="dropdown"
                   >
                     <img
-                      src={user.picture || "/assets/img/default-avatar.png"}
+                      src={user.picture || "/assets/img/can-1.png"}
                       alt="avatar"
                       className="img-circle"
                       style={{
@@ -90,20 +114,190 @@ export default function Header() {
                         marginRight: "5px",
                       }}
                     />
-                    <span>{user.email}</span> <i className="fa fa-angle-down" />
+                    <span>{user.username}</span>
                   </a>
+
                   <ul
-                    className="dropdown-menu"
-                    style={{ minWidth: "150px", right: 0 }}
+                    className="dropdown-menu mega-menu"
+                    style={{ minWidth: "280px", right: 0, padding: "15px" }}
+                    onMouseLeave={resetSections}
                   >
-                    <li>
-                      <a href="/profile">Profile</a>
+                    <li className="dropdown-user-info">
+                      <div className="user-info-container">
+                        <img
+                          src={user.picture || "/assets/img/can-1.png"}
+                          alt="avatar"
+                          className="img-circle"
+                        />
+                        <div className="user-text">
+                          <p className="username">{user.username}</p>
+                          <p className="email">{user.email}</p>
+                        </div>
+                      </div>
                     </li>
-                    <li>
-                      <a href="/settings">Settings</a>
+
+                    {/* Job Management */}
+                    <li className="dropdown-section-wrapper">
+                      <div
+                        className="dropdown-section-title"
+                        onClick={() => toggleSection("jobs")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i
+                          className="fa fa-briefcase"
+                          style={{ marginRight: 6 }}
+                        ></i>
+                        Job Management
+                        <i
+                          className={`fa fa-angle-${
+                            openSections.jobs ? "up" : "down"
+                          }`}
+                          style={{ float: "right", marginTop: 4 }}
+                        />
+                      </div>
+                      <ul
+                        className={`collapsible ${
+                          openSections.jobs ? "open" : ""
+                        }`}
+                      >
+                        <li>
+                          <a href="/jobs/saved">
+                            <i className="fa fa-bookmark" /> Saved Jobs
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/jobs/applied">
+                            <i className="fa fa-paper-plane" /> Applied Jobs
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/jobs/matches">
+                            <i className="fa fa-lightbulb-o" /> Matching Jobs
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/jobs/suggestion-settings">
+                            <i className="fa fa-cogs" /> Job Suggestions
+                          </a>
+                        </li>
+                      </ul>
                     </li>
-                    <li>
-                      <a onClick={handleLogout} style={{ cursor: "pointer" }}>
+
+                    {/* CV & Cover Letter */}
+                    <li className="dropdown-section-wrapper">
+                      <div
+                        className="dropdown-section-title"
+                        onClick={() => toggleSection("cv")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i
+                          className="fa fa-id-card"
+                          style={{ marginRight: 6 }}
+                        ></i>
+                        CV & Cover Letter
+                        <i
+                          className={`fa fa-angle-${
+                            openSections.cv ? "up" : "down"
+                          }`}
+                          style={{ float: "right", marginTop: 4 }}
+                        />
+                      </div>
+                      <ul
+                        className={`collapsible ${
+                          openSections.cv ? "open" : ""
+                        }`}
+                      >
+                        <li>
+                          <a href="/cv">
+                            <i className="fa fa-file-text" /> My CV
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+
+                    {/* Settings */}
+                    <li className="dropdown-section-wrapper">
+                      <div
+                        className="dropdown-section-title"
+                        onClick={() => toggleSection("settings")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i
+                          className="fa fa-sliders"
+                          style={{ marginRight: 6 }}
+                        ></i>
+                        Settings
+                        <i
+                          className={`fa fa-angle-${
+                            openSections.settings ? "up" : "down"
+                          }`}
+                          style={{ float: "right", marginTop: 4 }}
+                        />
+                      </div>
+                      <ul
+                        className={`collapsible ${
+                          openSections.settings ? "open" : ""
+                        }`}
+                      >
+                        <li>
+                          <a href="/settings/notifications">
+                            <i className="fa fa-bell" /> Email & Notifications
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+
+                    {/* Privacy & Security */}
+                    <li className="dropdown-section-wrapper">
+                      <div
+                        className="dropdown-section-title"
+                        onClick={() => toggleSection("privacy")}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <i
+                          className="fa fa-lock"
+                          style={{ marginRight: 6 }}
+                        ></i>
+                        Privacy & Security
+                        <i
+                          className={`fa fa-angle-${
+                            openSections.privacy ? "up" : "down"
+                          }`}
+                          style={{ float: "right", marginTop: 4 }}
+                        />
+                      </div>
+                      <ul
+                        className={`collapsible ${
+                          openSections.privacy ? "open" : ""
+                        }`}
+                      >
+                        <li>
+                          <a href="/profile">
+                            <i className="fa fa-user" /> Personal Info
+                          </a>
+                        </li>
+                        <li>
+                          <a href="/settings/security">
+                            <i className="fa fa-shield" /> Security
+                          </a>
+                        </li>
+                      </ul>
+                    </li>
+
+                    {/* Logout */}
+                    <li className="text-center mt-2">
+                      <a
+                        onClick={handleLogout}
+                        style={{
+                          cursor: "pointer",
+                          color: "red",
+                          fontWeight: "bold",
+                        }}
+                      >
+                        <i
+                          className="fa fa-sign-out"
+                          style={{ marginRight: 6 }}
+                        ></i>
                         Logout
                       </a>
                     </li>
