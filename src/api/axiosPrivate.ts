@@ -1,14 +1,15 @@
 import axios from 'axios';
+import { RefreshResponse } from '../features/auth/authType';
 
 const axiosPrivate = axios.create({
-  baseURL: 'http://localhost:8080/api/v1',
-  withCredentials: true,
+  baseURL: 'http://3.112.235.50:8080/api/v1/',
 });
 
 axiosPrivate.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
+      config.headers = config.headers || {};
       config.headers.Authorization = `Bearer ${token}`;
     }
     return config;
@@ -25,7 +26,7 @@ axiosPrivate.interceptors.response.use(
       originalRequest._retry = true;
 
       try {
-        const refreshResponse = await axios.post(
+        const refreshResponse = await axios.post<RefreshResponse>(
           'http://localhost:8080/api/v1/auth/refresh',
           {},
           { withCredentials: true }
