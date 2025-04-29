@@ -1,15 +1,15 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect, useRef } from "react";
-import { setToken } from "../../../features/auth/localStorageService";
-import { Box, CircularProgress, Typography } from "@mui/material";
-import { useDispatch } from "react-redux";
-import { setUser } from "../../../features/auth/authSlice";
+import { useNavigate } from 'react-router-dom';
+import { useEffect, useRef } from 'react';
+import { setToken } from '../../../features/auth/localStorageService';
+import { Box, CircularProgress, Typography } from '@mui/material';
+import { useDispatch } from 'react-redux';
+import { setUser } from '../../../features/auth/authSlice';
 
 export default function Authenticate() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
-  const hasRun = useRef(false); 
+  const hasRun = useRef(false);
 
   useEffect(() => {
     if (hasRun.current) return;
@@ -19,57 +19,59 @@ export default function Authenticate() {
     const isMatch = window.location.href.match(authCodeRegex);
 
     if (!isMatch) {
-      navigate("/login");
+      navigate('/login');
       return;
     }
 
     const authCode = isMatch[1];
 
     fetch(
-      `http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
-      { method: "POST", credentials: "include" }
+      `http://18.140.1.2:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
+      { method: 'POST', credentials: 'include' },
     )
       .then(async (response) => {
         if (!response.ok) {
-          throw new Error("Google authentication failed");
+          throw new Error('Google authentication failed');
         }
 
         const result = await response.json();
         const data = result?.data;
 
         if (!data?.accessToken) {
-          throw new Error("Missing access token");
+          throw new Error('Missing access token');
         }
 
         // 1. Lưu token
         setToken(data.accessToken);
 
         // 2. Cập nhật Redux store
-        dispatch(setUser({
-          id: data.id, 
-          email: data.email,
-          username: data.name,
-          picture: data.picture || null,
-          roleNames: data.roleNames,
-        }));
+        dispatch(
+          setUser({
+            id: data.id,
+            email: data.email,
+            username: data.name,
+            picture: data.picture || null,
+            roleNames: data.roleNames,
+          }),
+        );
 
-        navigate("/profile");
+        navigate('/profile');
       })
       .catch((err) => {
-        console.error("OAuth error:", err);
-        navigate("/login");
+        console.error('OAuth error:', err);
+        navigate('/login');
       });
   }, [dispatch, navigate]);
 
   return (
     <Box
       sx={{
-        display: "flex",
-        flexDirection: "column",
-        gap: "30px",
-        justifyContent: "center",
-        alignItems: "center",
-        height: "100vh",
+        display: 'flex',
+        flexDirection: 'column',
+        gap: '30px',
+        justifyContent: 'center',
+        alignItems: 'center',
+        height: '100vh',
       }}
     >
       <CircularProgress />

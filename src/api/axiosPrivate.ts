@@ -2,7 +2,7 @@ import axios from 'axios';
 import { RefreshResponse } from '../features/auth/authType';
 
 const axiosPrivate = axios.create({
-  baseURL: 'http://3.112.235.50:8080/api/v1/',
+  baseURL: 'http://18.140.1.2:8080/api/v1/',
 });
 
 axiosPrivate.interceptors.request.use(
@@ -14,7 +14,7 @@ axiosPrivate.interceptors.request.use(
     }
     return config;
   },
-  (error) => Promise.reject(error)
+  (error) => Promise.reject(error),
 );
 
 axiosPrivate.interceptors.response.use(
@@ -27,9 +27,9 @@ axiosPrivate.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post<RefreshResponse>(
-          'http://localhost:8080/api/v1/auth/refresh',
+          'http://18.140.1.2:8080/api/v1/auth/refresh',
           {},
-          { withCredentials: true }
+          { withCredentials: true },
         );
 
         const newToken = refreshResponse.data.data.token;
@@ -39,13 +39,13 @@ axiosPrivate.interceptors.response.use(
         return axiosPrivate(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem('accessToken');
-        window.location.href = '/login'; 
+        window.location.href = '/login';
         return Promise.reject(refreshError);
       }
     }
 
     return Promise.reject(error);
-  }
+  },
 );
 
 export default axiosPrivate;
