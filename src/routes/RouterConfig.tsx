@@ -13,6 +13,9 @@ import RequireAuth from '../components/guards/RequireAuth';
 import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
 import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
 import Authenticate from '../pages/identity/login/authenticate';
+import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
+import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
+import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
 
 interface RouteConfig {
   path: string;
@@ -32,39 +35,71 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/login',
-    element: <RequireGuest><Login /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <Login />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
     path: '/signup',
-    element: <RequireGuest><SignUp /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <SignUp />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
     path: '/forget-password',
-    element: <RequireGuest><ForgetPassword /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <ForgetPassword />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
     path: '/profile',
-    element: <RequireAuth><UserProfile /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <BusinessProfile />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/verify-business',
+    element: (
+      <RequireAuth>
+        <VerifyBusinessForm />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/settings/security',
-    element: <RequireAuth><SecuritySettings /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <SecuritySettings />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
-  
-    {
-      path: '/reset-password',
-      element: <RequireGuest><ResetPassword /></RequireGuest>,
-      layout: DefaultLayout,
-    },
-    {
-      path: '/authenticate',
-      element: <Authenticate></Authenticate>
-    },
 
+  {
+    path: '/reset-password',
+    element: (
+      <RequireGuest>
+        <ResetPassword />
+      </RequireGuest>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/authenticate',
+    element: <Authenticate></Authenticate>,
+  },
 ];
 export default routes;
