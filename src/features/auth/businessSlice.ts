@@ -20,8 +20,10 @@ const businessSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchBusinessInfo.fulfilled, (state, action) => {
+        console.log(action.payload);
+
         state.status = 'succeeded';
-        state.isApproved = action.is_approved ?? false;
+        state.isApproved = action.payload.is_approved ?? false;
       })
       .addCase(fetchBusinessInfo.rejected, (state, action) => {
         state.status = 'failed';
