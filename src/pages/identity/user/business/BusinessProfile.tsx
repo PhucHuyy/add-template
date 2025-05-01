@@ -9,6 +9,7 @@ import ProfileOverview from '../../../../components/BusinessProfile/ProfileOverv
 import BusinessVerifyNotice from './BusinessVerifyNotice';
 import InformationTab from '../../../../components/BusinessProfile/InforBusinessTab';
 import Loading from '../../../../common/Loading';
+import Error404 from '../../../Error404';
 
 export default function UserProfile() {
   const [activeTab, setActiveTab] = useState('about');
@@ -29,7 +30,7 @@ export default function UserProfile() {
     const fetchBusiness = async () => {
       try {
         const response = await getMyBusiness();
-        setBusiness(response.data); // giả sử API trả về { success, message, data: business }
+        setBusiness(response.data);
         console.log(response.data);
       } catch (err: any) {
         if (err.message?.includes('not found')) {
@@ -54,11 +55,15 @@ export default function UserProfile() {
       <div>
         <Loading />
       </div>
-    ); // hoặc gọi <LoadingSpinner />
+    );
   }
 
   if (error) {
-    return <div>Error: {error}</div>; // hoặc component lỗi riêng
+    return (
+      <>
+        <Error404 />
+      </>
+    );
   }
 
   if (!business) {
