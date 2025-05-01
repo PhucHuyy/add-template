@@ -26,7 +26,7 @@ export default function Authenticate() {
     const authCode = isMatch[1];
 
     fetch(
-      `http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
+      `http://18.140.1.2:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
       { method: "POST", credentials: "include" }
     )
       .then(async (response) => {
