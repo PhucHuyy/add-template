@@ -107,6 +107,7 @@ export default function Header() {
                       src={user.picture || "/assets/img/can-1.png"}
                       alt="avatar"
                       className="img-circle"
+                      onError={(e) => { e.currentTarget.src = '/assets/img/can-1.png'; }}
                       style={{
                         width: "30px",
                         height: "30px",

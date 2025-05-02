@@ -1,8 +1,8 @@
-// hooks/useAuthInit.ts
 import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../app/hook';
 import { authService } from '../features/auth/authService';
 import { setUser } from '../features/auth/authSlice';
+import { User } from '../features/auth/authType'; 
 
 export const useAuthInit = () => {
   const dispatch = useAppDispatch();
@@ -14,7 +14,7 @@ export const useAuthInit = () => {
     if (token) {
       authService.getProfile()
         .then((profile) => {
-          dispatch(setUser(profile));
+          dispatch(setUser(profile as User)); 
         })
         .finally(() => setReady(true));
     } else {

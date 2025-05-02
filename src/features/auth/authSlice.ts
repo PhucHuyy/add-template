@@ -187,7 +187,9 @@ export const login = createAsyncThunk<
   try {
     const response = await axiosPublic.post<ApiResponse<LoginResponse>>(
       "/auth/login",
-      payload
+
+      payload,
+     { withCredentials: true}
 
     );
 
@@ -295,11 +297,11 @@ const authSlice = createSlice({
         const userData = action.payload.data;
 
         state.user = {
-          uid: userData.id,
+          id: userData.id,
           email: userData.email,
           username: userData.username,
           roleNames: userData.roleNames,
-          picture: userData.picture || null,
+          picture: userData.picture ?? undefined,
         };
       })
 
