@@ -2,7 +2,9 @@ import axios from 'axios';
 import { RefreshResponse } from '../features/auth/authType';
 
 const axiosPrivate = axios.create({
+
   baseURL: 'http://18.140.1.2:8080/api/v1/',
+
 });
 
 axiosPrivate.interceptors.request.use(
@@ -27,7 +29,9 @@ axiosPrivate.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post<RefreshResponse>(
+
           'http://18.140.1.2:8080/api/v1/auth/refresh',
+
           {},
           { withCredentials: true },
         );
