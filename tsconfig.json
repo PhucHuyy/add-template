@@ -1,7 +1,14 @@
 {
   "compilerOptions": {
     "typeRoots": ["./node_modules/@types", "./src/types"],
-    "types": ["node", "react", "react-dom"]
+    "types": ["node", "react", "react-dom"],
+    "strict": true, // Bật chế độ kiểm tra chặt chẽ hơn
+    "noImplicitAny": false, // Tắt cảnh báo về kiểu 'any'
+    "noUnusedLocals": false, // Tắt cảnh báo về biến không sử dụng
+    "noUnusedParameters": false, // Tắt cảnh báo về tham số không sử dụng
+    "skipLibCheck": true, // Bỏ qua kiểm tra thư viện
+    "esModuleInterop": true, // Cải thiện tương thích với ES modules
+    "allowJs": true // Cho phép biên dịch file JavaScript cùng với TypeScript
   },
   "files": [],
   "references": [

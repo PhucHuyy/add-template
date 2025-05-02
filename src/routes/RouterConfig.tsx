@@ -13,11 +13,20 @@ import RequireAuth from '../components/guards/RequireAuth';
 import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
 import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
 import Authenticate from '../pages/identity/login/authenticate';
+
 import StudentProfile from '../pages/identity/user/StudentProfile';
 import StudentVerifycation from '../pages/identity/user/StudentVerifycation/StudentVerifycation';
 import ManageCv from '../pages/identity/user/ManageCv/ManageCv';
 import UpdateProfile from '../pages/identity/user/UpdateProfile/UpdateProfile';
 import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
+
+
+import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
+import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
+import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
+
+
+
 interface RouteConfig {
   path: string;
   element: JSX.Element;
@@ -36,21 +45,51 @@ const routes: RouteConfig[] = [
   },
   {
     path: '/login',
-    element: <RequireGuest><Login /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <Login />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
     path: '/signup',
-    element: <RequireGuest><SignUp /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <SignUp />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
     path: '/forget-password',
-    element: <RequireGuest><ForgetPassword /></RequireGuest>,
+    element: (
+      <RequireGuest>
+        <ForgetPassword />
+      </RequireGuest>
+    ),
     layout: AuthLayout,
   },
   {
-    path: '/profile',
+    path: '/businessprofile',
+    element: (
+      <RequireAuth>
+        <BusinessProfile />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/verify-business',
+    element: (
+      <RequireAuth>
+        <VerifyBusinessForm />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/profile',    
     element: <RequireAuth><UserProfile /></RequireAuth>,
     layout: DefaultLayout,
   },
