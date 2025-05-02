@@ -1,6 +1,9 @@
+import { useNavigate } from 'react-router-dom';
 import '../../pages/identity/user/business/BusinessProfile.css';
 
-export default function ProfileOverview({ user, isApproved }) {
+export default function ProfileOverview({ user, isApproved, status }) {
+  const navigate = useNavigate();
+
   return (
     <>
       <section className="detail-desc advance-detail-pr gray-bg">
@@ -18,7 +21,7 @@ export default function ProfileOverview({ user, isApproved }) {
                     <i className="fa fa-pencil"></i>
                   </a>
                 </div>
-                {isApproved ? (
+                {isApproved && status == 'inactive' ? (
                   <span className="badge-active">Active Now</span>
                 ) : (
                   <span className="badge-inactive">Pending</span>
@@ -78,16 +81,26 @@ export default function ProfileOverview({ user, isApproved }) {
                 </div>
               </div>
 
-              <div className="button-group">
-                {isApproved ? (
+              <div
+                className="button-group"
+                style={{
+                  marginTop: '20px',
+                  display: 'flex',
+                  justifyContent: 'space-evenly',
+                }}
+              >
+                {isApproved && status == 'inactive' ? (
                   <>
-                    <button className="footer-btn grn-btn">Edit Now</button>
+                    <button
+                      className="footer-btn grn-btn"
+                      onClick={() => navigate('/edit')}
+                    >
+                      Edit Now
+                    </button>
                     <button className="footer-btn blu-btn">Save Draft</button>
                   </>
                 ) : (
-                  <button className="footer-btn grn-btn" disabled>
-                    Edit Now (Disabled)
-                  </button>
+                  <></>
                 )}
                 {/* <a href="#" className="footer-btn grn-btn">
                   Edit Now

@@ -16,6 +16,7 @@ import Authenticate from '../pages/identity/login/authenticate';
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
 import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
+import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
 
 interface RouteConfig {
   path: string;
@@ -65,6 +66,15 @@ const routes: RouteConfig[] = [
     element: (
       <RequireAuth>
         <BusinessProfile />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/edit',
+    element: (
+      <RequireAuth>
+        <EditBusinessProfile />
       </RequireAuth>
     ),
     layout: DefaultLayout,
