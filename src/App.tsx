@@ -1,11 +1,13 @@
-import { useSelector } from 'react-redux';
-import { RootState } from './app/store';
-import { Route, Routes } from 'react-router-dom';
-import routes from './routes/RouterConfig';
+
+import { useSelector } from "react-redux";
+import { RootState } from "./app/store";
+import { Route, Routes } from "react-router-dom";
+import routes from "./routes/RouterConfig";
 
 function App() {
   const isRehydrated = useSelector(
-    (state: RootState) => state._persist?.rehydrated,
+    (state: RootState) => state._persist?.rehydrated
+
   );
 
   if (!isRehydrated) {
@@ -24,6 +26,7 @@ function App() {
     <>
       <div className="Loader" />
       <Routes>
+        
         {routes.map(({ path, element, layout: Layout }) => (
           <Route
             key={path}
@@ -32,6 +35,7 @@ function App() {
           />
         ))}
       </Routes>
+
     </>
   );
 }

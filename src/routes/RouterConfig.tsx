@@ -13,10 +13,12 @@ import RequireAuth from '../components/guards/RequireAuth';
 import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
 import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
 import Authenticate from '../pages/identity/login/authenticate';
+
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
 import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
 import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
+
 
 interface RouteConfig {
   path: string;
@@ -62,7 +64,7 @@ const routes: RouteConfig[] = [
     layout: AuthLayout,
   },
   {
-    path: '/profile',
+    path: '/businessprofile',
     element: (
       <RequireAuth>
         <BusinessProfile />
@@ -89,27 +91,25 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
+    path: '/profile',    
+    element: <RequireAuth><UserProfile /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
     path: '/settings/security',
-    element: (
-      <RequireAuth>
-        <SecuritySettings />
-      </RequireAuth>
-    ),
+    element: <RequireAuth><SecuritySettings /></RequireAuth>,
     layout: DefaultLayout,
   },
+  
+    {
+      path: '/reset-password',
+      element: <RequireGuest><ResetPassword /></RequireGuest>,
+      layout: DefaultLayout,
+    },
+    {
+      path: '/authenticate',
+      element: <Authenticate></Authenticate>
+    },
 
-  {
-    path: '/reset-password',
-    element: (
-      <RequireGuest>
-        <ResetPassword />
-      </RequireGuest>
-    ),
-    layout: DefaultLayout,
-  },
-  {
-    path: '/authenticate',
-    element: <Authenticate></Authenticate>,
-  },
 ];
 export default routes;

@@ -1,8 +1,9 @@
 // src/features/auth/authSlice.ts
 
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
-import axiosPublic from '../../api/axiosPublic';
-import axiosPrivate from '../../api/axiosPrivate';
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+import axiosPublic from "../../api/axiosPublic";
+import axiosPrivate from "../../api/axiosPrivate";
+
 import {
   ApiResponse,
   AuthState,
@@ -12,7 +13,9 @@ import {
   LoginResponse,
   ResetPasswordRequest,
   User,
-} from './authType';
+
+} from "./authType";
+
 
 const initialState: AuthState = {
   user: null,
@@ -38,13 +41,16 @@ export const googleAuthenticate = createAsyncThunk<
 
     if (!res.ok) {
       throw new Error('Google authentication failed');
+
     }
 
     const json = await res.json();
     const data = json.data;
 
     if (!data || !data.accessToken) {
-      throw new Error('Missing access token in response');
+
+      throw new Error("Missing access token in response");
+
     }
 
     const user: User = {
@@ -55,37 +61,48 @@ export const googleAuthenticate = createAsyncThunk<
       roleNames: data.roleNames || [],
     };
 
-    localStorage.setItem('accessToken', data.accessToken);
+
+    localStorage.setItem("accessToken", data.accessToken);
+
 
     return {
       accessToken: data.accessToken,
       user,
     };
   } catch (err: any) {
-    return rejectWithValue(err.message || 'Google OAuth failed');
+
+    return rejectWithValue(err.message || "Google OAuth failed");
   }
 });
+
+
 
 export const changePassword = createAsyncThunk<
   ChangePasswordResponse,
   ChangePasswordPayload,
   { rejectValue: string }
->('auth/changePassword', async (payload, { rejectWithValue }) => {
+
+>("auth/changePassword", async (payload, { rejectWithValue }) => {
   try {
-    const response = await axiosPrivate.put<
-      ApiResponse<ChangePasswordResponse>
-    >('/auth/change-pass', payload, {
-      withCredentials: true,
-    });
+    const response = await axiosPrivate.put<ApiResponse<ChangePasswordResponse>>(
+      "/auth/change-pass",
+      payload,
+      {
+        withCredentials: true, 
+      }
+    );
 
     const { newAccessToken } = response.data.data;
-    localStorage.setItem('accessToken', newAccessToken);
+    localStorage.setItem("accessToken", newAccessToken);
+
 
     return response.data.data;
   } catch (error: unknown) {
     const axiosError = error as { response?: { data?: { message?: string } } };
     return rejectWithValue(
-      axiosError.response?.data?.message || 'Đổi mật khẩu thất bại',
+
+      axiosError.response?.data?.message || "Đổi mật khẩu thất bại"
+
     );
   }
 });
@@ -94,17 +111,21 @@ export const getProfile = createAsyncThunk<
   { code: number; message: string; data: User },
   void,
   { rejectValue: string }
->('auth/getProfile', async (_, thunkAPI) => {
+
+>("auth/getProfile", async (_, thunkAPI) => {
+
   try {
     const res = await axiosPrivate.get<{
       code: number;
       message: string;
       data: User;
-    }>('/users/my-info');
+
+    }>("/users/my-info");
     return res.data;
   } catch (error: any) {
     return thunkAPI.rejectWithValue(
-      error.response?.data?.message || 'Cannot Login',
+      error.response?.data?.message || "Cannot Login"
+
     );
   }
 });
@@ -113,16 +134,20 @@ export const resetPassword = createAsyncThunk<
   string,
   ResetPasswordRequest,
   { rejectValue: string }
->('auth/reset', async (payload, { rejectWithValue }) => {
+
+>("auth/reset", async (payload, { rejectWithValue }) => {
   try {
     const response = await axiosPublic.put<ApiResponse<null>>(
-      '/auth/reset',
-      payload,
+      "/auth/reset",
+      payload
+
     );
     return response.data.message; // Chỉ lấy message thôi
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || 'Reset password failed',
+
+      error.response?.data?.message || "Reset password failed"
+
     );
   }
 });
@@ -131,43 +156,55 @@ export const forgotPassword = createAsyncThunk<
   { message: string },
   { email: string },
   { rejectValue: string }
->('auth/forgotPassword', async (payload, { rejectWithValue }) => {
+
+>("auth/forgotPassword", async (payload, { rejectWithValue }) => {
   try {
     const response = await axiosPublic.post<ApiResponse<null>>(
-      '/auth/forgot-password',
-      payload,
+      "/auth/forgot-password",
+      payload
+
     );
     return { message: response.data.message };
   } catch (error: any) {
     return rejectWithValue(
-      error.response?.data?.message || 'Reset password failed',
+
+      error.response?.data?.message || "Reset password failed"
     );
   }
 });
 
+
+
+ 
 export const login = createAsyncThunk<
   LoginResponse,
   LoginPayload,
   { rejectValue: string }
->('auth/login', async (payload, { rejectWithValue }) => {
+
+>("auth/login", async (payload, { rejectWithValue }) => {
   try {
     const response = await axiosPublic.post<ApiResponse<LoginResponse>>(
-      '/auth/login',
-      payload,
+      "/auth/login",
+      payload
+
     );
 
     return response.data.data;
   } catch (error: any) {
-    return rejectWithValue(error.response?.data?.message || 'Login failed');
+
+    return rejectWithValue(error.response?.data?.message || "Login failed");
+
   }
 });
 export const register = createAsyncThunk<
   { code: number; message: string; data?: string },
   { username: string; email: string; password: string },
   { rejectValue: string }
->('auth/register', async ({ username, email, password }, thunkAPI) => {
+>("auth/register", async ({ username, email, password }, thunkAPI) => {
   try {
-    const response = await axiosPublic.post('/auth/register', {
+
+    const response = await axiosPublic.post("/auth/register", {
+
       username,
       email,
       password,
@@ -186,29 +223,34 @@ export const register = createAsyncThunk<
   } catch (error: unknown) {
     const axiosError = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      axiosError.response?.data?.message || 'Đăng ký thất bại',
+
+      axiosError.response?.data?.message || "Đăng ký thất bại"
+
     );
   }
 });
 
-export const logout = createAsyncThunk('auth/logout', async (_, thunkAPI) => {
+export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
-    await axiosPrivate.post('/auth/logout', null, {
+
+    await axiosPrivate.post("/auth/logout", null,{
       withCredentials: true,
     });
-    localStorage.removeItem('accessToken');
+    localStorage.removeItem("accessToken");
     return;
   } catch (error: unknown) {
     const axiosError = error as { response?: { data?: { message?: string } } };
     return thunkAPI.rejectWithValue(
-      axiosError.response?.data?.message || 'Đăng xuất thất bại',
+
+      axiosError.response?.data?.message || "Đăng xuất thất bại"
+
     );
   }
 });
 
 // Slice
 const authSlice = createSlice({
-  name: 'auth',
+  name: "auth",
   initialState,
   reducers: {
     setUser(state, action: { payload: User }) {
@@ -220,7 +262,7 @@ const authSlice = createSlice({
       state.token = null;
       state.loading = false;
       state.error = null;
-      localStorage.removeItem('accessToken');
+      localStorage.removeItem("accessToken");
     },
   },
   extraReducers: (builder) => {
@@ -233,7 +275,9 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.token;
-        localStorage.setItem('accessToken', action.payload.token);
+
+        localStorage.setItem("accessToken", action.payload.token);
+
       })
       .addCase(login.rejected, (state, action) => {
         state.loading = false;
@@ -293,12 +337,17 @@ const authSlice = createSlice({
       .addCase(changePassword.fulfilled, (state, action) => {
         state.loading = false;
         state.token = action.payload.newAccessToken;
-        localStorage.setItem('accessToken', action.payload.newAccessToken);
+
+        localStorage.setItem("accessToken", action.payload.newAccessToken);
       })
       .addCase(changePassword.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.payload || 'Đổi mật khẩu thất bại';
-      });
+        state.error = action.payload || "Đổi mật khẩu thất bại";
+      })
+      
+      
+      ;
+
   },
 });
 
