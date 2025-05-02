@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
-import { getMyBusiness } from '../../service/user/getMyBusinessService';
+import { getMyBusiness } from '../../service/business/MyBusinessService';
 
 export const fetchBusinessInfo = createAsyncThunk('business/me', async () => {
   const response = await getMyBusiness();
@@ -10,8 +10,9 @@ const businessSlice = createSlice({
   name: 'business',
   initialState: {
     isApproved: false,
-    status: 'idle',
+    status: null as string | null,
     error: null as string | null,
+    data: null as any | null,
   },
   reducers: {},
   extraReducers: (builder) => {
@@ -20,10 +21,9 @@ const businessSlice = createSlice({
         state.status = 'loading';
       })
       .addCase(fetchBusinessInfo.fulfilled, (state, action) => {
-        console.log(action.payload);
-
-        state.status = 'succeeded';
-        state.isApproved = action.payload.is_approved ?? false;
+        state.status = action.payload.status;
+        state.data = action.payload;
+        state.isApproved = action.payload.approved ?? false;
       })
       .addCase(fetchBusinessInfo.rejected, (state, action) => {
         state.status = 'failed';

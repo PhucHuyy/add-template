@@ -18,3 +18,16 @@ export const getMyBusiness = async () => {
     throw new Error(error.response?.data?.message || 'Something went wrong');
   }
 };
+
+export const updateBusiness = async (data: any) => {
+  try {
+    const response: AxiosResponse<MyBusinessResponse> = await axiosBusiness.put(
+      'business/update',
+      data,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error updating business info:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
