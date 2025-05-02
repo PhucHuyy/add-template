@@ -14,9 +14,17 @@ import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
 import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
 import Authenticate from '../pages/identity/login/authenticate';
 
+import StudentProfile from '../pages/identity/user/StudentProfile';
+import StudentVerifycation from '../pages/identity/user/StudentVerifycation/StudentVerifycation';
+import ManageCv from '../pages/identity/user/ManageCv/ManageCv';
+import UpdateProfile from '../pages/identity/user/UpdateProfile/UpdateProfile';
+import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
+
+
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
 import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
+
 
 
 interface RouteConfig {
@@ -83,6 +91,31 @@ const routes: RouteConfig[] = [
   {
     path: '/profile',    
     element: <RequireAuth><UserProfile /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/logoutsang',
+    element: <RequireAuth><LogoutSang /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/studentprofile',
+    element: <RequireAuth><StudentProfile /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/studentverifycation',
+    element: <RequireAuth><StudentVerifycation /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/updateprofile',
+    element: <RequireAuth><UpdateProfile /></RequireAuth>,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/cv',
+    element: <RequireAuth><ManageCv /></RequireAuth>,
     layout: DefaultLayout,
   },
   {
