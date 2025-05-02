@@ -1,3 +1,4 @@
+
 import { useSelector } from "react-redux";
 import { RootState } from "./app/store";
 import { Route, Routes } from "react-router-dom";
@@ -6,6 +7,7 @@ import routes from "./routes/RouterConfig";
 function App() {
   const isRehydrated = useSelector(
     (state: RootState) => state._persist?.rehydrated
+
   );
 
   if (!isRehydrated) {
