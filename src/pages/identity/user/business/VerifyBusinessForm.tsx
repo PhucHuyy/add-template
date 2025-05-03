@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
-import { verifyBusiness } from '../../../../service/user/verifyBusinessService';
-import { getMyBusiness } from '../../../../service/user/getMyBusinessService';
-import { uploadBusinessImages } from '../../../../service/user/uploadImageBusinessService';
+import { verifyBusiness } from '../../../../service/business/verifyBusinessService';
+import { getMyBusiness } from '../../../../service/business/MyBusinessService';
+import { uploadBusinessImages } from '../../../../service/business/uploadImageBusinessService';
 import { useNavigate } from 'react-router-dom';
 
 import './VerifyBusinessForm.css';

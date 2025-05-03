@@ -24,6 +24,7 @@ import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
 import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
+import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
 
 
 
@@ -75,6 +76,15 @@ const routes: RouteConfig[] = [
     element: (
       <RequireAuth>
         <BusinessProfile />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/edit',
+    element: (
+      <RequireAuth>
+        <EditBusinessProfile />
       </RequireAuth>
     ),
     layout: DefaultLayout,

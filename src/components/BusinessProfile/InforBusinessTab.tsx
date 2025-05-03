@@ -1,14 +1,20 @@
 import { useEffect, useState } from 'react';
-import { getMyBusiness } from '../../service/user/getMyBusinessService';
-import { getBusinessImages } from '../../service/user/getImageBusinessService';
+import { getMyBusiness } from '../../service/business/MyBusinessService';
+import {
+  deleteBusinessImage,
+  getBusinessImages,
+} from '../../service/business/imageBusinessService';
+import Swal from 'sweetalert2';
+
 import '../../pages/identity/user/business/BusinessProfile.css';
 import Loading from '../../common/Loading';
 
-const InformationTab = () => {
+const InformationTab = ({ isApproved }) => {
   const [businessInfo, setBusinessInfo] = useState(null);
   const [businessImages, setBusinessImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [selectedImage, setSelectedImage] = useState(null);
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -40,7 +46,42 @@ const InformationTab = () => {
     fetchImages();
   }, []);
 
-  console.log(businessImages);
+  const handleDeleteImage = async (imageId: string) => {
+    const result = await Swal.fire({
+      title: 'Are you sure you want to delete this image?',
+      text: 'The image will be permanently deleted.',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Delete',
+      cancelButtonText: 'Cancel',
+      width: '500px',
+      customClass: {
+        confirmButton: 'btn-confirm',
+        cancelButton: 'btn-cancel',
+      },
+    });
+
+    if (result.isConfirmed) {
+      try {
+        await deleteBusinessImage(imageId);
+        Swal.fire({
+          icon: 'success',
+          title: 'Delete image successfully',
+          showConfirmButton: false,
+          timer: 1500,
+        });
+
+        setTimeout(() => {
+          navigate('/profile');
+        }, 1500);
+
+        const updatedImages = await getBusinessImages();
+        setBusinessImages(updatedImages);
+      } catch (error) {
+        toast.error('Failed to delete photo');
+      }
+    }
+  };
 
   if (loading) {
     return <Loading />;
@@ -114,12 +155,59 @@ const InformationTab = () => {
           <div className="image-gallery">
             {businessImages.map((image, index) => (
               <div key={index} className="image-card">
-                <img src={image.imageUrl} alt={`Business Image ${index + 1}`} />
+                <img
+                  src={image.imageUrl}
+                  alt={`Business Image ${index + 1}`}
+                  onClick={() => setSelectedImage(image.imageUrl)}
+                  style={{
+                    cursor: 'pointer',
+                    maxWidth: '100%',
+                    height: 'auto',
+                  }}
+                />
+                {isApproved && (
+                  <button
+                    className="delete-button"
+                    onClick={() => handleDeleteImage(image.imageId)}
+                  >
+                    &times;
+                  </button>
+                )}
               </div>
             ))}
           </div>
         ) : (
           <p>No images available.</p>
+        )}
+
+        {selectedImage && (
+          <div
+            className="modal-overlay"
+            onClick={() => setSelectedImage(null)}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+            }}
+          >
+            <img
+              src={selectedImage}
+              alt="Full View"
+              style={{
+                maxHeight: '90%',
+                maxWidth: '90%',
+                objectFit: 'contain',
+                borderRadius: '0px',
+              }}
+            />
+          </div>
         )}
       </div>
     </div>

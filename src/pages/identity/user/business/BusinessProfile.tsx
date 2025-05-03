@@ -2,7 +2,7 @@ import './BusinessProfile.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../../../app/store';
 import { useEffect, useState } from 'react';
-import { getMyBusiness } from '../../../../service/user/getMyBusinessService';
+import { getMyBusiness } from '../../../../service/business/MyBusinessService';
 
 import AboutTab from '../../../../components/BusinessProfile/AboutTab';
 import ProfileOverview from '../../../../components/BusinessProfile/ProfileOverview';
@@ -10,47 +10,30 @@ import BusinessVerifyNotice from './BusinessVerifyNotice';
 import InformationTab from '../../../../components/BusinessProfile/InforBusinessTab';
 import Loading from '../../../../common/Loading';
 import Error404 from '../../../Error404';
+import { useDispatch } from 'react-redux';
+import { fetchBusinessInfo } from '../../../../features/auth/businessSlice';
 
 export default function UserProfile() {
+  const dispatch = useDispatch();
+
   const [activeTab, setActiveTab] = useState('about');
-  const [business, setBusiness] = useState<any>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [business, setBusiness] = useState<any>(null);
+  // const [loading, setLoading] = useState(true);
+  // const [error, setError] = useState<string | null>(null);
 
   const user = useSelector((state: RootState) => state.auth.user);
-  const businessInfo = useSelector((state: RootState) => state.business);
+  const business = useSelector((state: RootState) => state.business.data);
   const isApproved = useSelector(
     (state: RootState) => state.business.isApproved,
   );
   const status = useSelector((state: RootState) => state.business.status);
-
-  console.log(isApproved, status, businessInfo);
+  const error = useSelector((state: RootState) => state.business.error);
 
   useEffect(() => {
-    const fetchBusiness = async () => {
-      try {
-        const response = await getMyBusiness();
-        setBusiness(response.data);
-        console.log(response.data);
-      } catch (err: any) {
-        if (err.message?.includes('not found')) {
-          console.log('Business not found');
-          setBusiness(null); // chưa có business
-        } else {
-          setError(err.message || 'Error fetching business info');
-          console.log(err);
-        }
-      } finally {
-        setLoading(false);
-      }
-    };
+    dispatch(fetchBusinessInfo());
+  }, [dispatch]);
 
-    fetchBusiness();
-  }, []);
-
-  console.log(business);
-
-  if (loading) {
+  if (status === 'loading') {
     return (
       <div>
         <Loading />
@@ -58,7 +41,7 @@ export default function UserProfile() {
     );
   }
 
-  if (error) {
+  if (status === 'failed') {
     return (
       <>
         <Error404 />
@@ -87,7 +70,12 @@ export default function UserProfile() {
       </section>
 
       {/* Profile Overview */}
-      <ProfileOverview user={user} isApproved={isApproved} />
+      <ProfileOverview
+        user={user}
+        isApproved={isApproved}
+        business={business}
+        status={status}
+      />
 
       {/* Tabs Section */}
       <section className="full-detail-description full-detail gray-bg">
@@ -110,7 +98,9 @@ export default function UserProfile() {
             </ul>
             <div className="tab-content">
               {activeTab === 'about' && <AboutTab user={user} />}
-              {activeTab === 'information' && <InformationTab />}
+              {activeTab === 'information' && (
+                <InformationTab isApproved={isApproved} />
+              )}
             </div>
           </div>
         </div>

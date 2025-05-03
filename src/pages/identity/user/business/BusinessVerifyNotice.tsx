@@ -1,6 +1,5 @@
 import { useNavigate } from 'react-router-dom';
 import './BusinessVerifyNotice.css';
-import Loading from '../../../../common/Loading';
 
 export default function BusinessVerifyNotice() {
   const navigate = useNavigate();
