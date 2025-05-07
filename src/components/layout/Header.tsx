@@ -131,7 +131,11 @@ export default function Header() {
                         />
                         <div className="user-text">
                           <p className="username">{user.username}</p>
-                          <p className="email">{user.email}</p>
+                          <p style={{
+                            whiteSpace: "normal",       // Cho phép xuống dòng
+                            wordBreak: "break-word",    // Bẻ từ nếu dài quá
+                            maxWidth: "250px"           // Giới hạn chiều ngang nếu cần
+                          }} className="email">{user.email}</p>
                         </div>
                       </div>
                     </li>
@@ -149,16 +153,14 @@ export default function Header() {
                         ></i>
                         Job Management
                         <i
-                          className={`fa fa-angle-${
-                            openSections.jobs ? "up" : "down"
-                          }`}
+                          className={`fa fa-angle-${openSections.jobs ? "up" : "down"
+                            }`}
                           style={{ float: "right", marginTop: 4 }}
                         />
                       </div>
                       <ul
-                        className={`collapsible ${
-                          openSections.jobs ? "open" : ""
-                        }`}
+                        className={`collapsible ${openSections.jobs ? "open" : ""
+                          }`}
                       >
                         <li>
                           <a href="/jobs/saved">
@@ -196,16 +198,14 @@ export default function Header() {
                         ></i>
                         CV & Cover Letter
                         <i
-                          className={`fa fa-angle-${
-                            openSections.cv ? "up" : "down"
-                          }`}
+                          className={`fa fa-angle-${openSections.cv ? "up" : "down"
+                            }`}
                           style={{ float: "right", marginTop: 4 }}
                         />
                       </div>
                       <ul
-                        className={`collapsible ${
-                          openSections.cv ? "open" : ""
-                        }`}
+                        className={`collapsible ${openSections.cv ? "open" : ""
+                          }`}
                       >
                         <li>
                           <a href="/cv">
@@ -228,16 +228,14 @@ export default function Header() {
                         ></i>
                         Settings
                         <i
-                          className={`fa fa-angle-${
-                            openSections.settings ? "up" : "down"
-                          }`}
+                          className={`fa fa-angle-${openSections.settings ? "up" : "down"
+                            }`}
                           style={{ float: "right", marginTop: 4 }}
                         />
                       </div>
                       <ul
-                        className={`collapsible ${
-                          openSections.settings ? "open" : ""
-                        }`}
+                        className={`collapsible ${openSections.settings ? "open" : ""
+                          }`}
                       >
                         <li>
                           <a href="/settings/notifications">
@@ -260,16 +258,14 @@ export default function Header() {
                         ></i>
                         Privacy & Security
                         <i
-                          className={`fa fa-angle-${
-                            openSections.privacy ? "up" : "down"
-                          }`}
+                          className={`fa fa-angle-${openSections.privacy ? "up" : "down"
+                            }`}
                           style={{ float: "right", marginTop: 4 }}
                         />
                       </div>
                       <ul
-                        className={`collapsible ${
-                          openSections.privacy ? "open" : ""
-                        }`}
+                        className={`collapsible ${openSections.privacy ? "open" : ""
+                          }`}
                       >
                         <li>
                           <a href="/profile">

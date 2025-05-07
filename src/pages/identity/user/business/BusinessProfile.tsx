@@ -12,6 +12,35 @@ import Loading from '../../../../common/Loading';
 import Error404 from '../../../Error404';
 import { useDispatch } from 'react-redux';
 import { fetchBusinessInfo } from '../../../../features/auth/businessSlice';
+import { Navigate, useNavigate } from 'react-router-dom';
+import axiosBusiness from '../../../../api/axiosBusiness';
+import { ApiResponse } from '../../../../features/auth/authType';
+
+export class RequestBusinesses {
+  requestId: string;
+  businessId: string;
+  reason: string;
+  sendTime: Date;
+  status: 'pending' | 'approve' | 'reject'; // Enum-like string literals
+  isDeleted: boolean;
+
+  constructor(
+    requestId: string,
+    businessId: string,
+    reason: string,
+    sendTime: Date,
+    status: 'pending' | 'approve' | 'reject',
+    isDeleted: boolean
+  ) {
+    this.requestId = requestId;
+    this.businessId = businessId;
+    this.reason = reason;
+    this.sendTime = sendTime;
+    this.status = status;
+    this.isDeleted = isDeleted;
+  }
+}
+
 
 export default function UserProfile() {
   const dispatch = useDispatch();
@@ -28,9 +57,25 @@ export default function UserProfile() {
   );
   const status = useSelector((state: RootState) => state.business.status);
   const error = useSelector((state: RootState) => state.business.error);
-
+  const [businessData, setBusinessData] = useState<RequestBusinesses|null>();
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchBusinessInfo());
+    if(status=="failed"){
+      navigate("/verify-business");
+    }
+
+
+    const getrequest = async () => {
+      try {
+        const response = await axiosBusiness.get<ApiResponse<RequestBusinesses>>('/request-business/getrequest');
+        setBusinessData(response.data.data);
+      } catch (error) {
+        console.error('❌ Failed to request business:', error);
+      }
+
+    };
+    getrequest()
   }, [dispatch]);
 
   if (status === 'loading') {
@@ -73,8 +118,8 @@ export default function UserProfile() {
       <ProfileOverview
         user={user}
         isApproved={isApproved}
-        business={business}
         status={status}
+        businessData={businessData}
       />
 
       {/* Tabs Section */}
@@ -99,7 +144,7 @@ export default function UserProfile() {
             <div className="tab-content">
               {activeTab === 'about' && <AboutTab user={user} />}
               {activeTab === 'information' && (
-                <InformationTab isApproved={isApproved} />
+                <InformationTab  />
               )}
             </div>
           </div>

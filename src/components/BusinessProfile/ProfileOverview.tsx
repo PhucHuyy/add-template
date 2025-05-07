@@ -1,9 +1,13 @@
 import { useNavigate } from 'react-router-dom';
 import '../../pages/identity/user/business/BusinessProfile.css';
+import { useEffect, useState } from 'react';
+import axiosBusiness from '../../api/axiosBusiness';
+import { ApiResponse } from '../../features/auth/authType';
+import { RequestBusinesses } from '../../pages/identity/user/business/BusinessProfile';
 
-export default function ProfileOverview({ user, isApproved, status }) {
+
+export default function ProfileOverview({ user, isApproved, status, businessData}) {
   const navigate = useNavigate();
-
   return (
     <>
       <section className="detail-desc advance-detail-pr gray-bg">
@@ -21,65 +25,19 @@ export default function ProfileOverview({ user, isApproved, status }) {
                     <i className="fa fa-pencil"></i>
                   </a>
                 </div>
-                {isApproved && status == 'inactive' ? (
-                  <span className="badge-active">Active Now</span>
-                ) : (
-                  <span className="badge-inactive">Pending</span>
-                )}
-                {/* <span className="badge-active">Active Now</span> */}
+                {businessData?.status==="reject"?(<span className="badge-inactive">reject</span>):(<span className="badge-active">{businessData?.status}</span>)}
+
+                
               </div>
 
               <h4 className="username">{user.username}</h4>
               <span className="designation">{user.email}</span>
 
               <div className="profile-stats row">
-                <div className="col-md-4">
-                  <div className="stat-box">
-                    <strong className="stat-number stat-red">85</strong>
-                    <div className="stat-label">New Post</div>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="stat-box">
-                    <strong className="stat-number stat-blue">110</strong>
-                    <div className="stat-label">Job Applied</div>
-                  </div>
-                </div>
-                <div className="col-md-4">
-                  <div className="stat-box">
-                    <strong className="stat-number stat-green">120</strong>
-                    <div className="stat-label">Invitation</div>
-                  </div>
-                </div>
+
               </div>
 
-              <div className="detail-footer-social">
-                <div>
-                  <a href="#">
-                    <i className="fa fa-facebook"></i>
-                  </a>
-                </div>
-                <div>
-                  <a href="#">
-                    <i className="fa fa-google-plus"></i>
-                  </a>
-                </div>
-                <div>
-                  <a href="#">
-                    <i className="fa fa-twitter"></i>
-                  </a>
-                </div>
-                <div>
-                  <a href="#">
-                    <i className="fa fa-linkedin"></i>
-                  </a>
-                </div>
-                <div>
-                  <a href="#">
-                    <i className="fa fa-instagram"></i>
-                  </a>
-                </div>
-              </div>
+
 
               <div
                 className="button-group"
@@ -89,7 +47,7 @@ export default function ProfileOverview({ user, isApproved, status }) {
                   justifyContent: 'space-evenly',
                 }}
               >
-                {isApproved && status == 'inactive' ? (
+                {businessData?.status==="reject" ? (
                   <>
                     <button
                       className="footer-btn grn-btn"
@@ -121,3 +79,7 @@ export default function ProfileOverview({ user, isApproved, status }) {
     </>
   );
 }
+function setError(arg0: string) {
+  throw new Error('Function not implemented.');
+}
+

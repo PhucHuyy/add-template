@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
-import { verifyBusiness } from '../../../../service/business/verifyBusinessService';
+import { sendRequest, verifyBusiness } from '../../../../service/business/verifyBusinessService';
 import { getMyBusiness } from '../../../../service/business/MyBusinessService';
 import { uploadBusinessImages } from '../../../../service/business/uploadImageBusinessService';
 import { useNavigate } from 'react-router-dom';
-
-import './VerifyBusinessForm.css';
+//import './VerifyBusinessForm.css';
 import Loading from '../../../../common/Loading';
+import Swal from 'sweetalert2';
 import ImagePreview from './ImagePreview';
 
 interface BusinessData {
@@ -22,7 +22,8 @@ interface BusinessData {
 export default function VerifyBusinessForm() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(true);
-  const [images, setImages] = useState<File | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+  const [selectedImages, setSelectedImages] = useState<{ url: string }[]>([]);
 
   const [formData, setFormData] = useState<BusinessData>({
     companyName: '',
@@ -53,6 +54,12 @@ export default function VerifyBusinessForm() {
     }
   };
 
+  const handleImageRemove = (index: number) => {
+    setSelectedImages(prev => prev.filter((_, i) => i !== index));
+    setImages(prev => prev.filter((_, i) => i !== index));
+    console.log(images.length);
+  };
+
   useEffect(() => {
     const checkBusinessVerified = async () => {
       try {
@@ -60,7 +67,7 @@ export default function VerifyBusinessForm() {
         console.log(getInfoBusiness);
 
         if (getInfoBusiness) {
-          navigate('/profile', { replace: true });
+          navigate('/businessprofile', { replace: true });
         } else {
           setLoading(false); // đã có business
         }
@@ -91,20 +98,32 @@ export default function VerifyBusinessForm() {
     try {
       // const result = await verifyBusiness(formData);
       // 1. Gửi dữ liệu doanh nghiệp
-      await verifyBusiness(formData);
-
+      const result = await verifyBusiness(formData);
+      const check = await sendRequest();
       // 2. Nếu có ảnh thì upload ảnh
       if (images.length > 0) {
+        console.log(images[0] instanceof File);
         await uploadBusinessImages(images);
       }
 
-      setTimeout(() => {
-        alert('Xác thực doanh nghiệp thành công!');
-      }, 3000); // giả lập delay 1 giây
-
-      navigate('/profile');
       console.log(result);
-      // bạn có thể redirect hoặc reset form tại đây
+      console.log(check);
+
+      setTimeout(() => {
+        Swal.fire({
+          title: 'Xác thực doanh nghiệp thành công!',
+          icon: 'success',
+          showConfirmButton: true,  // Hiển thị nút xác nhận
+          confirmButtonText: 'OK',  // Text trên nút xác nhận
+        }).then((result) => {
+          // Kiểm tra xem người dùng đã nhấn "OK"
+          if (result.isConfirmed) {
+            // Nếu nhấn OK, chuyển hướng đến trang profile
+            navigate('/businessprofile');
+          }
+        });
+      }, 3000);
+      
     } catch (error: any) {
       alert(error.message);
     }
@@ -113,52 +132,142 @@ export default function VerifyBusinessForm() {
   if (loading) return <Loading />;
 
   return (
-    <div className="verify-business-container">
-      <h2 className="verify-title">Verify Business</h2>
-      <form className="verify-form" onSubmit={handleSubmit}>
-        {Object.entries(formData).map(([key, value]) => (
-          <div className="form-group" key={key}>
-            <label htmlFor={key}>{key}</label>
-            {key === 'companyInfo' || key === 'address' ? (
-              <textarea
-                name={key}
-                id={key}
-                value={value}
-                onChange={handleChange}
-              />
-            ) : (
-              <input
-                type="text"
-                name={key}
-                id={key}
-                value={value}
-                onChange={handleChange}
-              />
-            )}
-            {errors[key as keyof BusinessData] && (
-              <span className="error-text">
-                {errors[key as keyof BusinessData]}
-              </span>
-            )}
-          </div>
-        ))}
-        <div className="form-group">
-          <label htmlFor="images">Image business</label>
-          <input
-            type="file"
-            name="images"
-            id="images"
-            accept="image/*"
-            multiple
-            onChange={handleImageChange}
-          />
-          <ImagePreview images={images ? [images] : []} />
-        </div>
 
-        <button type="submit" className="submit-button">
-          Send request to verify
-        </button>
-      </form>
+    <div className="user-profile">
+      <div className="clearfix"></div>
+
+      <section className="inner-header-title" style={{ backgroundImage: "url(/assets/img/banner-10.jpg)" }}>
+        <div className="container">
+          <h1>Business Verifycation</h1>
+        </div>
+      </section>
+      <div className="clearfix"></div>
+
+
+      <div className="verify-business-container" style={{width: '700px', margin: 'auto', marginTop: "50px", marginBottom: "50px"}} >
+        <form className="verify-form" onSubmit={handleSubmit}>
+          {Object.entries(formData).map(([key, value]) => (
+            <div className="form-group" key={key}>
+              <label htmlFor={key}>{key}</label>
+              {key === 'companyInfo' || key === 'address' ? (
+                <textarea
+                  name={key}
+                  id={key}
+                  value={value}
+                  onChange={handleChange}
+                />
+              ) : (
+                <input
+                  type="text"
+                  name={key}
+                  id={key}
+                  value={value}
+                  onChange={handleChange}
+                />
+              )}
+              {errors[key as keyof BusinessData] && (
+                <span className="error-text">
+                  {errors[key as keyof BusinessData]}
+                </span>
+              )}
+            </div>
+          ))}
+          <div className="form-group">
+            <label htmlFor="images">Image business</label>
+            <div className="image-upload-container" style={{
+              display: 'flex',
+              flexDirection: 'row', // đảm bảo các items nằm ngang
+              alignItems: 'center',
+              gap: '10px', // khoảng cách giữa các ảnh
+              flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+              overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+              padding: '10px 0'
+            }}>
+              {selectedImages.map((image, index) => (
+                <div key={index} className="image-preview" style={{
+                  position: 'relative',
+                  minWidth: '100px', // đảm bảo kích thước tối thiểu
+                  height: '100px',
+                  flexShrink: 0 // ngăn không cho ảnh co lại
+                }}>
+                  <img
+                    src={image.url}
+                    alt={`Preview ${index}`}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '4px'
+                    }}
+                  />
+                  <button
+                    onClick={() => handleImageRemove(index)}
+                    style={{
+                      position: 'absolute',
+                      top: '0px',
+                      right: '0px',
+                      border: 'none',
+                      background: 'red',
+                      color: 'white',
+                      borderRadius: '50%',
+                      width: '20px',
+                      height: '20px',
+                      cursor: 'pointer',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center'
+                    }}
+                  >
+                    ×
+                  </button>
+                </div>
+              ))}
+
+              {selectedImages.length < 5 && (
+                <label
+                  className="upload-button"
+                  style={{
+                    minWidth: '100px',
+                    height: '100px',
+                    border: '2px dashed #ccc',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center',
+                    cursor: 'pointer',
+                    fontSize: '30px',
+                    flexShrink: 0,
+                    borderRadius: '4px'
+                  }}
+                >
+                  <input
+                    type="file"
+                    multiple
+                    accept="image/*"
+                    onChange={(e) => {
+                      const files = e.target.files;
+                      if (files) {
+                        const newImages = Array.from(files).map(file => ({
+                          url: URL.createObjectURL(file)
+                        }));
+                        setSelectedImages(prev => [...prev, ...newImages].slice(0, 5)); // tối đa 5 ảnh
+                        setImages(prev => [...prev, ...files].slice(0, 5))
+                      }
+                    }}
+                    style={{ display: 'none' }}
+                  />
+                  +
+                </label>
+              )}
+            </div>
+          </div>
+          <div className="detail-pannel-footer-btn pull-right">
+            <button style={{ backgroundColor: 'green', color: 'white' }} type="submit" className="footer-btn choose-cover">
+
+              Send request to verify
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 }

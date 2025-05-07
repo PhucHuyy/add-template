@@ -5,16 +5,18 @@ import {
   getBusinessImages,
 } from '../../service/business/imageBusinessService';
 import Swal from 'sweetalert2';
-
+import { toast } from 'react-toastify';
 import '../../pages/identity/user/business/BusinessProfile.css';
 import Loading from '../../common/Loading';
+import { Navigate, useNavigate } from 'react-router-dom';
 
-const InformationTab = ({ isApproved }) => {
+const InformationTab = ({  }) => {
   const [businessInfo, setBusinessInfo] = useState(null);
   const [businessImages, setBusinessImages] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [selectedImage, setSelectedImage] = useState(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const fetchBusiness = async () => {
@@ -152,30 +154,42 @@ const InformationTab = ({ isApproved }) => {
         </div>
 
         {businessImages.length > 0 ? (
-          <div className="image-gallery">
+          <div className="col-md-12 col-sm-12" style={{ paddingLeft: '0px' }}>
+          <label style={{ textAlign: 'start', fontSize: '20px', fontWeight: 'bold' }}  >Company Image :</label>
+          <div className="image-upload-container" style={{
+            display: 'flex',
+            flexDirection: 'row', // đảm bảo các items nằm ngang
+            alignItems: 'center',
+            gap: '10px', // khoảng cách giữa các ảnh
+            flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+            overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+            padding: '10px 0'
+          }}>
             {businessImages.map((image, index) => (
-              <div key={index} className="image-card">
+              <div key={index} className="image-preview" style={{
+                position: 'relative',
+                minWidth: '100px', // đảm bảo kích thước tối thiểu
+                height: '100px',
+                flexShrink: 0 // ngăn không cho ảnh co lại
+              }}>
                 <img
                   src={image.imageUrl}
-                  alt={`Business Image ${index + 1}`}
+                  alt={`Preview ${index}`}
                   onClick={() => setSelectedImage(image.imageUrl)}
                   style={{
-                    cursor: 'pointer',
-                    maxWidth: '100%',
-                    height: 'auto',
+                    width: '100px',
+                    height: '100px',
+                    objectFit: 'cover',
+                    borderRadius: '0px',
+                    margin: '0px',
+                    maxWidth: `100%`
                   }}
                 />
-                {isApproved && (
-                  <button
-                    className="delete-button"
-                    onClick={() => handleDeleteImage(image.imageId)}
-                  >
-                    &times;
-                  </button>
-                )}
               </div>
             ))}
+
           </div>
+        </div>
         ) : (
           <p>No images available.</p>
         )}

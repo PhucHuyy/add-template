@@ -1,5 +1,4 @@
 import axiosBusiness from '../../api/axiosBusiness';
-import { AxiosResponse } from 'axios';
 
 interface VerifyBusinessResponse {
   success: boolean;
@@ -9,13 +8,24 @@ interface VerifyBusinessResponse {
 
 export const verifyBusiness = async (
   businessData: any,
-): Promise<VerifyBusinessResponse> => {
+): Promise<boolean> => {
   try {
-    const response: AxiosResponse<VerifyBusinessResponse> =
+    const response =
       await axiosBusiness.post('/business/verify', businessData);
-    return response.data;
+    return true;
   } catch (error: any) {
     console.error('Error verifying business:', error);
-    throw new Error(error.response?.data?.message || 'Đã có lỗi xảy ra');
+    return false;
   }
 };
+
+export const sendRequest = async ()  => {
+  try {
+    const response =
+      await axiosBusiness.post("/request-business/insert-request-business");
+    return true;
+  } catch (error: any) {
+    console.error('Error verifying business:', error);
+    return false;
+  }
+}

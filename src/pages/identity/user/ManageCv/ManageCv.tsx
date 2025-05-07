@@ -4,9 +4,12 @@ import { ManageCv as ManageCvservice } from '../../../../services/user/ManageCv/
 import { CvDTO } from '../../../../services/user/ManageCv/ManageCv';
 import { CvDTOForCreate } from '../../../../services/user/ManageCv/ManageCv';
 import { CvDTOForUpdate } from '../../../../services/user/ManageCv/ManageCv';
+import { StudentProfileService } from '../../../../services/user/StudentProfile/StudentProfileService';
+import { Navigate, useNavigate } from 'react-router-dom';
 export default function ManageCv() {
+    const navigate = useNavigate();
     const [showPopup, setShowPopup] = useState(false);
-    const [cvs, setCvs] = useState<CvDTO[]| null>([]);
+    const [cvs, setCvs] = useState<CvDTO[] | null>([]);
     const [search, setSearch] = useState<string>("");
     const [title, setTitle] = useState<string>("");
     const [cvDetail, setCvDetail] = useState<string>("");
@@ -22,7 +25,39 @@ export default function ManageCv() {
             console.error("❌ Lỗi khi lấy danh sách CV:", error);
         }
     };
+
+    const handleNotifycation = () => {
+        Swal.fire({
+            text: "Since your application has not been approved, you have to wait.",
+            icon: 'warning',
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Yes!!!',
+            allowOutsideClick: false,
+        }).then((result) => {
+            if (result.isConfirmed) {
+                navigate("/studentprofile");
+            }
+        });
+    };
     useEffect(() => {
+        const GetProfile = async () => {
+            try {
+                const service = new StudentProfileService();
+                const data = await service.getRequestStudent();
+                console.log(data);
+                if (data.getStatus() == null || !data.getStatus().includes("approve")) {
+                    handleNotifycation();
+                    return;
+                }
+                fetchCvs();
+
+            } catch (error) {
+                console.error("❌ Lỗi khi lấy danh sách CV:", error);
+            }
+        }
+
+
         const fetchCvs = async () => {
             try {
                 const service = new ManageCvservice();
@@ -33,8 +68,8 @@ export default function ManageCv() {
                 console.error("❌ Lỗi khi lấy danh sách CV:", error);
             }
         };
-
-        fetchCvs();
+        GetProfile();
+        //fetchCvs();
     }, []);
 
     const handleOpenPopup = () => {
@@ -185,7 +220,7 @@ export default function ManageCv() {
                                 <div className="col-md-4 col-sm-5">
                                     <div className="filter-form">
                                         <div className="input-group">
-                                            <input type="text" className="form-control" value={search} onChange={(e)=>{setSearch(e.target.value)}} placeholder="Search…" />
+                                            <input type="text" className="form-control" value={search} onChange={(e) => { setSearch(e.target.value) }} placeholder="Search…" />
                                             <span className="input-group-btn">
                                                 <button type="button" onClick={fetchCvs} className="btn btn-default">Search</button>
                                             </span>
@@ -339,7 +374,7 @@ export default function ManageCv() {
                                     </div>
                                 )}
                             </div>
-                            {cvs?.length === 0 || cvs===null ? (
+                            {cvs?.length === 0 || cvs === null ? (
                                 <p style={{ color: "gray" }}>No CVs match.</p>
                             ) : (
                                 <ul>

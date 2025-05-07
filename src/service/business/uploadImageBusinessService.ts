@@ -1,5 +1,5 @@
 import axiosBusiness from '../../api/axiosBusiness';
-import { AxiosResponse } from 'axios';
+//import { AxiosResponse } from 'axios';
 
 interface UploadImageResponse {
   code: number;
@@ -17,14 +17,14 @@ export interface ImageBusiness {
 
 export const uploadBusinessImages = async (
   files: File[],
-): Promise<UploadImageResponse> => {
+): Promise<boolean> => {
   const formData = new FormData();
   files.forEach((file) => {
     formData.append('files', file);
   });
 
   try {
-    const response: AxiosResponse<UploadImageResponse> =
+    const response =
       await axiosBusiness.post(
         '/business/images/upload',
         formData,
@@ -35,9 +35,10 @@ export const uploadBusinessImages = async (
         //   }
       );
 
-    return response.data;
+    console.log(response.data);
+    return true;
   } catch (error: any) {
     console.error('Error uploading business images:', error);
-    throw new Error(error.response?.data?.message || 'Image upload failed');
+    return false;
   }
 };

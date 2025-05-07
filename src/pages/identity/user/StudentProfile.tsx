@@ -6,13 +6,14 @@ import { RequestStudents } from '../../../services/user/StudentProfile/StudentPr
 import { StudentVerifycationService } from "../../../services/user/StudentVerifycation/StudentVerifycationService";
 import { useNavigate } from 'react-router-dom';
 import Swal from "sweetalert2";
+import { StudentCard } from "../../../services/user/StudentProfile/StudentCard";
 export default function StudentProfile() {
   const navigate = useNavigate();
 
   const [profile, setProfile] = useState<StudentProfileModel | null>(null);
   const [request, setRequest] = useState<RequestStudents | null>(null);
-
-
+  const [selectedImages, setSelectedImages] = useState<{ url: string }[]>([]);
+  const [selectedImage, setSelectedImage] = useState(String);
 
   useEffect(() => {
 
@@ -24,6 +25,13 @@ export default function StudentProfile() {
         const data = await service.getStudentProfile();
         console.log("newToken: " + localStorage.getItem('accessToken'));
         console.log(data);
+        setSelectedImages(
+          data?.getStudentCardDTOS()?.map((item: StudentCard) => ({
+            url: item.getStudentCardUrl()
+          })) || []
+        );
+
+
         if (!data) {
           handleNotifycation();
           return;
@@ -148,12 +156,12 @@ export default function StudentProfile() {
                 </ul>
               </div>
 
-              <div className="col-md-12 col-sm-12">
+              <div className="col-md-12 col-sm-12" >
                 <div className="detail-pannel-footer-btn pull-right">
-                  {(request?.getStatus() === "reject" || !request) ? (<a href="#" onClick={handleEditProfile} className="footer-btn grn-btn">Edit Now</a>) : ("")}
+                  {(request?.getStatus() === "reject" || !request) ? (<a onClick={handleEditProfile} className="footer-btn grn-btn">Edit Now</a>) : ("")}
                 </div>
-                <div className="detail-pannel-footer-btn pull-right">
-                  {(request?.getStatus() === "reject") ? (<a href="#" onClick={handleSendRequest} className="footer-btn grn-btn">Send Request</a>) : ("")}
+                <div className="detail-pannel-footer-btn pull-left">
+                  {(request?.getStatus() === "reject" || !request) ? (<a onClick={handleSendRequest} className="footer-btn blu-btn">Send Request</a>) : ("")}
                 </div>
               </div>
 
@@ -186,12 +194,74 @@ export default function StudentProfile() {
                       : "not graduated";
                   })()}
                 </li>
+                <li style={{ fontSize: '20px' }}><div className="col-md-12 col-sm-12" style={{ paddingLeft: '0px' }}>
+                  <label style={{ textAlign: 'start', fontSize: '20px' }}  >Image Stduent Card :</label>
+                  <div className="image-upload-container" style={{
+                    display: 'flex',
+                    flexDirection: 'row', // đảm bảo các items nằm ngang
+                    alignItems: 'center',
+                    gap: '10px', // khoảng cách giữa các ảnh
+                    flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+                    overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+                    padding: '10px 0'
+                  }}>
+                    {selectedImages.map((image, index) => (
+                      <div key={index} className="image-preview" style={{
+                        position: 'relative',
+                        minWidth: '100px', // đảm bảo kích thước tối thiểu
+                        height: '100px',
+                        flexShrink: 0 // ngăn không cho ảnh co lại
+                      }}>
+                        <img
+                          src={image.url}
+                          alt={`Preview ${index}`}
+                          onClick={() => setSelectedImage(image.url)}
+                          style={{
+                            width: '100px',
+                            height: '100px',
+                            objectFit: 'cover',
+                            borderRadius: '4px'
+                          }}
+                        />
+                      </div>
+                    ))}
 
+                  </div>
+                </div></li>
 
               </ul>
             </div>
           </div>
         </div>
+        {selectedImage !== "" && (
+          <div
+            onClick={() => setSelectedImage("")}
+            style={{
+              position: 'fixed',
+              top: 0,
+              left: 0,
+              width: '100vw',
+              height: '100vh',
+              backgroundColor: 'rgba(0, 0, 0, 0.8)',
+              display: 'flex',
+              justifyContent: 'center',
+              alignItems: 'center',
+              zIndex: 1000,
+            }}
+          >
+            <img
+              src={selectedImage}
+              alt="Full View"
+              style={{
+                maxHeight: '90%',
+                maxWidth: '90%',
+                objectFit: 'contain',
+                borderRadius: '0px',
+              }}
+            />
+          </div>
+        )}
+
       </section>
     </div>
   );

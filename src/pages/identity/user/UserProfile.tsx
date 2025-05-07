@@ -15,17 +15,19 @@ export default function UserProfile() {
     const trimmedRole = role.trim();
     const iduser = user?.id || "";
     setid(iduser);
-    setrole(trimmedRole);
-
+    
+    if (trimmedRole.includes("BUSINESS")) {
+      setrole('BUSINESS');
+      navigate("/verify-business");
+    }
+    if (trimmedRole.includes("STUDENT")) {
+      setrole('STUDENT');
+      navigate("/studentverifycation");
+    }
     if (trimmedRole.includes("USER")) {
-
+      setrole("USER");
     } else {
-      if (trimmedRole.includes("BUSINESS")) {
-        navigate("/verify-business");
-      }
-      if (trimmedRole.includes("")) {
-        navigate("/studentverifycation");
-      }
+
     }
   });
   //http://localhost:8080/api/v1/users/{userId}/roles/student
@@ -45,10 +47,10 @@ export default function UserProfile() {
     if (result.isConfirmed) {
       try {
         // Call the API only if confirmed
-        // const response = await axiosPrivate.put(`/users/${id}/roles/business`);
+        const response = await axiosPrivate.post(`/users/${id}/roles/business`);
 
         // // Handle response (data containing roles)
-        // console.log('User roles:', response.data);
+        console.log('User roles:', response.data);
 
         // Navigate to the next page
         navigate("/verify-business");
@@ -80,10 +82,10 @@ export default function UserProfile() {
     if (result.isConfirmed) {
       try {
         // Call the API only if confirmed
-        // const response = await axiosPrivate.put(`/users/${id}/roles/student`);
+        const response = await axiosPrivate.post(`/users/${id}/roles/student`);
 
         // // Handle response (data containing roles)
-        // console.log('User roles:', response.data);
+        console.log('User roles:', response.data);
 
         // Navigate to the next page
         navigate("/studentverifycation");
@@ -135,7 +137,7 @@ export default function UserProfile() {
                 <h4 className="username">{user.username}</h4>
                 <span className="designation">{user.email}</span>
 
-                <div className="button-group">
+                <div>
                   <a onClick={choosebusiness} className="footer-btn grn-btn">Business</a>
                   <a onClick={choosestudent} className="footer-btn blu-btn">Student</a>
                 </div>

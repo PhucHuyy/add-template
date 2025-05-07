@@ -455,8 +455,8 @@ export default function UpdateProfile() {
                         onClick={() => handleImageRemove(index)}
                         style={{
                           position: 'absolute',
-                          top: '-10px',
-                          right: '-10px',
+                          top: '1px',
+                          right: '1px',
                           border: 'none',
                           background: 'red',
                           color: 'white',
