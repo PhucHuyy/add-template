@@ -24,3 +24,28 @@ export const deleteBusinessImage = async (imageId: string) => {
     throw new Error(error.response?.data?.message || 'Failed to delete image');
   }
 };
+
+export const uploadImagesBusiness2 = async (files: File[]) => {
+  try {
+    const formData = new FormData();
+
+    // Thêm các file vào formData
+    files.forEach((file) => {
+      formData.append('files', file); // Đảm bảo tên trường là 'files' như API yêu cầu
+    });
+
+
+    // Gửi yêu cầu POST với axios
+    const response = await axiosBusiness.post('business/images/upload2', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data', // Đảm bảo Content-Type là 'multipart/form-data'
+      },
+    });
+    console.log(response.data); // Trả về dữ liệu phản hồi từ API)
+
+    return true; // Trả về dữ liệu phản hồi từ API
+  } catch (error: any) {
+    console.error('Error uploading images:', error);
+    return false;
+  }
+};

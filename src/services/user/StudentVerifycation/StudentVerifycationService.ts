@@ -2,6 +2,7 @@ import { StudentVerifycation } from "./StudentVerifycation";
 import axiosPrivate from "../../../api/axiosPrivate";
 import axiosPrivateProfileServcie from "../../../api/axiosPrivateProfileServcie";
 import { ApiResponse } from "../../../features/auth/authType";
+import { promises } from "dns";
 export class StudentVerifycationService {
     private apiUrl: string = 'http://localhost:8888/api/student_profiles/create';
     //const tokenSTr = localStorage.getItem('accessToken');
@@ -117,18 +118,36 @@ export class StudentVerifycationService {
 
     async updateAvatarUrl(url: string): Promise<boolean> {
         try {
-          const response = await axiosPrivateProfileServcie.put(`/student_profiles/updateurlavatar/${encodeURIComponent(url)}`);
-      
-          if (response.status === 200) {
-            console.log('✅ Avatar URL updated successfully:', response.data);
-            return true;
-          }
-      
-          return false;
+            const response = await axiosPrivateProfileServcie.put(
+                "/student_profiles/updateurlavatar",
+                { avatarUrl: url } // 👈 Trùng với tên field trong avatarUpdateDTO
+            );
+
+            if (response.status === 200) {
+                console.log("✅ Avatar URL updated successfully:", response.data);
+                return true;
+            }
+
+            return false;
         } catch (error) {
-          console.error('❌ Error updating avatar URL:', error);
-          return false;
+            console.error("❌ Error updating avatar URL:", error);
+            return false;
         }
-      }
-      
+    }
+
+
+    async checkProfileExists(): Promise<Boolean> {
+        try {
+            const response = await axiosPrivateProfileServcie.get<ApiResponse<Boolean>>("/student_profiles/checkprofileexits");
+            console.log("Profile exists:", response.data);
+            return response.data.data; // true hoặc false
+        } catch (error) {
+            console.error("Error checking profile existence:", error);
+            return false;
+        }
+    };
+
+
+
+
 }

@@ -32,21 +32,39 @@ export default function StudentVerifycation() {
     console.log("🧠 Component user:", user);
     //setAvatarUrl(user?.picture??'');
     useEffect(() => {
+        const checkProfileExists = async () => {
+            const service = new StudentVerifycationService();
+            const check = await service.checkProfileExists();
+            console.log("thanh " + check);
+            if (check) {
+                navigate("/studentprofile");
+            }
+        }
+
+        checkProfileExists();
+
+
         const token = localStorage.getItem('accessToken');
         console.log(token);
-        if (user?.picture) {
-            setAvatarUrl(user.picture);
-        }
+
+        setAvatarUrl(user?.picture??"");
+
+        console.log(avatarUrl);
+
+
     }, []); // chỉ chạy khi load component
 
     const handleImageupload = async () => {
         const service = new StudentVerifycationService();
         if (fileAvatar) {
             const url = await service.uploadAvatar(fileAvatar);
+            console.log("upload file ");
             setAvatarUrlUpload(url);
             return url;
         } else {
+            console.log("avatarUrl: " + avatarUrl);
             const check = service.updateAvatarUrl(avatarUrl);
+            console.log(check + "upload lnk ");
             return "sang";
         }
     }
@@ -69,8 +87,9 @@ export default function StudentVerifycation() {
         Swal.fire({
             text: "Are you sure you want to submit a request?",
             icon: 'question',
-            confirmButtonColor: '#28a745', // xanh lá cây đậm
-            cancelButtonColor: '#d33',      // đỏ
+            showCancelButton: true,
+            confirmButtonColor: '#28a745',
+            cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, send it!',
             allowOutsideClick: false,
         }).then(async (result) => {
@@ -84,6 +103,7 @@ export default function StudentVerifycation() {
         Swal.fire({
             text: "Are you sure you want to save draft profile?",
             icon: 'question',
+            showCancelButton: true,
             confirmButtonColor: '#28a745',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Yes, send it!',
@@ -198,8 +218,8 @@ export default function StudentVerifycation() {
     const handleImageRemove = (index: number) => {
         setSelectedImages(prev => prev.filter((_, i) => i !== index));
         setfileStudentCard(prev => prev.filter((_, i) => i !== index));
-      };
-      
+    };
+
 
 
     const handleEditAvatar = (e: React.MouseEvent<HTMLAnchorElement, MouseEvent>) => {
@@ -362,8 +382,8 @@ export default function StudentVerifycation() {
                                                 onClick={() => handleImageRemove(index)}
                                                 style={{
                                                     position: 'absolute',
-                                                    top: '-10px',
-                                                    right: '-10px',
+                                                    top: '0px',
+                                                    right: '0px',
                                                     border: 'none',
                                                     background: 'red',
                                                     color: 'white',
