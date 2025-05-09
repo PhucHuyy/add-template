@@ -22,9 +22,12 @@ import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
 
 
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
-import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
+ 
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
 import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
+import RequireRole from '../components/guards/RequireRole';
+import AdminLayout from '../components/layout/AdminLayout';
+import AdminDashboard from '../pages/admin/AdminDashBoard';
 
 
 
@@ -143,6 +146,15 @@ const routes: RouteConfig[] = [
       path: '/authenticate',
       element: <Authenticate></Authenticate>
     },
-
+    {
+      path: "/admin",
+      element: <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <AdminDashboard />
+          </AdminLayout>
+          </RequireRole>
+      </RequireAuth>
+    }
 ];
 export default routes;
