@@ -2,7 +2,7 @@ import axios from 'axios';
 import { RefreshResponse } from '../features/auth/authType';
 
 const axiosPrivateProfileServcie = axios.create({
-    baseURL: 'http://localhost:8888/api',
+    baseURL: 'http://localhost:8088/api',
 });
 
 axiosPrivateProfileServcie.interceptors.request.use(

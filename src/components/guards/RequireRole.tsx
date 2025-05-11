@@ -5,7 +5,7 @@ import { JSX } from "react";
 
 interface Props {
   children: JSX.Element;
-  allowRoles: string[]; // Danh sách role được phép
+  allowRoles: string[];
 }
 
 export default function RequireRole({ children, allowRoles }: Props) {
