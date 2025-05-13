@@ -1,19 +1,34 @@
 import axiosPrivate from "../../api/axiosPrivate";
 import axiosPrivateProfileServcie from "../../api/axiosPrivateProfileServcie";
-import { adminUser, CountResponse, UserStatsResponse } from "./adminType";
+import {
+  ApiResponse,
+  CountResponse,
+  PaginatedResponse,
+  UserReportResponse,
+  UserStaffAdmin,
+  UserStatsResponse,
+} from "./adminType";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 interface AdminState {
-  users: adminUser[];
+  users: UserStaffAdmin[];
+  total: number;
+  currentPage: number;
+  pageSize: number;
   userStats: UserStatsResponse | null;
   pendingRequestCount: number | null;
   pendingStudentCount: number | null;
   pendingBusinessCount: number | null;
 
+  userRegistrationReport: UserReportResponse | null;
+
+  searchResult: UserStaffAdmin[] | null;
+
   draftJobCount: number | null;
   pendingJobCount: number | null;
   acceptedJobCount: number | null;
   rejectedJobCount: number | null;
+  staffAdmins: UserStaffAdmin[]; // Added staffAdmins property
   loading: boolean;
   error: string | null;
 }
@@ -26,11 +41,16 @@ const initialState: AdminState = {
   pendingRequestCount: null,
   pendingStudentCount: null,
   pendingBusinessCount: null,
-
   draftJobCount: null,
   pendingJobCount: null,
   acceptedJobCount: null,
   rejectedJobCount: null,
+  staffAdmins: [], // Initialized staffAdmins
+  searchResult: null,
+  userRegistrationReport: null,
+  total: 0,
+  currentPage: 0,
+  pageSize: 0
 };
 
 export const fetchUserStats = createAsyncThunk<
@@ -122,6 +142,96 @@ export const countTotalPendingJobsRequests = createAsyncThunk<
     }
   }
 );
+export const fetchAllStaffAdmin = createAsyncThunk<
+  PaginatedResponse<UserStaffAdmin>,
+  { page?: number; size?: number },
+  { rejectValue: string }
+>(
+  "admin/fetchAllStaffAdmin",
+  async ({ page = 0, size = 10 }, { rejectWithValue }) => {
+    try {
+      const response = await axiosPrivate.get<{
+        data: PaginatedResponse<UserStaffAdmin>;
+      }>(`/users/roles/staff_admin?page=${page}&size=${size}`);
+      return response.data.data;
+    } catch (error: any) {
+      return rejectWithValue(
+        error.response?.data?.message || "Failed to fetch staff admins"
+      );
+    }
+  }
+);
+
+export const assignStaffAdminRole = createAsyncThunk<
+  void,
+  string,
+  { rejectValue: string }
+>("admin/assignStaffAdminRole", async (userId, { rejectWithValue }) => {
+  try {
+    const response = await axiosPrivate.post<ApiResponse<void>>(
+      `/users/${userId}/roles/staff-admin`,
+      null
+    );
+    return;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to assign role"
+    );
+  }
+});
+
+export const searchUserByEmail = createAsyncThunk<
+  UserStaffAdmin[],
+  string,
+  { rejectValue: string }
+>("admin/searchUserByEmail", async (email, { rejectWithValue }) => {
+  try {
+    const response = await axiosPrivate.get<{ data: UserStaffAdmin[] }>(
+      `/users/search?email=${email}`
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message || "Failed to search user"
+    );
+  }
+});
+
+export const fetchUserRegistrationReport = createAsyncThunk<
+  UserReportResponse,
+  void,
+  { rejectValue: string }
+>("admin/fetchUserRegistrationReport", async (_, { rejectWithValue }) => {
+  try {
+    const response = await axiosPrivate.get<{ data: UserReportResponse }>(
+      "/users/report"
+    );
+    return response.data.data;
+  } catch (error: any) {
+    return rejectWithValue(
+      error.response?.data?.message ||
+        "Failed to fetch user registration report"
+    );
+  }
+});
+
+export const removeUserRole = createAsyncThunk(
+  "admin/removeUserRole",
+  async (
+    { userId, roleName }: { userId: string; roleName: string },
+    { rejectWithValue }
+  ) => {
+    try {
+      const response = await axiosPrivate.put("/users/roles/remove", {
+        userId,
+        roleName,
+      });
+      return response.data;
+    } catch (error: any) {
+      return rejectWithValue(error.response?.data || error.message);
+    }
+  }
+);
 
 const adminSlice = createSlice({
   name: "admin",
@@ -205,6 +315,74 @@ const adminSlice = createSlice({
       .addCase(countTotalPendingJobsRequests.pending, (state) => {
         state.loading = true;
         state.error = null;
+      });
+
+    builder
+      .addCase(assignStaffAdminRole.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(assignStaffAdminRole.fulfilled, (state) => {
+        state.loading = false;
+        // Có thể trigger fetchAllStaffAdmin hoặc hiển thị thông báo ở component
+      })
+      .addCase(assignStaffAdminRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to assign STAFF_ADMIN role";
+      });
+    builder
+      .addCase(fetchAllStaffAdmin.fulfilled, (state, action) => {
+        state.staffAdmins = action.payload.content;
+        state.total = action.payload.total;
+        state.loading = false;
+      })
+
+      .addCase(fetchAllStaffAdmin.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchAllStaffAdmin.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload || "Failed to fetch staff admins";
+      });
+    builder
+      .addCase(searchUserByEmail.fulfilled, (state, action) => {
+        state.searchResult = action.payload;
+        state.loading = false;
+      })
+      .addCase(searchUserByEmail.rejected, (state, action) => {
+        state.error = action.payload || "Failed to search user";
+        state.loading = false;
+      })
+      .addCase(searchUserByEmail.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+        state.searchResult = null;
+      });
+    builder
+      .addCase(fetchUserRegistrationReport.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchUserRegistrationReport.fulfilled, (state, action) => {
+        state.userRegistrationReport = action.payload;
+        state.loading = false;
+      })
+      .addCase(fetchUserRegistrationReport.rejected, (state, action) => {
+        state.loading = false;
+        state.error =
+          action.payload || "Failed to fetch user registration report";
+      });
+    builder
+      .addCase(removeUserRole.pending, (state) => {
+        state.loading = true;
+      })
+      .addCase(removeUserRole.fulfilled, (state) => {
+        state.loading = false;
+      })
+      .addCase(removeUserRole.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
       });
   },
 });

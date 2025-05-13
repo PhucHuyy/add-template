@@ -4,12 +4,24 @@ import {
   countTotalPendingJobsRequests,
   countTotalPendingRequests,
   countTotalPendingStudentRequests,
+  fetchUserRegistrationReport,
   fetchUserStats,
 } from "../../features/admin/adminSlice";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { RootState } from "../../app/store";
 import { useAppDispatch } from "../../app/hook";
 import { useSelector } from "react-redux";
+import {
+  LineChart,
+  Line,
+  BarChart,
+  Bar,
+  XAxis,
+  YAxis,
+  Tooltip,
+  ResponsiveContainer,
+  CartesianGrid,
+} from "recharts";
 
 export default function AdminDashboard() {
   const dispatch = useAppDispatch();
@@ -20,6 +32,7 @@ export default function AdminDashboard() {
     pendingStudentCount,
     pendingBusinessCount,
     pendingJobCount,
+    userRegistrationReport,
   } = useSelector((state: RootState) => state.admin);
   useEffect(() => {
     dispatch(fetchUserStats());
@@ -27,8 +40,27 @@ export default function AdminDashboard() {
     dispatch(countTotalPendingStudentRequests());
     dispatch(countTotalPendingBusinessRequests());
     dispatch(countTotalPendingJobsRequests(0));
+    dispatch(fetchUserRegistrationReport());
   }, [dispatch]);
 
+  const [chartType, setChartType] = useState<
+    "last7Days" | "thisMonth" | "thisYear"
+  >("last7Days");
+
+  const chartData = useMemo(() => {
+    if (!userRegistrationReport) return [];
+
+    switch (chartType) {
+      case "last7Days":
+        return userRegistrationReport.last7Days;
+      case "thisMonth":
+        return userRegistrationReport.thisMonth;
+      case "thisYear":
+        return userRegistrationReport.thisYear;
+      default:
+        return [];
+    }
+  }, [chartType, userRegistrationReport]);
   if (loading) {
     return (
       <div className="flex justify-center items-center h-screen">
@@ -58,7 +90,7 @@ export default function AdminDashboard() {
       </div>
 
       {/* Nội dung chính trong khung trắng */}
-      <div className="container white-shadow">
+      <div className="white-shadow px-12 py-8">
         {/* Stats */}
         <div className="overview-container">
           <div className="overview-box">
@@ -78,7 +110,9 @@ export default function AdminDashboard() {
           <div className="overview-box">
             <i className="fa fa-briefcase overview-icon"></i>
             <div>
-              <p className="overview-value">Pending Jobs: {pendingJobCount ?? "..."}</p>
+              <p className="overview-value">
+                Pending Jobs: {pendingJobCount ?? "..."}
+              </p>
             </div>
           </div>
           <div className="overview-box">
@@ -106,9 +140,36 @@ export default function AdminDashboard() {
           </div> */}
 
           {/* Chart Placeholder */}
-          <div className="dashboard-card chart-placeholder">
+          <div className="dashboard-card chart-full">
             <h3 className="card-title">User Registrations</h3>
-            <div className="placeholder-box">[Chart Placeholder]</div>
+            <div className="chart-tabs">
+              <button onClick={() => setChartType("last7Days")}>7 Days</button>
+              <button onClick={() => setChartType("thisMonth")}>
+                This Month
+              </button>
+              <button onClick={() => setChartType("thisYear")}>
+                This Year
+              </button>
+            </div>
+            <ResponsiveContainer width="100%" height={300}>
+              {chartType === "thisYear" ? (
+                <BarChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis />
+                  <Tooltip />
+                  <Bar dataKey="total" fill="#8884d8" />
+                </BarChart>
+              ) : (
+                <LineChart data={chartData}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Line type="monotone" dataKey="total" stroke="#82ca9d" />
+                </LineChart>
+              )}
+            </ResponsiveContainer>
           </div>
         </div>
         {/* === Recent Registrations & Staff Admin Overview === */}
