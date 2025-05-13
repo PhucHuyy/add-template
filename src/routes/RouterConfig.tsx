@@ -27,6 +27,13 @@ import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessFo
 import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
 
 
+<<<<<<< Updated upstream
+=======
+import RefreshTokenTester from "../pages/RefreshTokenTester";
+import StaffAdmin from "../pages/staff-admin/StaffAdmin";
+import ListStudentAccount from "../pages/admin/ListStudentAccount";
+import ListBussinessAccount from "../pages/admin/ListBussinessAccount";
+>>>>>>> Stashed changes
 
 interface RouteConfig {
   path: string;
@@ -144,5 +151,80 @@ const routes: RouteConfig[] = [
       element: <Authenticate></Authenticate>
     },
 
+<<<<<<< Updated upstream
+=======
+  {
+    path: "/reset-password",
+    element: (
+      <RequireGuest>
+        <ResetPassword />
+      </RequireGuest>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: "/authenticate",
+    element: <Authenticate></Authenticate>,
+  },
+  {
+    path: "/test",
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <RefreshTokenTester />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/admin",
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
+          <AdminLayout>
+            <AdminDashboard />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/admin/staff-admins",
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={["ADMIN"]}>
+          <AdminLayout>
+            <StaffAdmin />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/admin/students-account",
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={["ADMIN"]}>
+          <AdminLayout>
+            <ListStudentAccount />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+
+  {
+    path: "/admin/business-account",
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={["ADMIN"]}>
+          <AdminLayout>
+            <ListBussinessAccount />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+>>>>>>> Stashed changes
 ];
 export default routes;

@@ -27,7 +27,11 @@ axiosPrivateProfileServcie.interceptors.request.use(
   
         try {
           const refreshResponse = await axios.post<RefreshResponse>(
+<<<<<<< Updated upstream
             'http://18.140.1.2:8080/api/v1/auth/refresh',
+=======
+            'http://localhost:8080/api/v1/auth/refresh',
+>>>>>>> Stashed changes
             {},
             { withCredentials: true }
           );

@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { useNavigate } from 'react-router-dom';
 import axiosPrivate from "../../../api/axiosPrivate";
 import Swal from "sweetalert2";
+import { RefreshResponse } from "../../../features/auth/authType";
 export default function UserProfile() {
   const navigate = useNavigate(); // Hook to navigate to other pages
   const user = useSelector((state: RootState) => state.auth.user);
@@ -15,17 +16,30 @@ export default function UserProfile() {
     const trimmedRole = role.trim();
     const iduser = user?.id || "";
     setid(iduser);
-    
+
     if (trimmedRole.includes("BUSINESS")) {
       setrole('BUSINESS');
+      localStorage.setItem("role", "BUSINESS");
       navigate("/verify-business");
     }
     if (trimmedRole.includes("STUDENT")) {
       setrole('STUDENT');
+      localStorage.setItem("role", "STUDENT");
       navigate("/studentverifycation");
     }
     if (trimmedRole.includes("USER")) {
+      localStorage.setItem("role", "USER");
       setrole("USER");
+    }
+    if (trimmedRole.includes("STAFF_ADMIN")) {
+      localStorage.setItem("role", "STAFF_ADMIN");
+      setrole("STAFF_ADMIN");
+      navigate("/");
+    }
+    if (trimmedRole.includes("ADMIN")) {
+      localStorage.setItem("role", "ADMIN");
+      setrole("ADMIN");
+      navigate("/");
     } else {
 
     }
@@ -48,7 +62,14 @@ export default function UserProfile() {
       try {
         // Call the API only if confirmed
         const response = await axiosPrivate.post(`/users/${id}/roles/business`);
+        const refreshResponse = await axios.post<RefreshResponse>(
+          "http://localhost:8080/api/v1/auth/refresh",
+          {},
+          { withCredentials: true }
+        );
 
+        const newToken = refreshResponse.data.data.token;
+        localStorage.setItem("accessToken", newToken);
         // // Handle response (data containing roles)
         console.log('User roles:', response.data);
 
@@ -83,7 +104,14 @@ export default function UserProfile() {
       try {
         // Call the API only if confirmed
         const response = await axiosPrivate.post(`/users/${id}/roles/student`);
+        const refreshResponse = await axios.post<RefreshResponse>(
+          "http://localhost:8080/api/v1/auth/refresh",
+          {},
+          { withCredentials: true }
+        );
 
+        const newToken = refreshResponse.data.data.token;
+        localStorage.setItem("accessToken", newToken);
         // // Handle response (data containing roles)
         console.log('User roles:', response.data);
 
