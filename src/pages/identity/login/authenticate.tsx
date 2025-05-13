@@ -28,7 +28,9 @@ export default function Authenticate() {
     fetch(
 
 
-      `http://18.140.1.2:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
+
+      `http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
+
       { method: "POST", credentials: "include" }
     )
       .then(async (response) => {
@@ -43,10 +45,16 @@ export default function Authenticate() {
           throw new Error('Missing access token');
         }
 
-        // 1. Lưu token
         setToken(data.accessToken);
 
-        // 2. Cập nhật Redux store
+        dispatch(setUser({
+          id: data.id, 
+          email: data.email,
+          username: data.name,
+          picture: data.picture || null,
+          roleNames: data.roleNames,
+        }));
+
 
         dispatch(
           setUser({

@@ -187,7 +187,9 @@ export const login = createAsyncThunk<
   try {
     const response = await axiosPublic.post<ApiResponse<LoginResponse>>(
       "/auth/login",
-      payload
+
+      payload,
+     { withCredentials: true}
 
     );
 
@@ -234,21 +236,44 @@ export const register = createAsyncThunk<
 
 export const logout = createAsyncThunk("auth/logout", async (_, thunkAPI) => {
   try {
-
-    await axiosPrivate.post("/auth/logout", null,{
+    await axiosPrivate.post("/auth/logout", null, {
       withCredentials: true,
     });
     localStorage.removeItem("accessToken");
     return;
-  } catch (error: unknown) {
-    const axiosError = error as { response?: { data?: { message?: string } } };
+  } catch (error: any) {
+    const status = error?.response?.status;
+
+    if (status === 401) {
+      try {
+        // Gọi /auth/refresh để lấy accessToken mới
+        const refreshRes = await axiosPublic.post("/auth/refresh", {}, {
+          withCredentials: true,
+        });
+        const newAccessToken = refreshRes.data.data.token;
+        localStorage.setItem("accessToken", newAccessToken);
+
+        // Gắn token mới vào axiosPrivate header rồi gọi lại logout
+        await axiosPrivate.post("/auth/logout", null, {
+          withCredentials: true,
+          headers: {
+            Authorization: `Bearer ${newAccessToken}`,
+          },
+        });
+
+        localStorage.removeItem("accessToken");
+        return;
+      } catch (refreshErr) {
+        return thunkAPI.rejectWithValue("Token hết hạn. Không thể đăng xuất.");
+      }
+    }
+
     return thunkAPI.rejectWithValue(
-
-      axiosError.response?.data?.message || "Đăng xuất thất bại"
-
+      error.response?.data?.message || "Đăng xuất thất bại"
     );
   }
 });
+
 
 // Slice
 const authSlice = createSlice({
@@ -295,11 +320,11 @@ const authSlice = createSlice({
         const userData = action.payload.data;
 
         state.user = {
-          uid: userData.id,
+          id: userData.id,
           email: userData.email,
           username: userData.username,
           roleNames: userData.roleNames,
-          picture: userData.picture || null,
+          picture: userData.picture ?? undefined,
         };
       })
 

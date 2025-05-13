@@ -20,20 +20,32 @@ import ManageCv from '../pages/identity/user/ManageCv/ManageCv';
 import UpdateProfile from '../pages/identity/user/UpdateProfile/UpdateProfile';
 import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
 
-
 import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
-import BusinessVerifyNotice from '../pages/identity/user/business/BusinessVerifyNotice';
+
 import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
 import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
+import RequireRole from '../components/guards/RequireRole';
+import AdminLayout from '../components/layout/AdminLayout';
+import AdminDashboard from '../pages/admin/AdminDashBoard';
 
 
-<<<<<<< Updated upstream
-=======
 import RefreshTokenTester from "../pages/RefreshTokenTester";
 import StaffAdmin from "../pages/staff-admin/StaffAdmin";
 import ListStudentAccount from "../pages/admin/ListStudentAccount";
 import ListBussinessAccount from "../pages/admin/ListBussinessAccount";
->>>>>>> Stashed changes
+
+import RefreshTokenTester from '../pages/RefreshTokenTester';
+import StaffAdmin from '../pages/staff-admin/StaffAdmin';
+import CreateJobPosting from '../pages/business/job-postings/CreateJobPosting';
+import ListJobPosting from '../pages/business/job-postings/ListJobPosting';
+import ListJobPublic from '../pages/business/job-postings/ListJobPublic';
+import JobDetail from '../pages/business/job-postings/JobDetail';
+import AppliedJobsList from '../pages/business/apply-jobs/AppliedJobsList';
+import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
+import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
+import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
+import JobInterviewList from '../pages/business/interviews/JobInterviewList';
+
 
 interface RouteConfig {
   path: string;
@@ -106,53 +118,218 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/profile',    
-    element: <RequireAuth><UserProfile /></RequireAuth>,
+    path: '/profile',
+    element: (
+      <RequireAuth>
+        <UserProfile />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/logoutsang',
-    element: <RequireAuth><LogoutSang /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <LogoutSang />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/studentprofile',
-    element: <RequireAuth><StudentProfile /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <StudentProfile />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/studentverifycation',
-    element: <RequireAuth><StudentVerifycation /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <StudentVerifycation />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/updateprofile',
-    element: <RequireAuth><UpdateProfile /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <UpdateProfile />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/cv',
-    element: <RequireAuth><ManageCv /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <ManageCv />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
   {
     path: '/settings/security',
-    element: <RequireAuth><SecuritySettings /></RequireAuth>,
+    element: (
+      <RequireAuth>
+        <SecuritySettings />
+      </RequireAuth>
+    ),
     layout: DefaultLayout,
   },
-  
-    {
-      path: '/reset-password',
-      element: <RequireGuest><ResetPassword /></RequireGuest>,
-      layout: DefaultLayout,
-    },
-    {
-      path: '/authenticate',
-      element: <Authenticate></Authenticate>
-    },
 
-<<<<<<< Updated upstream
-=======
+  {
+    path: '/reset-password',
+    element: (
+      <RequireGuest>
+        <ResetPassword />
+      </RequireGuest>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/authenticate',
+    element: <Authenticate></Authenticate>,
+  },
+  {
+    path: '/test',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <RefreshTokenTester />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/admin',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <AdminDashboard />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/admin/staff-admins',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN']}>
+          <AdminLayout>
+            <StaffAdmin />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+
+  // RECRUIMENT ROUTES
+  {
+    path: '/business/create-job',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <CreateJobPosting />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/business/list-job-created',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <ListJobPosting />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/business/list-apply-jobs',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <ListApplyJobs />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/business/job-interview-list',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <JobInterviewList />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/list-jobs',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <ListJobPublic />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: 'detail-job',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <JobDetail />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/student/applied-jobs-list',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <AppliedJobsList />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/student/detail-apply-job',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <DetailApplyJob />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/student/list-interview',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <StudentInterviewList />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+
+
   {
     path: "/reset-password",
     element: (
@@ -225,6 +402,6 @@ const routes: RouteConfig[] = [
       </RequireAuth>
     ),
   },
->>>>>>> Stashed changes
+
 ];
 export default routes;
