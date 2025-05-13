@@ -36,7 +36,7 @@ export const googleAuthenticate = createAsyncThunk<
   try {
     const res = await fetch(
 
-      `http://18.140.1.2:8080/api/v1/auth/outbound/authentication?code=${code}`,
+      `http://localhost:8080/api/v1/auth/outbound/authentication?code=${code}`,
       { method: 'POST', credentials: 'include' },
 
     );

@@ -27,7 +27,7 @@ axiosBusiness.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post<RefreshResponse>(
-          'http://18.140.1.2:8080/api/v1/auth/refresh',
+          'http://localhost:8080/api/v1/auth/refresh',
           {},
           { withCredentials: true },
         );

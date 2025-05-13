@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import axios from 'axios';
+import { RefreshResponse } from '../features/auth/authType';
 
 export default function RefreshTokenTester() {
   const [result, setResult] = useState<string | null>(null);
@@ -7,7 +8,7 @@ export default function RefreshTokenTester() {
 
   const handleRefresh = async () => {
     try {
-      const response = await axios.post(
+      const response = await axios.post<RefreshResponse>(
         'http://localhost:8080/api/v1/auth/refresh',
         {},
         { withCredentials: true }
@@ -31,3 +32,4 @@ export default function RefreshTokenTester() {
     </div>
   );
 }
+
