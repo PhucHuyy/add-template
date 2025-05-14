@@ -239,6 +239,18 @@ const routes: RouteConfig[] = [
       </RequireAuth>
     ),
   },
+  // {
+  //   path: '/business/update-job/:id',
+  //   element: (
+  //     <RequireAuth>
+  //       <RequireRole allowRoles={['BUSINESS']}>
+  //         <DefaultLayout>
+  //           <CreateJobPosting mode="update" />
+  //         </DefaultLayout>
+  //       </RequireRole>
+  //     </RequireAuth>
+  //   ),
+  // },
   {
     path: '/business/list-job-created',
     element: (
@@ -286,7 +298,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: 'detail-job',
+    path: 'detail-job/:jobId',
     element: (
       <RequireAuth>
         <DefaultLayout>
