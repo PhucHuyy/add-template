@@ -2,7 +2,7 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import businessReducer from '../features/auth/businessSlice';
 import adminReducer from '../features/admin/adminSlice';
-
+import notificationReducer from '../features/noti/NotiSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineReducers } from 'redux';
@@ -16,6 +16,7 @@ const rootReducer = combineReducers({
   auth: authReducer,
   business: businessReducer,
   admin: adminReducer,
+  noti: notificationReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -27,6 +28,7 @@ export const store = configureStore({
       serializableCheck: false,
     }),
 });
+
 
 export const persistor = persistStore(store);
 
