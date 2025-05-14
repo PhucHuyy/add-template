@@ -27,7 +27,6 @@ axiosPrivateProfileServcie.interceptors.request.use(
   
         try {
           const refreshResponse = await axios.post<RefreshResponse>(
-
             'http://localhost:8080/api/v1/auth/refresh',
 
             {},
@@ -51,3 +50,4 @@ axiosPrivateProfileServcie.interceptors.request.use(
   );
   
   export default axiosPrivateProfileServcie;
+
