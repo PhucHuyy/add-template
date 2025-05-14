@@ -195,7 +195,6 @@ export default function Header() {
                         </li>
                       ))}
                     </ul>
-                    s
                   </li>
 
                   <li className="dropdown user-menu">
