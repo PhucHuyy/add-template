@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { RefreshResponse } from '../features/auth/authType';
 
-const axiosPrivateProfileServcie = axios.create({
-  baseURL: 'http://localhost:8088/api',
+const axiosRecruitment = axios.create({
+  baseURL: 'http://localhost:8090/api/v1/',
 });
 
-axiosPrivateProfileServcie.interceptors.request.use(
+axiosRecruitment.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem('accessToken');
     if (token) {
@@ -17,7 +17,7 @@ axiosPrivateProfileServcie.interceptors.request.use(
   (error) => Promise.reject(error),
 );
 
-axiosPrivateProfileServcie.interceptors.response.use(
+axiosRecruitment.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
@@ -27,16 +27,16 @@ axiosPrivateProfileServcie.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post<RefreshResponse>(
-          'http://localhost:8088/api/v1/auth/refresh',
+          'http://18.140.1.2:8088/api/v1/auth/refresh',
           {},
           { withCredentials: true },
         );
 
         const newToken = refreshResponse.data.data.token;
         localStorage.setItem('accessToken', newToken);
-        //console.log("newToken: "+newToken);
+
         originalRequest.headers.Authorization = `Bearer ${newToken}`;
-        return axiosPrivateProfileServcie(originalRequest);
+        return axiosRecruitment(originalRequest);
       } catch (refreshError) {
         localStorage.removeItem('accessToken');
         window.location.href = '/login';
@@ -48,4 +48,4 @@ axiosPrivateProfileServcie.interceptors.response.use(
   },
 );
 
-export default axiosPrivateProfileServcie;
+export default axiosRecruitment;
