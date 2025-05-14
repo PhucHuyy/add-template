@@ -7,8 +7,10 @@ import {
   sendRequestCreateJob,
 } from '../../../service/business/jobpostings/JobPostingsService';
 import Swal from 'sweetalert2';
+import { useNavigate } from 'react-router-dom';
 
 export default function CreateJobPosting() {
+  const navigate = useNavigate();
   const [options, setOptions] = useState<{ label: string; value: string }[]>(
     [],
   );
@@ -115,7 +117,14 @@ export default function CreateJobPosting() {
         confirmButtonColor: '#07b107',
         background: '#ffffff',
         color: '#333333',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
+
+      setTimeout(() => {
+        navigate('/business/list-job-created');
+      }, 3000);
     } catch (error) {
       console.error('Error creating job posting:', error);
 
@@ -172,17 +181,23 @@ export default function CreateJobPosting() {
         icon: 'success',
         title: 'Success!',
         text: 'Job saved as draft.',
-        confirmButtonColor: '#07b107',
         background: '#ffffff',
         color: '#333333',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
       });
+
+      setTimeout(() => {
+        navigate('/business/list-job-created');
+      }, 3000);
     } catch (error) {
       console.error('Error creating job posting:', error);
 
       Swal.fire({
         icon: 'error',
         title: 'Error!',
-        text: 'Failed to saved job. Please try again.',
+        text: 'Failed to save job. Please try again.',
         confirmButtonColor: '#e74c3c',
         background: '#ffffff',
         color: '#333333',

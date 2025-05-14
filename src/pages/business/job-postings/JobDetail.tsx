@@ -6,6 +6,7 @@ import {
   bannedJob,
   getDetailJob,
   rejectJob,
+  sendDraftJob,
 } from '../../../service/business/jobpostings/JobPostingsService';
 import { getBusinessById } from '../../../service/business/MyBusinessService';
 import { useSelector } from 'react-redux';
@@ -266,6 +267,52 @@ export default function JobDetail() {
     }
   };
 
+  const handlePreSendDraft = (jobId: string) => {
+    Swal.fire({
+      title: 'Confirm send draft?',
+      text: 'Are you sure you want to submit this job draft request?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#07b107',
+      cancelButtonColor: '#e74c3c',
+      confirmButtonText: 'Agree',
+      cancelButtonText: 'Cancel',
+      background: '#ffffff',
+      color: '#333333',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSendDraft(jobId);
+      }
+    });
+  };
+
+  const handleSendDraft = async (jobId: string) => {
+    try {
+      const response = await sendDraftJob(jobId);
+      console.log(response.data, 'response.data');
+
+      Swal.fire({
+        title: 'Draft sent successfully!',
+        text: 'Your job draft has been sent successfully.',
+        icon: 'success',
+        background: '#ffffff',
+        color: '#333333',
+        confirmButtonColor: '#07b107',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        willClose: () => {
+          window.location.reload();
+        },
+      });
+    } catch (error) {
+      console.error('Error sending draft:', error);
+      throw new Error(error.response?.data?.message || 'Something went wrong');
+    }
+  };
+
+  console.log(status, 'status');
+
   return (
     <>
       <div className="clearfix" />
@@ -360,35 +407,27 @@ export default function JobDetail() {
 
                   {nameRole === 'BUSINESS' && (
                     <>
-                      {status === -1 ||
-                        (status === 2 && (
-                          <>
+                      {(status === -1 || status === 2) && (
+                        <>
+                          <div
+                            onClick={() =>
+                              navigate(`/business/update-job/${jobId}`)
+                            }
+                            className="footer-btn blu-btn"
+                          >
+                            Update
+                          </div>
+
+                          {status === -1 && (
                             <div
-                              onClick={() =>
-                                navigate(`/business/update-job/${jobId}`)
-                              }
+                              onClick={() => handlePreSendDraft(jobId)}
                               className="footer-btn blu-btn"
                             >
-                              Update
+                              Send Draft
                             </div>
-                          </>
-                        ))}
-
-                      {/* <a
-                        href="#"
-                        style={{
-                          fontWeight: 'bold',
-                          width: '126px',
-                          height: '48px',
-                          backgroundColor: 'red',
-                          textAlign: 'center',
-                          padding: '10px 0',
-                          alignItems: 'center',
-                        }}
-                        className="footer-btn red-btn"
-                      >
-                        Delete
-                      </a> */}
+                          )}
+                        </>
+                      )}
                     </>
                   )}
 
