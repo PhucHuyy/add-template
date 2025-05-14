@@ -216,13 +216,14 @@ export default function ListStudentAccount() {
                                         <td>{student.university}</td>
                                         <td>{student.phoneNumber}</td>
                                         <td>{new Date(student.createdAt).toLocaleDateString()}</td>
-                                        {student.status==='active' ? (<td className="status-active">Active</td>) : (<td className="status-inactive">Inactive</td>)}
+                                        {student.status === 'active' ? (<td className="status-active">Active</td>) : (<td className="status-inactive">Inactive</td>)}
                                         {/* <td className="status-active">Active</td> */}
                                     </tr>
                                 ))}
                             </tbody>
                         </table>
-                        <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto', marginTop: '15px' }}>
+
+                        {studentlist ? (<div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: 'auto', marginTop: '15px' }}>
                             <span
                                 style={{
                                     color: 'gray',
@@ -230,8 +231,10 @@ export default function ListStudentAccount() {
                                     fontSize: '20px',
                                     padding: '5px',
                                     borderRadius: '50%',
-                                    border: '1px solid #ddd',
-                                    marginRight: '10px'
+                                    border: '2px solid #ddd',
+                                    marginRight: '10px',
+                                    width: '37px',
+                                    textAlign: 'center'
                                 }}
                                 onClick={async () => {
                                     // Your async logic here
@@ -248,7 +251,7 @@ export default function ListStudentAccount() {
                                     color: 'gray'
                                 }}
                             >
-                                {pageIndex} / {totalPage} trang
+                                {pageIndex} / {totalPage} Pages
                             </span>
                             <span
                                 style={{
@@ -257,7 +260,9 @@ export default function ListStudentAccount() {
                                     fontSize: '20px',
                                     padding: '5px',
                                     borderRadius: '50%',
-                                    border: '1px solid green'
+                                    border: '2px solid green',
+                                    width: '37px',
+                                    textAlign: 'center'
                                 }}
 
                                 onClick={async () => {
@@ -268,7 +273,8 @@ export default function ListStudentAccount() {
                             >
                                 &gt;
                             </span>
-                        </div>
+                        </div>) : ("")}
+
 
                     </div>
                 </div>
@@ -359,7 +365,7 @@ export default function ListStudentAccount() {
                             ))}
                         </div>
                         <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            {selectedStudent.status==="active"?(<button
+                            {selectedStudent.status === "active" ? (<button
                                 onClick={async () => {
                                     // Your async logic here
                                     await banUnban(selectedStudent.profileId, 'ban');
@@ -380,7 +386,7 @@ export default function ListStudentAccount() {
                                 onMouseOut={(e) => e.currentTarget.style.backgroundColor = '#007bff'}
                             >
                                 Ban
-                            </button>):(<button
+                            </button>) : (<button
                                 onClick={async () => {
                                     // Your async logic here
                                     await banUnban(selectedStudent.profileId, 'UnBan');
@@ -402,7 +408,7 @@ export default function ListStudentAccount() {
                             >
                                 UnBan
                             </button>)}
-                            
+
                             <button
                                 onClick={closePopup}
                                 style={{

@@ -42,6 +42,7 @@ import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
 import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
+import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
 
 
 interface RouteConfig {
@@ -408,6 +409,17 @@ const routes: RouteConfig[] = [
             <ListBussinessAccount />
           </AdminLayout>
         </RequireRole>
+      </RequireAuth>
+    ),
+  },
+
+  {
+    path: "/BusinessDetail/:id",
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <BusinessDetail />
+        </DefaultLayout>
       </RequireAuth>
     ),
   },
