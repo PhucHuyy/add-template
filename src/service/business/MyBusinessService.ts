@@ -7,8 +7,7 @@ interface MyBusinessResponse {
   data: any;
 }
 
-
- export interface BusinessProfilesForUpdate {
+export interface BusinessProfilesForUpdate {
   companyName: string;
   industry: string;
   companyInfo: string;
@@ -32,11 +31,25 @@ export const getMyBusiness = async () => {
   }
 };
 
-export const updateBusiness = async (data: BusinessProfilesForUpdate): Promise<MyBusinessResponse> => {
+export const getBusinessById = async (businessId: string) => {
+  try {
+    const response: AxiosResponse<MyBusinessResponse> = await axiosBusiness.get(
+      `business/business-profile/${businessId}`,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching business info:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const updateBusiness = async (
+  data: BusinessProfilesForUpdate,
+): Promise<MyBusinessResponse> => {
   try {
     const response: AxiosResponse<MyBusinessResponse> = await axiosBusiness.put(
       'business/update',
-      data
+      data,
     );
     return response.data;
   } catch (error: any) {
