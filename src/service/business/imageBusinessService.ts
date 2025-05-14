@@ -13,6 +13,18 @@ export const getBusinessImages = async () => {
   }
 };
 
+export const getAvatarBusiness = async () => {
+  try {
+    const response: AxiosResponse<any[]> = await axiosBusiness.get(
+      `business/images/avatar`,
+    );
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching business images:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
 export const deleteBusinessImage = async (imageId: string) => {
   try {
     const response: AxiosResponse<any> = await axiosBusiness.put(
@@ -34,13 +46,16 @@ export const uploadImagesBusiness2 = async (files: File[]) => {
       formData.append('files', file); // Đảm bảo tên trường là 'files' như API yêu cầu
     });
 
-
     // Gửi yêu cầu POST với axios
-    const response = await axiosBusiness.post('business/images/upload2', formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data', // Đảm bảo Content-Type là 'multipart/form-data'
+    const response = await axiosBusiness.post(
+      'business/images/upload2',
+      formData,
+      {
+        headers: {
+          'Content-Type': 'multipart/form-data', // Đảm bảo Content-Type là 'multipart/form-data'
+        },
       },
-    });
+    );
     console.log(response.data); // Trả về dữ liệu phản hồi từ API)
 
     return true; // Trả về dữ liệu phản hồi từ API

@@ -51,4 +51,3 @@ axiosPrivateProfileServcie.interceptors.request.use(
   );
   
   export default axiosPrivateProfileServcie;
-

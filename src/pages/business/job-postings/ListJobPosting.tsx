@@ -1,6 +1,80 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import {
+  getListJobCreated,
+  sendDraftJob,
+} from '../../../service/business/jobpostings/JobPostingsService';
+import './ListJobPosting.css';
+import Swal from 'sweetalert2';
 
 export default function ListJobPosting() {
+  const [jobs, setJobs] = useState([]);
+
+  const handlePreSendDraft = (jobId: string) => {
+    Swal.fire({
+      title: 'Confirm send draft?',
+      text: 'Are you sure you want to submit this job draft request?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonColor: '#07b107',
+      cancelButtonColor: '#e74c3c',
+      confirmButtonText: 'Agree',
+      cancelButtonText: 'Cancel',
+      background: '#ffffff',
+      color: '#333333',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        handleSendDraft(jobId);
+      }
+    });
+  };
+
+  const handleSendDraft = async (jobId: string) => {
+    try {
+      const response = await sendDraftJob(jobId);
+      console.log(response.data, 'response.data');
+
+      Swal.fire({
+        title: 'Draft sent successfully!',
+        text: 'Your job draft has been sent successfully.',
+        icon: 'success',
+        background: '#ffffff',
+        color: '#333333',
+        confirmButtonColor: '#07b107',
+        showConfirmButton: false,
+        timer: 3000,
+        timerProgressBar: true,
+        willClose: () => {
+          window.location.reload();
+        },
+      });
+    } catch (error) {
+      console.error('Error sending draft:', error);
+      throw new Error(error.response?.data?.message || 'Something went wrong');
+    }
+  };
+
+  useEffect(() => {
+    const fetchListJobCreated = async () => {
+      try {
+        const response = await getListJobCreated();
+        console.log(response.data, 'response.data');
+
+        if (response.code === 1000) {
+          setJobs(response.data);
+        } else {
+          console.error('Failed to fetch job postings');
+        }
+      } catch (error) {
+        console.error('Error fetching list job created:', error);
+        throw new Error(
+          error.response?.data?.message || 'Something went wrong',
+        );
+      }
+    };
+
+    fetchListJobCreated();
+  }, []);
+
   return (
     <>
       <div>
@@ -56,213 +130,107 @@ export default function ListJobPosting() {
               </div>
             </div>
             {/* Company Searrch Filter End */}
+
             <div className="item-click">
               <article>
-                <div className="brows-job-list">
-                  <div className="col-md-1 col-sm-2 small-padding">
-                    <div className="brows-job-company-img">
-                      <a href="job-detail.html">
-                        <img
-                          src="/assets/img/com-1.jpg"
-                          className="img-responsive"
-                          alt=""
-                        />
-                      </a>
+                {jobs.map((job) => (
+                  <div className="brows-job-list" key={job.jobId}>
+                    <div className="col-md-1 col-sm-2 small-padding">
+                      <div className="brows-job-company-img">
+                        <a href={`/detail-job/${job.jobId}`}>
+                          <img
+                            src={
+                              job.avatarUrl || '/assets/img/default-company.jpg'
+                            }
+                            className="img-responsive"
+                            alt={job.companyName}
+                          />
+                        </a>
+                      </div>
+                    </div>
+                    <div className="col-md-6 col-sm-5">
+                      <div className="brows-job-position">
+                        <a href={`/detail-job/${job.jobId}`}>
+                          <h3 className="job-title">{job.title}</h3>
+                        </a>
+                        <p>
+                          <span>{job.companyName}</span>
+                          <span className="brows-job-sallery">
+                            <i className="fa fa-money" /> {job.salary}
+                          </span>
+                          {job.urgentRecruitment && (
+                            <span className="job-type cl-danger bg-trans-danger">
+                              Urgent
+                            </span>
+                          )}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-3 col-sm-3">
+                      <div className="brows-job-location">
+                        <p>
+                          <i className="fa fa-map-marker" /> {job.location}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-2 col-sm-2">
+                      <div className="brows-job-link">
+                        {job.status === -1 ? (
+                          <button
+                            className="btn"
+                            style={{
+                              backgroundColor: '#f8f9fa',
+                              color: '#000',
+                              border: '1px solid #ccc',
+                              padding: '10px 20px',
+                              borderRadius: '4px',
+                              minWidth: '120px',
+                              transition:
+                                'background-color 0.3s ease, color 0.3s ease',
+                              cursor: 'pointer',
+                            }}
+                            onMouseOver={(e) => {
+                              e.target.style.backgroundColor = '#07b107';
+                              e.target.style.color = '#fff';
+                            }}
+                            onMouseOut={(e) => {
+                              e.target.style.backgroundColor = '#f8f9fa';
+                              e.target.style.color = '#000';
+                            }}
+                            onClick={() => handlePreSendDraft(job.jobId)}
+                          >
+                            Send Draft
+                          </button>
+                        ) : (
+                          <span
+                            style={{
+                              padding: '8px 16px',
+                              borderRadius: '4px',
+                              backgroundColor:
+                                job.status === 0
+                                  ? '#ffc107'
+                                  : job.status === 1
+                                  ? '#07b107'
+                                  : job.status === 2
+                                  ? '#dc3545'
+                                  : '#6c757d',
+                              color: '#fff',
+                              fontWeight: 'bold',
+                              display: 'inline-block',
+                              minWidth: '120px',
+                              textAlign: 'center',
+                            }}
+                          >
+                            {job.status === 0 && 'Pending'}
+                            {job.status === 1 && 'Accepted'}
+                            {job.status === 2 && 'Rejected'}
+                            {job.status === 3 && 'Hidden'}
+                          </span>
+                        )}
+                      </div>
                     </div>
                   </div>
-                  <div className="col-md-6 col-sm-5">
-                    <div className="brows-job-position">
-                      <a href="job-apply-detail.html">
-                        <h3>Digital Marketing Manager</h3>
-                      </a>
-                      <p>
-                        <span>Autodesk</span>
-                        <span className="brows-job-sallery">
-                          <i className="fa fa-money" />
-                          $750 - 800
-                        </span>
-                        <span className="job-type cl-success bg-trans-success">
-                          Full Time
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-3 col-sm-3">
-                    <div className="brows-job-location">
-                      <p>
-                        <i className="fa fa-map-marker" />
-                        QBL Park, C40
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-job-link">
-                      <button
-                        className="btn"
-                        style={{
-                          backgroundColor: '#f8f9fa',
-                          color: '#000',
-                          border: '1px solid #ccc',
-                          padding: '10px 20px',
-                          borderRadius: '4px',
-                          transition:
-                            'background-color 0.3s ease, color 0.3s ease',
-                          cursor: 'pointer',
-                        }}
-                        onMouseOver={(e) => {
-                          e.target.style.backgroundColor = '#07b107';
-                          e.target.style.color = '#fff';
-                        }}
-                        onMouseOut={(e) => {
-                          e.target.style.backgroundColor = '#f8f9fa';
-                          e.target.style.color = '#000';
-                        }}
-                      >
-                        Send Draft
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <span className="tg-themetag tg-featuretag">Premium</span>
-              </article>
-            </div>
-            <div className="item-click">
-              <article>
-                <div className="brows-job-list">
-                  <div className="col-md-1 col-sm-2 small-padding">
-                    <div className="brows-job-company-img">
-                      <a href="job-detail.html">
-                        <img
-                          src="/assets/img/com-2.jpg"
-                          className="img-responsive"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-sm-5">
-                    <div className="brows-job-position">
-                      <a href="job-apply-detail.html">
-                        <h3>Compensation Analyst</h3>
-                      </a>
-                      <p>
-                        <span>Google</span>
-                        <span className="brows-job-sallery">
-                          <i className="fa fa-money" />
-                          $810 - 900
-                        </span>
-                        <span className="job-type bg-trans-warning cl-warning">
-                          Part Time
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-3 col-sm-3">
-                    <div className="brows-job-location">
-                      <p>
-                        <i className="fa fa-map-marker" />
-                        QBL Park, C40
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-job-link">
-                      <button
-                        className="btn"
-                        style={{
-                          backgroundColor: '#f8f9fa',
-                          color: '#000',
-                          border: '1px solid #ccc',
-                          padding: '10px 20px',
-                          borderRadius: '4px',
-                          transition:
-                            'background-color 0.3s ease, color 0.3s ease',
-                          cursor: 'pointer',
-                        }}
-                        onMouseOver={(e) => {
-                          e.target.style.backgroundColor = '#07b107';
-                          e.target.style.color = '#fff';
-                        }}
-                        onMouseOut={(e) => {
-                          e.target.style.backgroundColor = '#f8f9fa';
-                          e.target.style.color = '#000';
-                        }}
-                      >
-                        Send Draft
-                      </button>
-                    </div>
-                  </div>
-                </div>
-              </article>
-            </div>
-            <div className="item-click">
-              <article>
-                <div className="brows-job-list">
-                  <div className="col-md-1 col-sm-2 small-padding">
-                    <div className="brows-job-company-img">
-                      <a href="job-detail.html">
-                        <img
-                          src="/assets/img/com-3.jpg"
-                          className="img-responsive"
-                          alt=""
-                        />
-                      </a>
-                    </div>
-                  </div>
-                  <div className="col-md-6 col-sm-5">
-                    <div className="brows-job-position">
-                      <a href="job-apply-detail.html">
-                        <h3>Investment Banker</h3>
-                      </a>
-                      <p>
-                        <span>Honda</span>
-                        <span className="brows-job-sallery">
-                          <i className="fa fa-money" />
-                          $800 - 910
-                        </span>
-                        <span className="job-type bg-trans-primary cl-primary">
-                          Freelancer
-                        </span>
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-3 col-sm-3">
-                    <div className="brows-job-location">
-                      <p>
-                        <i className="fa fa-map-marker" />
-                        QBL Park, C40
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-job-link">
-                      <button
-                        className="btn"
-                        style={{
-                          backgroundColor: '#f8f9fa',
-                          color: '#000',
-                          border: '1px solid #ccc',
-                          padding: '10px 20px',
-                          borderRadius: '4px',
-                          transition:
-                            'background-color 0.3s ease, color 0.3s ease',
-                          cursor: 'pointer',
-                        }}
-                        onMouseOver={(e) => {
-                          e.target.style.backgroundColor = '#07b107';
-                          e.target.style.color = '#fff';
-                        }}
-                        onMouseOut={(e) => {
-                          e.target.style.backgroundColor = '#f8f9fa';
-                          e.target.style.color = '#000';
-                        }}
-                      >
-                        Send Draft
-                      </button>
-                    </div>
-                  </div>
-                </div>
-                <span className="tg-themetag tg-featuretag">Premium</span>
+                ))}
               </article>
             </div>
 

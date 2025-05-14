@@ -12,7 +12,7 @@ export default function BusinessDetail() {
         <>
             <div className="clearfix"></div>
 
-            <section className="inner-header-title" style={{ backgroundImage: 'url(assets/img/banner-10.jpg)' }}>
+            <section className="inner-header-title" style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}>
                 <div className="container">
                     <h1>Company Detail</h1>
                 </div>
