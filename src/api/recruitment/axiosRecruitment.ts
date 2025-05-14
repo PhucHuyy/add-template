@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { RefreshResponse } from '../features/auth/authType';
+import { RefreshResponse } from '../../features/auth/authType';
 
 const axiosRecruitment = axios.create({
   baseURL: 'http://localhost:8090/api/v1/',
