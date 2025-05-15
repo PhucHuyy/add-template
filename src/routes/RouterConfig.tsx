@@ -43,6 +43,7 @@ import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
 import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
+import CategoriesList from '../pages/business/categories/CategoriesList';
 
 interface RouteConfig {
   path: string;
@@ -329,6 +330,16 @@ const routes: RouteConfig[] = [
       <RequireAuth>
         <DefaultLayout>
           <StudentInterviewList />
+        </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/admin/categories',
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <CategoriesList />
         </DefaultLayout>
       </RequireAuth>
     ),
