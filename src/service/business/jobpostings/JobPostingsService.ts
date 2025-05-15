@@ -1,4 +1,5 @@
 import axiosRecruitment from '../../../api/recruitment/axiosRecruitment';
+import axiosRecruitmentPublic from '../../../api/recruitment/axiosRecruitmentPublic';
 import { AxiosResponse } from 'axios';
 
 export const sendRequestCreateJob = async (jobPostingsRequestDTO: any) => {
@@ -116,6 +117,45 @@ export const bannedJob = async (jobId: string): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitment.put(
       `job-postings/${jobId}/banned`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const getListPublicJob = async () => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
+      `job-postings/view-all-public-job`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const hideJob = async (jobId: string): Promise<any> => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitment.put(
+      `job-postings/hide-job-posting/${jobId}`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const unHideJob = async (jobId: string): Promise<any> => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitment.put(
+      `job-postings/unhide-job-posting/${jobId}`,
     );
 
     return response.data;
