@@ -175,16 +175,27 @@ export default function StudentProfile() {
         <div className="container">
           <div className="deatil-tab-employ tool-tab">
             <div>
-              <ul className="job-detail-des">
-                <li style={{ fontSize: '20px' }}><span>Date Of Birth:</span>{profile?.getDateOfBirth()}</li>
-                <li style={{ fontSize: '20px' }}><span>Address:</span>{profile?.getAddress()}</li>
-                <li style={{ fontSize: '20px' }}><span>University:</span>{profile?.getUniversity()}</li>
-                <li style={{ fontSize: '20px' }}><span>major:</span>{profile?.getMajor()}</li>
-                <li style={{ fontSize: '20px' }}><span>Phone Number:</span>{profile?.getPhoneNumber()}</li>
-                <li style={{ fontSize: '20px' }}><span>Academic Year Start:</span>{profile?.getAcademicYearStart()}</li>
-                <li style={{ fontSize: '20px' }}>
-                  <span>Academic Year End:</span>
-                  {(() => {
+              <table style={{ margin: 'auto', width: '700px', }}>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Date Of Birth:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getDateOfBirth()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Address:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getAddress()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>University:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getUniversity()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Major:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getMajor()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Phone Number:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getPhoneNumber()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Academic Year Start:</td><td style={{ fontSize: '20px', color: 'gray' }}>{profile?.getAcademicYearStart()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Academic Year End:</td><td style={{ fontSize: '20px', color: 'gray' }}>{(() => {
                     const rawDate = profile?.getAcademicYearEnd();
                     const endDate = rawDate ? rawDate : null;
 
@@ -192,18 +203,23 @@ export default function StudentProfile() {
                     return endDate
                       ? endDate
                       : "not graduated";
-                  })()}
-                </li>
-                <li style={{ fontSize: '20px' }}><div className="col-md-12 col-sm-12" style={{ paddingLeft: '0px' }}>
-                  <label style={{ textAlign: 'start', fontSize: '20px' }}  >Image Stduent Card :</label>
-                  <div className="image-upload-container" style={{
+                  })()}</td>
+                </tr>
+                <tr>
+                  <td style={{ fontSize: '20px', color: '#444444' }}>Image Stduent Card:</td>
+                </tr>
+              </table>
+
+              <div className="image-upload-container" style={{
                     display: 'flex',
                     flexDirection: 'row', // đảm bảo các items nằm ngang
                     alignItems: 'center',
                     gap: '10px', // khoảng cách giữa các ảnh
                     flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
                     overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
-                    padding: '10px 0'
+                    padding: '10px 0',
+                    margin: 'auto',
+                    justifyContent: 'center'
                   }}>
                     {selectedImages.map((image, index) => (
                       <div key={index} className="image-preview" style={{
@@ -225,11 +241,7 @@ export default function StudentProfile() {
                         />
                       </div>
                     ))}
-
                   </div>
-                </div></li>
-
-              </ul>
             </div>
           </div>
         </div>
