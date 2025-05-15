@@ -210,15 +210,15 @@ export default function CreateJobPosting() {
       try {
         const response = await getAllCategories();
         const data = response.data.data;
+        console.log('Response:', data);
+        // const formattedOptions = data.map(
+        //   (category: { name: string; id: string }) => ({
+        //     label: category.name,
+        //     value: category.categoryId,
+        //   }),
+        // );
 
-        const formattedOptions = data.map(
-          (category: { name: string; id: string }) => ({
-            label: category.name,
-            value: category.categoryId,
-          }),
-        );
-
-        setOptions(formattedOptions);
+        // setOptions(formattedOptions);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

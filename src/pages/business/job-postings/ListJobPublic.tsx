@@ -6,23 +6,38 @@ export default function ListJobPublic() {
   const [jobs, setJobs] = React.useState([]);
   const [showModal, setShowModal] = useState(false);
 
-  useEffect(() => {
-    const fetchPublicJob = async () => {
-      try {
-        const response = await getListPublicJob();
-        setJobs(response.data);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-        throw new Error(
-          (error as any).response?.data?.message || 'Something went wrong',
-        );
-      }
-    };
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [limit] = useState(1);
 
-    fetchPublicJob();
-  }, []);
+  useEffect(() => {
+    const offset = (page - 1) * limit;
+
+    fetchPublicJob(offset);
+  }, [page]);
+
+  const fetchPublicJob = async (offset: number) => {
+    try {
+      const response = await getListPublicJob(offset, limit);
+      console.log('Response:', response.data);
+      setJobs(response.data.data);
+      setTotalPage(response.data.totalPages);
+    } catch (error) {
+      console.error('Error fetching categories:', error);
+      throw new Error(
+        (error as any).response?.data?.message || 'Something went wrong',
+      );
+    }
+  };
+
+  const isExpired = (expirationDate: any) => {
+    const now = new Date();
+    const expiration = new Date(expirationDate);
+    return expiration < now;
+  };
 
   console.log('Jobs:', jobs);
+  console.log('Total Page:', totalPage);
 
   return (
     <>
@@ -131,6 +146,18 @@ export default function ListJobPublic() {
                               Urgent
                             </span>
                           )}
+                          <span
+                            style={{
+                              marginLeft: '25px',
+                              color: '#666',
+                              fontStyle: 'italic',
+                            }}
+                          >
+                            Expiration:{' '}
+                            {new Date(job.expirationDate).toLocaleDateString(
+                              'vi-VN',
+                            )}
+                          </span>
                         </p>
 
                         {/* Hiển thị các category */}
@@ -170,6 +197,7 @@ export default function ListJobPublic() {
                     </div>
 
                     {/* Nút Apply và Save */}
+
                     <div className="col-md-2 col-sm-2">
                       <div
                         className="brows-job-link"
@@ -180,62 +208,76 @@ export default function ListJobPublic() {
                           gap: '10px',
                         }}
                       >
-                        <button
-                          className="btn"
-                          style={{
-                            backgroundColor: '#f8f9fa',
-                            color: '#000',
-                            border: '1px solid #ccc',
-                            padding: '10px 15px',
-                            borderRadius: '4px',
-                            transition:
-                              'background-color 0.3s ease, color 0.3s ease',
-                            cursor: 'pointer',
-                            flex: 1,
-                          }}
-                          onMouseOver={(e) => {
-                            e.target.style.backgroundColor = '#07b107';
-                            e.target.style.color = '#fff';
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.backgroundColor = '#f8f9fa';
-                            e.target.style.color = '#000';
-                          }}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setShowModal(true);
-                          }}
-                        >
-                          Apply Now
-                        </button>
+                        {isExpired(job.expirationDate) ? (
+                          <span
+                            style={{
+                              padding: '10px 15px',
+                              backgroundColor: '#dc3545',
+                              color: '#fff',
+                              borderRadius: '4px',
+                              fontWeight: 'bold',
+                              textAlign: 'center',
+                              flex: 1,
+                            }}
+                          >
+                            Expired
+                          </span>
+                        ) : (
+                          <>
+                            <button
+                              className="btn"
+                              style={{
+                                backgroundColor: '#f8f9fa',
+                                color: '#000',
+                                border: '1px solid #ccc',
+                                padding: '10px 15px',
+                                borderRadius: '4px',
+                                transition:
+                                  'background-color 0.3s ease, color 0.3s ease',
+                                cursor: 'pointer',
+                                flex: 1,
+                              }}
+                              onMouseOver={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  '#07b107';
+                                e.currentTarget.style.color = '#fff';
+                              }}
+                              onMouseOut={(e) => {
+                                e.currentTarget.style.backgroundColor =
+                                  '#f8f9fa';
+                                e.currentTarget.style.color = '#000';
+                              }}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                setShowModal(true);
+                              }}
+                            >
+                              Apply Now
+                            </button>
 
-                        <button
-                          className="btn"
-                          style={{
-                            backgroundColor: '#fff',
-                            color: '#dc3545',
-                            border: '2px solid #dc3545',
-                            padding: '10px',
-                            borderRadius: '50%',
-                            width: '42px',
-                            height: '42px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            transition: 'border-color 0.3s ease',
-                            cursor: 'pointer',
-                          }}
-                          onMouseOver={(e) => {
-                            e.target.style.borderColor = '#dc3545';
-                          }}
-                          onMouseOut={(e) => {
-                            e.target.style.borderColor = '#dc3545';
-                          }}
-                          title="Save Job"
-                          onClick={() => alert('Saved!')}
-                        >
-                          <i className="fa fa-heart" />
-                        </button>
+                            <button
+                              className="btn"
+                              style={{
+                                backgroundColor: '#fff',
+                                color: '#dc3545',
+                                border: '2px solid #dc3545',
+                                padding: '10px',
+                                borderRadius: '50%',
+                                width: '42px',
+                                height: '42px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'border-color 0.3s ease',
+                                cursor: 'pointer',
+                              }}
+                              title="Save Job"
+                              onClick={() => alert('Saved!')}
+                            >
+                              <i className="fa fa-heart" />
+                            </button>
+                          </>
+                        )}
                       </div>
                     </div>
                   </div>
@@ -244,33 +286,41 @@ export default function ListJobPublic() {
             </div>
 
             {/*/.row*/}
-            <div className="row">
-              <ul className="pagination">
-                <li>
-                  <a href="#">«</a>
-                </li>
-                <li className="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i className="fa fa-ellipsis-h" />
-                  </a>
-                </li>
-                <li>
-                  <a href="#">»</a>
-                </li>
-              </ul>
-            </div>
+            <ul className="pagination">
+              <li>
+                <a
+                  href="#"
+                  onClick={() => page > 1 && setPage(page - 1)}
+                  className={page === 1 ? 'disabled' : ''}
+                >
+                  «
+                </a>
+              </li>
+
+              {[...Array(totalPage)].map((_, index) => {
+                const current = index + 1;
+                return (
+                  <li
+                    key={current}
+                    className={page === current ? 'active' : ''}
+                  >
+                    <a href="#" onClick={() => setPage(current)}>
+                      {current}
+                    </a>
+                  </li>
+                );
+              })}
+
+              <li>
+                <a
+                  href="#"
+                  onClick={() => page < totalPage && setPage(page + 1)}
+                  className={page === totalPage ? 'disabled' : ''}
+                >
+                  »
+                </a>
+              </li>
+            </ul>
           </div>
         </section>
       </div>
