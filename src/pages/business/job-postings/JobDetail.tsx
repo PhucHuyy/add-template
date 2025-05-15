@@ -59,6 +59,7 @@ export default function JobDetail() {
   const [status, setStatus] = useState(null);
   const [isDeleted, setIsDeleted] = useState(false);
   const [expirationDate, setExpirationDate] = useState('');
+  const [categoryNames, setCategoryNames] = useState<string[]>([]);
 
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
@@ -82,6 +83,7 @@ export default function JobDetail() {
         setStatus(informationJobResponse?.data?.status);
         setIsDeleted(informationJobResponse?.data?.deleted);
         setExpirationDate(informationJobResponse?.data?.expirationDate);
+        setCategoryNames(informationJobResponse?.data?.categoryNames);
 
         const businessId = informationJobResponse?.data?.businessId;
 
@@ -311,8 +313,6 @@ export default function JobDetail() {
     }
   };
 
-  console.log(status, 'status');
-
   return (
     <>
       <div className="clearfix" />
@@ -349,6 +349,25 @@ export default function JobDetail() {
                 <h4>{businessInfo.companyName}</h4>
                 <span className="designation">{businessInfo.industry}</span>
                 <p>{businessInfo.companyInfo}</p>
+                <div className="category-tags" style={{ marginTop: '8px' }}>
+                  {categoryNames.map((name, index) => (
+                    <span
+                      key={index}
+                      style={{
+                        display: 'inline-block',
+                        backgroundColor: '#f0f0f0',
+                        color: '#333',
+                        padding: '4px 10px',
+                        borderRadius: '20px',
+                        fontSize: '1.3rem',
+                        marginRight: '6px',
+                        marginBottom: '6px',
+                      }}
+                    >
+                      {name}
+                    </span>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="col-md-4 col-sm-4">
