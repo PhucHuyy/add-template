@@ -28,8 +28,8 @@ import RequireRole from '../components/guards/RequireRole';
 import AdminLayout from '../components/layout/AdminLayout';
 import AdminDashboard from '../pages/admin/AdminDashBoard';
 
-import ListStudentAccount from "../pages/admin/ListStudentAccount";
-import ListBussinessAccount from "../pages/admin/ListBussinessAccount";
+import ListStudentAccount from '../pages/admin/ListStudentAccount';
+import ListBussinessAccount from '../pages/admin/ListBussinessAccount';
 
 import RefreshTokenTester from '../pages/RefreshTokenTester';
 import StaffAdmin from '../pages/staff-admin/StaffAdmin';
@@ -42,7 +42,7 @@ import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
 import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
-
+import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
 
 interface RouteConfig {
   path: string;
@@ -239,18 +239,18 @@ const routes: RouteConfig[] = [
       </RequireAuth>
     ),
   },
-  // {
-  //   path: '/business/update-job/:id',
-  //   element: (
-  //     <RequireAuth>
-  //       <RequireRole allowRoles={['BUSINESS']}>
-  //         <DefaultLayout>
-  //           <CreateJobPosting mode="update" />
-  //         </DefaultLayout>
-  //       </RequireRole>
-  //     </RequireAuth>
-  //   ),
-  // },
+  {
+    path: '/business/update-job/:id',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <UpdateJobPosting />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
   {
     path: '/business/list-job-created',
     element: (
@@ -290,21 +290,17 @@ const routes: RouteConfig[] = [
   {
     path: '/list-jobs',
     element: (
-      <RequireAuth>
-        <DefaultLayout>
-          <ListJobPublic />
-        </DefaultLayout>
-      </RequireAuth>
+      <DefaultLayout>
+        <ListJobPublic />
+      </DefaultLayout>
     ),
   },
   {
     path: 'detail-job/:jobId',
     element: (
-      <RequireAuth>
-        <DefaultLayout>
-          <JobDetail />
-        </DefaultLayout>
-      </RequireAuth>
+      <DefaultLayout>
+        <JobDetail />
+      </DefaultLayout>
     ),
   },
   {
@@ -338,9 +334,8 @@ const routes: RouteConfig[] = [
     ),
   },
 
-
   {
-    path: "/reset-password",
+    path: '/reset-password',
     element: (
       <RequireGuest>
         <ResetPassword />
@@ -349,11 +344,11 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: "/authenticate",
+    path: '/authenticate',
     element: <Authenticate></Authenticate>,
   },
   {
-    path: "/test",
+    path: '/test',
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -363,10 +358,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: "/admin",
+    path: '/admin',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
           <AdminLayout>
             <AdminDashboard />
           </AdminLayout>
@@ -375,10 +370,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: "/admin/staff-admins",
+    path: '/admin/staff-admins',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={["ADMIN"]}>
+        <RequireRole allowRoles={['ADMIN']}>
           <AdminLayout>
             <StaffAdmin />
           </AdminLayout>
@@ -387,10 +382,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: "/admin/students-account",
+    path: '/admin/students-account',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={["ADMIN"]}>
+        <RequireRole allowRoles={['ADMIN']}>
           <AdminLayout>
             <ListStudentAccount />
           </AdminLayout>
@@ -400,10 +395,10 @@ const routes: RouteConfig[] = [
   },
 
   {
-    path: "/admin/business-account",
+    path: '/admin/business-account',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={["ADMIN"]}>
+        <RequireRole allowRoles={['ADMIN']}>
           <AdminLayout>
             <ListBussinessAccount />
           </AdminLayout>
@@ -411,6 +406,5 @@ const routes: RouteConfig[] = [
       </RequireAuth>
     ),
   },
-
 ];
 export default routes;
