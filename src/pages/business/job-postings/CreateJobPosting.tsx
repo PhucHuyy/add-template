@@ -209,16 +209,16 @@ export default function CreateJobPosting() {
     const fetchCategories = async () => {
       try {
         const response = await getAllCategories();
-        const data = response.data.data;
+        const data = response.data;
         console.log('Response:', data);
-        // const formattedOptions = data.map(
-        //   (category: { name: string; id: string }) => ({
-        //     label: category.name,
-        //     value: category.categoryId,
-        //   }),
-        // );
+        const formattedOptions = data.map(
+          (category: { name: string; id: string }) => ({
+            label: category.name,
+            value: category.categoryId,
+          }),
+        );
 
-        // setOptions(formattedOptions);
+        setOptions(formattedOptions);
       } catch (error) {
         console.error('Error fetching categories:', error);
       }

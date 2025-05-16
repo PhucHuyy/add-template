@@ -3,14 +3,15 @@ import { RootState } from "../../app/store";
 import { logout } from "../../features/auth/authSlice";
 import { useNavigate } from "react-router-dom";
 import "../../config/scriptConfig";
-import MegaMenu from "./MegaMenu";
 import "./header.css";
 import { useAppDispatch } from "../../app/hook";
 import { useEffect, useState } from "react";
 import {
   fetchNotifications,
   markNotificationAsRead,
-} from "../../features/noti/NotiSlice";
+} from "../../features/noti/notiSlice";
+import MegaMenuWrapper from "./MegaMenuWrapper";
+import { megaMenu as fullMenu, MegaMenuColumn } from "../../data/menuData";
 
 export default function Header() {
   console.log("[App render]");
@@ -20,6 +21,11 @@ export default function Header() {
   const navigate = useNavigate();
   const { notifications = [] } = useSelector((state: RootState) => state.noti);
   console.log("🔔 Notifications in Header:", notifications);
+  const roles = user?.roleNames || [];
+  const filteredMegaMenu = fullMenu.filter((col: MegaMenuColumn) => {
+    if (!col.roles) return true;
+    return col.roles.some((r: string) => roles.includes(r));
+  });
 
   const isAdmin = () => {
     return (
@@ -115,11 +121,10 @@ export default function Header() {
               data-in="fadeInDown"
               data-out="fadeOutUp"
             >
-              <MegaMenu />
+              <MegaMenuWrapper menu={filteredMegaMenu} />{" "}
               <li>
                 <a href="/blog">Blog</a>
               </li>
-
               {!user ? (
                 <>
                   <li>
