@@ -43,12 +43,9 @@ import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
 import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
-<<<<<<< Updated upstream
 import CategoriesList from '../pages/business/categories/CategoriesList';
-=======
 import ListUsers from '../pages/admin/ListUsers';
 import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
->>>>>>> Stashed changes
 
 interface RouteConfig {
   path: string;
