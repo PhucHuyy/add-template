@@ -47,6 +47,7 @@ import CategoriesList from '../pages/business/categories/CategoriesList';
 import ListUsers from '../pages/admin/ListUsers';
 import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
 import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
+import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
 
 interface RouteConfig {
   path: string;
@@ -453,6 +454,16 @@ const routes: RouteConfig[] = [
             <ListProfiles />
           </AdminLayout>
         </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/BusinessDetail/:id",
+    element: (
+      <RequireAuth>
+        <DefaultLayout>
+          <BusinessDetail />
+        </DefaultLayout>
       </RequireAuth>
     ),
   },
