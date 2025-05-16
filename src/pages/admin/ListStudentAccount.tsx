@@ -167,7 +167,6 @@ export default function ListStudentAccount() {
                             <option value={-1}>All</option>
                             <option value={0}>Pending</option>
                             <option value={1}>Approved</option>
-                            <option value={2}>Reject</option>
                         </select>
                         <button
                             onClick={handleSearch}
