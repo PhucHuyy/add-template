@@ -22,6 +22,7 @@ import {
   ResponsiveContainer,
   CartesianGrid,
 } from "recharts";
+import { href, useNavigate } from "react-router-dom";
 
 export default function AdminDashboard() {
   const dispatch = useAppDispatch();
@@ -34,6 +35,7 @@ export default function AdminDashboard() {
     pendingJobCount,
     userRegistrationReport,
   } = useSelector((state: RootState) => state.admin);
+  const navigate = useNavigate();
   useEffect(() => {
     dispatch(fetchUserStats());
     dispatch(countTotalPendingRequests());
@@ -93,10 +95,13 @@ export default function AdminDashboard() {
       <div className="white-shadow px-12 py-8">
         {/* Stats */}
         <div className="overview-container">
-          <div className="overview-box">
+          <div
+            className="overview-box"
+            onClick={() => navigate("/admin/users")}
+            style={{ cursor: "pointer" }}
+          >
             <i className="fa fa-users overview-icon"></i>
             <div>
-              {/* <p className="overview-title">User Summary</p> */}
               <p className="overview-value">
                 User total: {userStats?.total ?? "..."}
               </p>
@@ -107,7 +112,12 @@ export default function AdminDashboard() {
               </p>
             </div>
           </div>
-          <div className="overview-box">
+          <div
+            className="overview-box"
+            onClick={() => navigate("/admin/pending-jobs")}
+            style={{ cursor: "pointer" }}
+          >
+            {" "}
             <i className="fa fa-briefcase overview-icon"></i>
             <div>
               <p className="overview-value">
@@ -115,7 +125,12 @@ export default function AdminDashboard() {
               </p>
             </div>
           </div>
-          <div className="overview-box">
+          <div
+            className="overview-box"
+            onClick={() => navigate("/admin/pending-profiles")}
+            style={{ cursor: "pointer" }}
+          >
+            {" "}
             <i className="fa fa-tasks overview-icon"></i>
             <div>
               <p className="overview-value">

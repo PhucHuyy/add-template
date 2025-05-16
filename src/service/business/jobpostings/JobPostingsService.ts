@@ -57,10 +57,16 @@ export const sendDraftJob = async (jobId: string): Promise<any> => {
   }
 };
 
-export const getListJobCreated = async () => {
+export const getListJobCreated = async (offset: number, limit: number) => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitment.get(
       `job-postings/view-list-job-created`,
+      {
+        params: {
+          offset,
+          limit,
+        },
+      },
     );
 
     return response.data;
@@ -126,10 +132,16 @@ export const bannedJob = async (jobId: string): Promise<any> => {
   }
 };
 
-export const getListPublicJob = async () => {
+export const getListPublicJob = async (offset: number, limit: number) => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
       `job-postings/view-all-public-job`,
+      {
+        params: {
+          offset,
+          limit,
+        },
+      },
     );
 
     return response.data;

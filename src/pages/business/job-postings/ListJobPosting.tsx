@@ -32,6 +32,9 @@ const sendDraftStyle = {
 
 export default function ListJobPosting() {
   const [jobs, setJobs] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [limit] = useState(2);
 
   const handlePreSendDraft = (jobId: string) => {
     Swal.fire({
@@ -161,26 +164,28 @@ export default function ListJobPosting() {
   };
 
   useEffect(() => {
-    const fetchListJobCreated = async () => {
-      try {
-        const response = await getListJobCreated();
-        console.log(response.data, 'response.data');
+    const offset = (page - 1) * limit;
+    fetchListJobCreated(offset);
+  }, [page]);
 
-        if (response.code === 1000) {
-          setJobs(response.data);
-        } else {
-          console.error('Failed to fetch job postings');
-        }
-      } catch (error) {
-        console.error('Error fetching list job created:', error);
-        throw new Error(
-          error.response?.data?.message || 'Something went wrong',
-        );
+  const fetchListJobCreated = async (offset: number) => {
+    try {
+      const response = await getListJobCreated(offset, limit);
+
+      if (response.code === 1000) {
+        setJobs(response.data.data);
+        setTotalPage(response.data.totalPages);
+      } else {
+        console.error('Failed to fetch job postings');
       }
-    };
+    } catch (error) {
+      console.error('Error fetching list job created:', error);
+      throw new Error(error.response?.data?.message || 'Something went wrong');
+    }
+  };
 
-    fetchListJobCreated();
-  }, []);
+  console.log(jobs, 'jobs');
+  console.log(totalPage, 'totalPage');
 
   return (
     <>
@@ -288,6 +293,18 @@ export default function ListJobPosting() {
                               Urgent
                             </span>
                           )}
+                          <span
+                            style={{
+                              marginLeft: '15px',
+                              color: '#666',
+                              fontStyle: 'italic',
+                            }}
+                          >
+                            Expiration:{' '}
+                            {new Date(job.expirationDate).toLocaleDateString(
+                              'vi-VN',
+                            )}
+                          </span>
                         </p>
 
                         {/* Hiển thị các category */}
@@ -401,33 +418,41 @@ export default function ListJobPosting() {
             </div>
 
             {/*/.row*/}
-            <div className="row">
-              <ul className="pagination">
-                <li>
-                  <a href="#">«</a>
-                </li>
-                <li className="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i className="fa fa-ellipsis-h" />
-                  </a>
-                </li>
-                <li>
-                  <a href="#">»</a>
-                </li>
-              </ul>
-            </div>
+            <ul className="pagination">
+              <li>
+                <a
+                  href="#"
+                  onClick={() => page > 1 && setPage(page - 1)}
+                  className={page === 1 ? 'disabled' : ''}
+                >
+                  «
+                </a>
+              </li>
+
+              {[...Array(totalPage)].map((_, index) => {
+                const current = index + 1;
+                return (
+                  <li
+                    key={current}
+                    className={page === current ? 'active' : ''}
+                  >
+                    <a href="#" onClick={() => setPage(current)}>
+                      {current}
+                    </a>
+                  </li>
+                );
+              })}
+
+              <li>
+                <a
+                  href="#"
+                  onClick={() => page < totalPage && setPage(page + 1)}
+                  className={page === totalPage ? 'disabled' : ''}
+                >
+                  »
+                </a>
+              </li>
+            </ul>
           </div>
         </section>
       </div>

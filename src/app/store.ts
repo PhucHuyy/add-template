@@ -2,7 +2,9 @@ import { configureStore } from '@reduxjs/toolkit';
 import authReducer from '../features/auth/authSlice';
 import businessReducer from '../features/auth/businessSlice';
 import adminReducer from '../features/admin/adminSlice';
-import notificationReducer from '../features/noti/NotiSlice';
+import notificationReducer from '../features/noti/notiSlice';
+import requestSliceReducer from '../features/admin/requestSlice';
+
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineReducers } from 'redux';
@@ -17,6 +19,7 @@ const rootReducer = combineReducers({
   business: businessReducer,
   admin: adminReducer,
   noti: notificationReducer,
+  request: requestSliceReducer,
 });
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
