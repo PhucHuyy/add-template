@@ -22,6 +22,17 @@ const menuItems = [
     icon: "fa fa-user-tie",
     path: "/admin/staff-admins",
   },
+{
+  title: "Pending Profiles",
+  icon: "fa fa-user-clock",
+  path: "/admin/pending-profiles",
+},
+{
+  title: "Pending Jobs",
+  icon: "fa fa-clipboard-list",
+  path: "/admin/pending-jobs",
+},
+
   { title: "Users", icon: "fas fa-user-friends", path: "/admin/users" },
   {
     title: "Banned accounts",

@@ -142,9 +142,8 @@ export default function StaffAdmin() {
                     <button
                       className="assign-btn"
                       onClick={(e) => {
-                        e.stopPropagation(); // không chọn user khi click button
+                        e.stopPropagation(); 
                         dispatch(assignStaffAdminRole(user.userId)).then(() => {
-                          // Optional: thông báo thành công, xóa dropdown
                           setSearchResults([]);
                         });
                       }}

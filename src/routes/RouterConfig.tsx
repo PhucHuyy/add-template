@@ -43,7 +43,12 @@ import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
 import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
+<<<<<<< Updated upstream
 import CategoriesList from '../pages/business/categories/CategoriesList';
+=======
+import ListUsers from '../pages/admin/ListUsers';
+import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
+>>>>>>> Stashed changes
 
 interface RouteConfig {
   path: string;
@@ -396,7 +401,7 @@ const routes: RouteConfig[] = [
     path: '/admin/students-account',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN']}>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
           <AdminLayout>
             <ListStudentAccount />
           </AdminLayout>
@@ -409,9 +414,33 @@ const routes: RouteConfig[] = [
     path: '/admin/business-account',
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN']}>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
           <AdminLayout>
             <ListBussinessAccount />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+    {
+    path: '/admin/users',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <ListUsers />
+          </AdminLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+   {
+    path: '/admin/pending-profiles',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <ListProfiles />
           </AdminLayout>
         </RequireRole>
       </RequireAuth>
