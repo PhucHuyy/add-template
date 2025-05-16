@@ -8,7 +8,7 @@ export default function ListJobPublic() {
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
-  const [limit] = useState(1);
+  const [limit] = useState(10);
 
   useEffect(() => {
     const offset = (page - 1) * limit;

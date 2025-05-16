@@ -8,6 +8,11 @@ const menuItems = [
   // { title: 'Users', icon: 'fa fa-users', path: '/admin/users' },
   // { title: 'Settings', icon: 'fa fa-cogs', path: '/admin/settings' },
   {
+    title: "Categories",
+    icon: "fa fa-th-large",
+    path: "/admin/categories",
+  },
+  {
     title: "Student accounts",
     icon: "fa fa-user-graduate",
     path: "/admin/students-account",
@@ -22,16 +27,16 @@ const menuItems = [
     icon: "fa fa-user-tie",
     path: "/admin/staff-admins",
   },
-{
-  title: "Pending Profiles",
-  icon: "fa fa-user-clock",
-  path: "/admin/pending-profiles",
-},
-{
-  title: "Pending Jobs",
-  icon: "fa fa-clipboard-list",
-  path: "/admin/pending-jobs",
-},
+  {
+    title: "Pending Profiles",
+    icon: "fa fa-user-clock",
+    path: "/admin/pending-profiles",
+  },
+  {
+    title: "Pending Jobs",
+    icon: "fa fa-clipboard-list",
+    path: "/admin/pending-jobs",
+  },
 
   { title: "Users", icon: "fas fa-user-friends", path: "/admin/users" },
   {
