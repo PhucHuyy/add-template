@@ -7,6 +7,8 @@ import { BusinessProfilesForUpdate, updateBusiness } from '../../../../service/b
 import './EditBusinessProfile.css';
 import Swal from 'sweetalert2';
 import { getBusinessImages, uploadImagesBusiness2 } from '../../../../service/business/imageBusinessService';
+import { uploadAvatar } from '../../../../service/business/uploadImageBusinessService';
+import { sendRequest } from '../../../../service/business/verifyBusinessService';
 
 interface BusinessProfile {
   companyName: string;
@@ -22,13 +24,17 @@ interface BusinessProfile {
 const EditBusinessProfile: React.FC = () => {
   const business = useSelector((state: RootState) => state.business.data);
   const navigate = useNavigate();
-  const [selectedImages, setSelectedImages] = useState<{ url: string}[]>([]);
+  const [selectedImages, setSelectedImages] = useState<{ url: string }[]>([]);
   const [formData, setFormData] = useState<BusinessProfilesForUpdate>(business);
   const [images, setImages] = useState<File[]>([]);
   const [cardid, setcardid] = useState<string[]>([]);
 
-  useEffect(()=>{
-    const fecthImage = async () =>{
+
+  const [avatar, setavatar] = useState<File | null>();
+  const [avatar_url, setavatarurl] = useState<{ url: string }>();
+
+  useEffect(() => {
+    const fecthImage = async () => {
       const img = await getBusinessImages();
       console.log(img);
       const imageUrls = img.map((item: any) => ({
@@ -41,11 +47,12 @@ const EditBusinessProfile: React.FC = () => {
 
       setSelectedImages(imageUrls);
       setcardid(imgid);
+      setavatarurl({ url: business.image_Avatar_url });
     }
 
     fecthImage();
-    
 
+    console.log(business);
     console.log(formData);
   }, []);
 
@@ -77,18 +84,18 @@ const EditBusinessProfile: React.FC = () => {
         cancelButton: 'btn-cancel',
       },
     });
-  
+
     if (result.isConfirmed) {
       try {
-        const imagesOldImg =  Array.isArray(cardid) ? cardid : [cardid];
-  
-  
+        const imagesOldImg = Array.isArray(cardid) ? cardid : [cardid];
+
+
         // Create the updated form data object
         const updatedFormData = {
           ...formData,
           imagesOldImg,    // Add old images to the data
         };
-  
+
         const filteredPayload = {
           companyName: updatedFormData.companyName,
           industry: updatedFormData.industry,
@@ -100,12 +107,19 @@ const EditBusinessProfile: React.FC = () => {
           address: updatedFormData.address,
           imagesOldImg: updatedFormData.imagesOldImg.map((img: any) => img.url),
         };
-  
+
         await updateBusiness(filteredPayload);
-        if(images.length>0){
+        if (images.length > 0) {
           await uploadImagesBusiness2(images); // Upload images if needed
         }
-  
+
+        await sendRequest();
+
+        if (avatar) {
+          await uploadAvatar(avatar);
+        }
+
+
         await Swal.fire({
           title: 'Success!',
           text: 'Updated successfully.',
@@ -133,7 +147,7 @@ const EditBusinessProfile: React.FC = () => {
       }
     }
   };
-  
+
 
   const handleCancel = async () => {
     const result = await Swal.fire({
@@ -155,6 +169,12 @@ const EditBusinessProfile: React.FC = () => {
     }
   };
 
+  const handleImageRemoveAvatar = () => {
+    console.log("sang");
+    setavatar(null);
+    setavatarurl({ url: "" });
+  }
+
   return (
     <div className="user-profile"
     >
@@ -171,6 +191,99 @@ const EditBusinessProfile: React.FC = () => {
       {/* --- Các form input giữ nguyên --- */}
       <div className="edit-container"
         style={{ marginBottom: '100px', marginTop: '50px' }}>
+
+        <div className="form-group">
+          <label>Image avatar</label>
+          <div className="image-upload-container" style={{
+            display: 'flex',
+            flexDirection: 'row', // đảm bảo các items nằm ngang
+            alignItems: 'center',
+            gap: '10px', // khoảng cách giữa các ảnh
+            flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+            overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+            padding: '10px 0'
+          }}>
+
+            {avatar || avatar_url?.url !== "" ? (<div className="image-preview" style={{
+              position: 'relative',
+              minWidth: '100px', // đảm bảo kích thước tối thiểu
+              height: '100px',
+              flexShrink: 0 // ngăn không cho ảnh co lại
+            }}>
+
+              <img
+                src={avatar_url?.url}
+                style={{
+                  width: '100px',
+                  height: '100px',
+                  objectFit: 'cover',
+                  borderRadius: '4px'
+                }}
+              />
+              <button
+                onClick={() => handleImageRemoveAvatar()}
+                style={{
+                  position: 'absolute',
+                  top: '0px',
+                  right: '0px',
+                  border: 'none',
+                  background: 'red',
+                  color: 'white',
+                  borderRadius: '50%',
+                  width: '20px',
+                  height: '20px',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
+                }}
+              >
+                ×
+              </button>
+            </div>) : ("")}
+
+            {!avatar && avatar_url?.url === "" ? (<label
+              className="upload-button"
+              style={{
+                minWidth: '100px',
+                height: '100px',
+                border: '2px dashed #ccc',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                cursor: 'pointer',
+                fontSize: '30px',
+                flexShrink: 0,
+                borderRadius: '4px'
+              }}
+            >
+              <input
+                type="file"
+                accept="image/*"
+                onChange={(e) => {
+                  const files = e.target.files;
+                  if (files) {
+                    // const newImages = Array.from(files).map(file => ({
+                    //   url: URL.createObjectURL(file)
+                    // }));
+                    const newImages = URL.createObjectURL(files[0])
+                    // setSelectedImages(prev => [...prev, ...newImages].slice(0, 5)); // tối đa 5 ảnh
+                    setavatarurl({ url: newImages });
+
+                    if (files && files.length > 0) {
+                      setavatar(files[0]); // setFile kiểu File | null | undefined
+                    } else {
+                      setavatar(null);
+                    }
+                  }
+                }}
+                style={{ display: 'none' }}
+              />
+              +
+            </label>) : ("")}
+
+          </div>
+        </div>
         <div className="form-group">
           <label>Company Name</label>
           <input
@@ -231,93 +344,94 @@ const EditBusinessProfile: React.FC = () => {
             onChange={handleChange}
           />
         </div>
+
         <div className="form-group">
           <label>Image Business</label>
           <div className="image-upload-container" style={{
-              display: 'flex',
-              flexDirection: 'row', // đảm bảo các items nằm ngang
-              alignItems: 'center',
-              gap: '10px', // khoảng cách giữa các ảnh
-              flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
-              overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
-              padding: '10px 0'
-            }}>
-              {selectedImages.map((image, index) => (
-                <div key={index} className="image-preview" style={{
-                  position: 'relative',
-                  minWidth: '100px', // đảm bảo kích thước tối thiểu
-                  height: '100px',
-                  flexShrink: 0 // ngăn không cho ảnh co lại
-                }}>
-                  <img
-                    src={image.url}
-                    alt={`Preview ${index}`}
-                    style={{
-                      width: '100px',
-                      height: '100px',
-                      objectFit: 'cover',
-                      borderRadius: '4px'
-                    }}
-                  />
-                  <button
-                    onClick={() => handleImageRemove(index)}
-                    style={{
-                      position: 'absolute',
-                      top: '0px',
-                      right: '0px',
-                      border: 'none',
-                      background: 'red',
-                      color: 'white',
-                      borderRadius: '50%',
-                      width: '20px',
-                      height: '20px',
-                      cursor: 'pointer',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center'
-                    }}
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-
-              {selectedImages.length < 5 && (
-                <label
-                  className="upload-button"
+            display: 'flex',
+            flexDirection: 'row', // đảm bảo các items nằm ngang
+            alignItems: 'center',
+            gap: '10px', // khoảng cách giữa các ảnh
+            flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+            overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+            padding: '10px 0'
+          }}>
+            {selectedImages.map((image, index) => (
+              <div key={index} className="image-preview" style={{
+                position: 'relative',
+                minWidth: '100px', // đảm bảo kích thước tối thiểu
+                height: '100px',
+                flexShrink: 0 // ngăn không cho ảnh co lại
+              }}>
+                <img
+                  src={image.url}
+                  alt={`Preview ${index}`}
                   style={{
-                    minWidth: '100px',
+                    width: '100px',
                     height: '100px',
-                    border: '2px dashed #ccc',
-                    display: 'flex',
-                    alignItems: 'center',
-                    justifyContent: 'center',
-                    cursor: 'pointer',
-                    fontSize: '30px',
-                    flexShrink: 0,
+                    objectFit: 'cover',
                     borderRadius: '4px'
                   }}
+                />
+                <button
+                  onClick={() => handleImageRemove(index)}
+                  style={{
+                    position: 'absolute',
+                    top: '0px',
+                    right: '0px',
+                    border: 'none',
+                    background: 'red',
+                    color: 'white',
+                    borderRadius: '50%',
+                    width: '20px',
+                    height: '20px',
+                    cursor: 'pointer',
+                    display: 'flex',
+                    alignItems: 'center',
+                    justifyContent: 'center'
+                  }}
                 >
-                  <input
-                    type="file"
-                    multiple
-                    accept="image/*"
-                    onChange={(e) => {
-                      const files = e.target.files;
-                      if (files) {
-                        const newImages = Array.from(files).map(file => ({
-                          url: URL.createObjectURL(file)
-                        }));
-                        setSelectedImages(prev => [...prev, ...newImages].slice(0, 5)); // tối đa 5 ảnh
-                        setImages(prev => [...prev, ...files].slice(0, 5))
-                      }
-                    }}
-                    style={{ display: 'none' }}
-                  />
-                  +
-                </label>
-              )}
-            </div>
+                  ×
+                </button>
+              </div>
+            ))}
+
+            {selectedImages.length < 5 && (
+              <label
+                className="upload-button"
+                style={{
+                  minWidth: '100px',
+                  height: '100px',
+                  border: '2px dashed #ccc',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  cursor: 'pointer',
+                  fontSize: '30px',
+                  flexShrink: 0,
+                  borderRadius: '4px'
+                }}
+              >
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={(e) => {
+                    const files = e.target.files;
+                    if (files) {
+                      const newImages = Array.from(files).map(file => ({
+                        url: URL.createObjectURL(file)
+                      }));
+                      setSelectedImages(prev => [...prev, ...newImages].slice(0, 5)); // tối đa 5 ảnh
+                      setImages(prev => [...prev, ...files].slice(0, 5))
+                    }
+                  }}
+                  style={{ display: 'none' }}
+                />
+                +
+              </label>
+            )}
+          </div>
         </div>
 
         <div className="button-group">

@@ -10,7 +10,7 @@ import '../../pages/identity/user/business/BusinessProfile.css';
 import Loading from '../../common/Loading';
 import { Navigate, useNavigate } from 'react-router-dom';
 
-const InformationTab = ({  }) => {
+const InformationTab = ({ }) => {
   const [businessInfo, setBusinessInfo] = useState(null);
   const [businessImages, setBusinessImages] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -152,44 +152,54 @@ const InformationTab = ({  }) => {
             </tbody>
           </table>
         </div>
-
+        <div className="col-md-12 col-sm-12" style={{ paddingLeft: '0px' }}>
+          <label style={{ textAlign: 'start', fontSize: '20px', fontWeight: 'bold' }}  >Company Avatar :</label>
+          <img style={{
+            width: '100px',
+            height: '100px',
+            objectFit: 'cover',
+            borderRadius: '0px',
+            margin: '0px',
+            maxWidth: `100%`
+          }} src={businessInfo?.image_Avatar_url} />
+        </div>
         {businessImages.length > 0 ? (
           <div className="col-md-12 col-sm-12" style={{ paddingLeft: '0px' }}>
-          <label style={{ textAlign: 'start', fontSize: '20px', fontWeight: 'bold' }}  >Company Image :</label>
-          <div className="image-upload-container" style={{
-            display: 'flex',
-            flexDirection: 'row', // đảm bảo các items nằm ngang
-            alignItems: 'center',
-            gap: '10px', // khoảng cách giữa các ảnh
-            flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
-            overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
-            padding: '10px 0'
-          }}>
-            {businessImages.map((image, index) => (
-              <div key={index} className="image-preview" style={{
-                position: 'relative',
-                minWidth: '100px', // đảm bảo kích thước tối thiểu
-                height: '100px',
-                flexShrink: 0 // ngăn không cho ảnh co lại
-              }}>
-                <img
-                  src={image.imageUrl}
-                  alt={`Preview ${index}`}
-                  onClick={() => setSelectedImage(image.imageUrl)}
-                  style={{
-                    width: '100px',
-                    height: '100px',
-                    objectFit: 'cover',
-                    borderRadius: '0px',
-                    margin: '0px',
-                    maxWidth: `100%`
-                  }}
-                />
-              </div>
-            ))}
+            <label style={{ textAlign: 'start', fontSize: '20px', fontWeight: 'bold' }}  >Company Image :</label>
+            <div className="image-upload-container" style={{
+              display: 'flex',
+              flexDirection: 'row', // đảm bảo các items nằm ngang
+              alignItems: 'center',
+              gap: '10px', // khoảng cách giữa các ảnh
+              flexWrap: 'nowrap', // ngăn không cho wrap xuống dòng
+              overflowX: 'auto', // cho phép scroll ngang nếu nhiều ảnh
+              padding: '10px 0'
+            }}>
+              {businessImages.map((image, index) => (
+                <div key={index} className="image-preview" style={{
+                  position: 'relative',
+                  minWidth: '100px', // đảm bảo kích thước tối thiểu
+                  height: '100px',
+                  flexShrink: 0 // ngăn không cho ảnh co lại
+                }}>
+                  <img
+                    src={image.imageUrl}
+                    alt={`Preview ${index}`}
+                    onClick={() => setSelectedImage(image.imageUrl)}
+                    style={{
+                      width: '100px',
+                      height: '100px',
+                      objectFit: 'cover',
+                      borderRadius: '0px',
+                      margin: '0px',
+                      maxWidth: `100%`
+                    }}
+                  />
+                </div>
+              ))}
 
+            </div>
           </div>
-        </div>
         ) : (
           <p>No images available.</p>
         )}

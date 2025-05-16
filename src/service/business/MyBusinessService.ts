@@ -16,6 +16,7 @@ export interface BusinessProfilesForUpdate {
   email: string;
   phoneNumber: string;
   address: string;
+  Image_Avatar_url: string;
   imagesOldImg: string[];
 }
 

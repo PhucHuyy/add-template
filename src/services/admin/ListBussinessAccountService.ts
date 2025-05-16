@@ -18,6 +18,7 @@ export class BusinessProfilesDTO {
     createdAt: string;  // Can use string, or Date if you want to work with Date objects
     updatedAt: string;  // Can use string, or Date if you want to work with Date objects
     imageBusiness: string[];
+    image_Avatar_url: string;
 
     constructor(
         profileId: string,
@@ -34,7 +35,8 @@ export class BusinessProfilesDTO {
         isDeleted: boolean,
         createdAt: string,  // or Date if using Date objects
         updatedAt: string,  // or Date if using Date objects
-        imageBusiness: string[]
+        imageBusiness: string[],
+        image_Avatar_url: string,
     ) {
         this.profileId = profileId;
         this.companyName = companyName;
@@ -51,14 +53,15 @@ export class BusinessProfilesDTO {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.imageBusiness = imageBusiness;
+        this.image_Avatar_url = image_Avatar_url
     }
 
     // You can also add methods here if needed
 }
 
 
-export class ListBussinessAccountServcie{
-       async GetAllBusiness(search?: string, isApproved?: number, pageIndex: number = 1, pageSize: number = 10): Promise<PageResult<BusinessProfilesDTO> | null> {
+export class ListBussinessAccountServcie {
+    async GetAllBusiness(search?: string, isApproved?: number, pageIndex: number = 1, pageSize: number = 10): Promise<PageResult<BusinessProfilesDTO> | null> {
         try {
             const response = await axiosPrivateProfileServcie.get<ApiResponse<PageResult<BusinessProfilesDTO>>>('/v1/admin/business/list', {
                 params: {
@@ -85,7 +88,7 @@ export class ListBussinessAccountServcie{
     // Hàm lấy thông tin chi tiết business profile
     async GetBusinessProfile(id: string): Promise<BusinessProfilesDTO | null> {
         try {
-            const response = await axiosPrivateProfileServcie.get<ApiResponse<BusinessProfilesDTO>>('/v1/admin/business/detail?id='+id, {
+            const response = await axiosPrivateProfileServcie.get<ApiResponse<BusinessProfilesDTO>>('/v1/admin/business/detail?id=' + id, {
             });
 
             if (response.data && response.data.data) {

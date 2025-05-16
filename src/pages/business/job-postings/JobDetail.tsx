@@ -69,6 +69,8 @@ export default function JobDetail() {
   const [expirationDate, setExpirationDate] = useState('');
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
 
+  const [businessId, setbusinessId] = useState<string>("");
+
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
     industry: '',
@@ -94,7 +96,7 @@ export default function JobDetail() {
         setCategoryNames(informationJobResponse?.data?.categoryNames);
 
         const businessId = informationJobResponse?.data?.businessId;
-
+        setbusinessId(businessId);
         const businessInfoResponse = await getBusinessById(businessId);
         setBusinessInfo({
           companyName: businessInfoResponse?.data?.companyName,
@@ -361,7 +363,7 @@ export default function JobDetail() {
           <div className="row bottom-mrg">
             <div className="col-md-8 col-sm-8">
               <div className="detail-desc-caption">
-                <h4>{businessInfo.companyName}</h4>
+                <h4><a href={'http://localhost:5173/BusinessDetail/'+businessId}>{businessInfo.companyName}</a></h4>
                 <span className="designation">{businessInfo.industry}</span>
                 <p>{businessInfo.companyInfo}</p>
                 <div className="category-tags" style={{ marginTop: '8px' }}>

@@ -6,6 +6,7 @@ import { useNavigate } from 'react-router-dom';
 import axiosPrivate from "../../../api/axiosPrivate";
 import Swal from "sweetalert2";
 import { RefreshResponse } from "../../../features/auth/authType";
+import axios from 'axios';
 export default function UserProfile() {
   const navigate = useNavigate(); // Hook to navigate to other pages
   const user = useSelector((state: RootState) => state.auth.user);
@@ -67,7 +68,7 @@ export default function UserProfile() {
           {},
           { withCredentials: true }
         );
-
+        console.log(refreshResponse);
         const newToken = refreshResponse.data.data.token;
         localStorage.setItem("accessToken", newToken);
         // // Handle response (data containing roles)
@@ -109,7 +110,7 @@ export default function UserProfile() {
           {},
           { withCredentials: true }
         );
-
+        console.log(refreshResponse);
         const newToken = refreshResponse.data.data.token;
         localStorage.setItem("accessToken", newToken);
         // // Handle response (data containing roles)
