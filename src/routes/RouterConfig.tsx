@@ -44,6 +44,7 @@ import StudentInterviewList from '../pages/business/interviews/StudentInterviewL
 import JobInterviewList from '../pages/business/interviews/JobInterviewList';
 import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
 import CategoriesList from '../pages/business/categories/CategoriesList';
+import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
 
 interface RouteConfig {
   path: string;
@@ -265,7 +266,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/list-apply-jobs',
+    path: '/business/list-apply-jobs/:jobId',
     element: (
       <RequireAuth>
         <RequireRole allowRoles={['BUSINESS']}>
@@ -283,6 +284,18 @@ const routes: RouteConfig[] = [
         <RequireRole allowRoles={['BUSINESS']}>
           <DefaultLayout>
             <JobInterviewList />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/business/public-job-list',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <PublicJobListByBusiness />
           </DefaultLayout>
         </RequireRole>
       </RequireAuth>
@@ -315,7 +328,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/student/detail-apply-job',
+    path: '/business/detail-apply-job',
     element: (
       <RequireAuth>
         <DefaultLayout>

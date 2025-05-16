@@ -176,3 +176,25 @@ export const unHideJob = async (jobId: string): Promise<any> => {
     throw new Error(error.response?.data?.message || 'Something went wrong');
   }
 };
+
+export const getPublicJobListByBusinessId = async (
+  offset: number,
+  limit: number,
+) => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitment.get(
+      `job-postings/view-list-job-public`,
+      {
+        params: {
+          offset,
+          limit,
+        },
+      },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
