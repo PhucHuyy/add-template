@@ -1,54 +1,54 @@
-import HomePage from '../pages/HomePage';
-import Error404 from '../pages/Error404';
-import Login from '../pages/identity/login/Login';
-import SignUp from '../pages/identity/register/SignUp';
+import HomePage from "../pages/HomePage";
+import Error404 from "../pages/Error404";
+import Login from "../pages/identity/login/Login";
+import SignUp from "../pages/identity/register/SignUp";
 
-import DefaultLayout from '../components/layout/DefaultLayout';
-import AuthLayout from '../components/layout/AuthLayout';
-import { JSX } from 'react';
-import UserProfile from '../pages/identity/user/UserProfile';
-import RequireGuest from '../components/guards/RequireGuest';
-import SecuritySettings from '../pages/identity/user/setting/SecuritySetting';
-import RequireAuth from '../components/guards/RequireAuth';
-import ResetPassword from '../pages/identity/user/resetPassword/ResetPassword';
-import ForgetPassword from '../pages/identity/user/resetPassword/ForgetPassword';
-import Authenticate from '../pages/identity/login/authenticate';
+import DefaultLayout from "../components/layout/DefaultLayout";
+import AuthLayout from "../components/layout/AuthLayout";
+import { JSX } from "react";
+import UserProfile from "../pages/identity/user/UserProfile";
+import RequireGuest from "../components/guards/RequireGuest";
+import SecuritySettings from "../pages/identity/user/setting/SecuritySetting";
+import RequireAuth from "../components/guards/RequireAuth";
+import ResetPassword from "../pages/identity/user/resetPassword/ResetPassword";
+import ForgetPassword from "../pages/identity/user/resetPassword/ForgetPassword";
+import Authenticate from "../pages/identity/login/authenticate";
 
-import StudentProfile from '../pages/identity/user/StudentProfile';
-import StudentVerifycation from '../pages/identity/user/StudentVerifycation/StudentVerifycation';
-import ManageCv from '../pages/identity/user/ManageCv/ManageCv';
-import UpdateProfile from '../pages/identity/user/UpdateProfile/UpdateProfile';
-import LogoutSang from '../pages/identity/user/StudentVerifycation/LogoutSang';
+import StudentProfile from "../pages/identity/user/StudentProfile";
+import StudentVerifycation from "../pages/identity/user/StudentVerifycation/StudentVerifycation";
+import ManageCv from "../pages/identity/user/ManageCv/ManageCv";
+import UpdateProfile from "../pages/identity/user/UpdateProfile/UpdateProfile";
+import LogoutSang from "../pages/identity/user/StudentVerifycation/LogoutSang";
 
-import BusinessProfile from '../pages/identity/user/business/BusinessProfile';
+import BusinessProfile from "../pages/identity/user/business/BusinessProfile";
 
-import VerifyBusinessForm from '../pages/identity/user/business/VerifyBusinessForm';
-import EditBusinessProfile from '../pages/identity/user/business/EditBusinessProfile';
-import RequireRole from '../components/guards/RequireRole';
-import AdminLayout from '../components/layout/AdminLayout';
-import AdminDashboard from '../pages/admin/AdminDashBoard';
+import VerifyBusinessForm from "../pages/identity/user/business/VerifyBusinessForm";
+import EditBusinessProfile from "../pages/identity/user/business/EditBusinessProfile";
+import RequireRole from "../components/guards/RequireRole";
+import AdminLayout from "../components/layout/AdminLayout";
+import AdminDashboard from "../pages/admin/AdminDashBoard";
 
-import ListStudentAccount from '../pages/admin/ListStudentAccount';
-import ListBussinessAccount from '../pages/admin/ListBussinessAccount';
+import ListStudentAccount from "../pages/admin/ListStudentAccount";
+import ListBussinessAccount from "../pages/admin/ListBussinessAccount";
 
-import RefreshTokenTester from '../pages/RefreshTokenTester';
-import StaffAdmin from '../pages/staff-admin/StaffAdmin';
-import CreateJobPosting from '../pages/business/job-postings/CreateJobPosting';
-import ListJobPosting from '../pages/business/job-postings/ListJobPosting';
-import ListJobPublic from '../pages/business/job-postings/ListJobPublic';
-import JobDetail from '../pages/business/job-postings/Job-Detail';
-import AppliedJobsList from '../pages/business/apply-jobs/AppliedJobsList';
-import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
-import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
-import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
-import JobInterviewList from '../pages/business/interviews/JobInterviewList';
-import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
-import CategoriesList from '../pages/business/categories/CategoriesList';
-import ListUsers from '../pages/admin/ListUsers';
-import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
-import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
-import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
-import ListJobs from '../pages/admin/Jobs/ListJobs';
+import RefreshTokenTester from "../pages/RefreshTokenTester";
+import StaffAdmin from "../pages/staff-admin/StaffAdmin";
+import CreateJobPosting from "../pages/business/job-postings/CreateJobPosting";
+import ListJobPosting from "../pages/business/job-postings/ListJobPosting";
+import ListJobPublic from "../pages/business/job-postings/ListJobPublic";
+import JobDetail from "../pages/business/job-postings/Job-Detail";
+import AppliedJobsList from "../pages/business/apply-jobs/AppliedJobsList";
+import ListApplyJobs from "../pages/business/apply-jobs/ListApplyJobs";
+import DetailApplyJob from "../pages/business/apply-jobs/DetailApplyJob";
+import StudentInterviewList from "../pages/business/interviews/StudentInterviewList";
+import JobInterviewList from "../pages/business/interviews/JobInterviewList";
+import UpdateJobPosting from "../pages/business/job-postings/UpdateJobPosting";
+import CategoriesList from "../pages/business/categories/CategoriesList";
+import ListUsers from "../pages/admin/ListUsers";
+import ListProfiles from "../pages/admin/ListProfiles/ListProfiles";
+import PublicJobListByBusiness from "../pages/business/apply-jobs/PublicJobListByBusiness";
+import BusinessDetail from "../pages/identity/user/business/BusinessDetail";
+import ListJobs from "../pages/admin/Jobs/ListJobs";
 
 interface RouteConfig {
   path: string;
@@ -57,17 +57,17 @@ interface RouteConfig {
 }
 const routes: RouteConfig[] = [
   {
-    path: '/',
+    path: "/",
     element: <HomePage />,
     layout: DefaultLayout,
   },
   {
-    path: '/404',
+    path: "/404",
     element: <Error404 />,
     layout: DefaultLayout,
   },
   {
-    path: '/login',
+    path: "/login",
     element: (
       <RequireGuest>
         <Login />
@@ -76,7 +76,7 @@ const routes: RouteConfig[] = [
     layout: AuthLayout,
   },
   {
-    path: '/signup',
+    path: "/signup",
     element: (
       <RequireGuest>
         <SignUp />
@@ -85,7 +85,7 @@ const routes: RouteConfig[] = [
     layout: AuthLayout,
   },
   {
-    path: '/forget-password',
+    path: "/forget-password",
     element: (
       <RequireGuest>
         <ForgetPassword />
@@ -94,7 +94,7 @@ const routes: RouteConfig[] = [
     layout: AuthLayout,
   },
   {
-    path: '/businessprofile',
+    path: "/businessprofile",
     element: (
       <RequireAuth>
         <BusinessProfile />
@@ -103,7 +103,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/edit',
+    path: "/edit",
     element: (
       <RequireAuth>
         <EditBusinessProfile />
@@ -112,7 +112,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/verify-business',
+    path: "/verify-business",
     element: (
       <RequireAuth>
         <VerifyBusinessForm />
@@ -121,7 +121,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/profile',
+    path: "/profile",
     element: (
       <RequireAuth>
         <UserProfile />
@@ -130,7 +130,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/logoutsang',
+    path: "/logoutsang",
     element: (
       <RequireAuth>
         <LogoutSang />
@@ -139,7 +139,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/studentprofile',
+    path: "/studentprofile",
     element: (
       <RequireAuth>
         <StudentProfile />
@@ -148,7 +148,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/studentverifycation',
+    path: "/studentverifycation",
     element: (
       <RequireAuth>
         <StudentVerifycation />
@@ -157,7 +157,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/updateprofile',
+    path: "/updateprofile",
     element: (
       <RequireAuth>
         <UpdateProfile />
@@ -166,7 +166,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/cv',
+    path: "/cv",
     element: (
       <RequireAuth>
         <ManageCv />
@@ -175,7 +175,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/settings/security',
+    path: "/settings/security",
     element: (
       <RequireAuth>
         <SecuritySettings />
@@ -185,7 +185,7 @@ const routes: RouteConfig[] = [
   },
 
   {
-    path: '/reset-password',
+    path: "/reset-password",
     element: (
       <RequireGuest>
         <ResetPassword />
@@ -194,11 +194,11 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/authenticate',
+    path: "/authenticate",
     element: <Authenticate></Authenticate>,
   },
   {
-    path: '/test',
+    path: "/test",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -208,10 +208,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin',
+    path: "/admin",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <AdminDashboard />
           </AdminLayout>
@@ -220,10 +220,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/staff-admins',
+    path: "/admin/staff-admins",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN']}>
+        <RequireRole allowRoles={["ADMIN"]}>
           <AdminLayout>
             <StaffAdmin />
           </AdminLayout>
@@ -234,10 +234,10 @@ const routes: RouteConfig[] = [
 
   // RECRUIMENT ROUTES
   {
-    path: '/business/create-job',
+    path: "/business/create-job",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <CreateJobPosting />
           </DefaultLayout>
@@ -246,10 +246,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/update-job/:id',
+    path: "/business/update-job/:id",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <UpdateJobPosting />
           </DefaultLayout>
@@ -258,10 +258,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/list-job-created',
+    path: "/business/list-job-created",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <ListJobPosting />
           </DefaultLayout>
@@ -270,10 +270,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/list-apply-jobs/:jobId',
+    path: "/business/list-apply-jobs/:jobId",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <ListApplyJobs />
           </DefaultLayout>
@@ -282,10 +282,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/job-interview-list',
+    path: "/business/job-interview-list",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <JobInterviewList />
           </DefaultLayout>
@@ -294,10 +294,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/public-job-list',
+    path: "/business/public-job-list",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['BUSINESS']}>
+        <RequireRole allowRoles={["BUSINESS"]}>
           <DefaultLayout>
             <PublicJobListByBusiness />
           </DefaultLayout>
@@ -306,7 +306,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/list-jobs',
+    path: "/list-jobs",
     element: (
       <DefaultLayout>
         <ListJobPublic />
@@ -314,7 +314,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: 'detail-job/:jobId',
+    path: "detail-job/:jobId",
     element: (
       <DefaultLayout>
         <JobDetail />
@@ -322,7 +322,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/student/applied-jobs-list',
+    path: "/student/applied-jobs-list",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -332,7 +332,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/detail-apply-job',
+    path: "/business/detail-apply-job",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -342,7 +342,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/student/list-interview',
+    path: "/student/list-interview",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -352,7 +352,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/categories',
+    path: "/admin/categories",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -363,7 +363,7 @@ const routes: RouteConfig[] = [
   },
 
   {
-    path: '/reset-password',
+    path: "/reset-password",
     element: (
       <RequireGuest>
         <ResetPassword />
@@ -372,11 +372,11 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/authenticate',
+    path: "/authenticate",
     element: <Authenticate></Authenticate>,
   },
   {
-    path: '/test',
+    path: "/test",
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -386,10 +386,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin',
+    path: "/admin",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <AdminDashboard />
           </AdminLayout>
@@ -398,10 +398,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/staff-admins',
+    path: "/admin/staff-admins",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN']}>
+        <RequireRole allowRoles={["ADMIN"]}>
           <AdminLayout>
             <StaffAdmin />
           </AdminLayout>
@@ -410,10 +410,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/students-account',
+    path: "/admin/students-account",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <ListStudentAccount />
           </AdminLayout>
@@ -423,10 +423,10 @@ const routes: RouteConfig[] = [
   },
 
   {
-    path: '/admin/business-account',
+    path: "/admin/business-account",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <ListBussinessAccount />
           </AdminLayout>
@@ -435,10 +435,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/users',
+    path: "/admin/users",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <ListUsers />
           </AdminLayout>
@@ -447,10 +447,10 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/admin/pending-profiles',
+    path: "/admin/pending-profiles",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <ListProfiles />
           </AdminLayout>
@@ -459,23 +459,24 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-<<<<<<< HEAD
     path: "/BusinessDetail/:id",
     element: (
       <RequireAuth>
         <DefaultLayout>
           <BusinessDetail />
         </DefaultLayout>
-=======
-    path: '/admin/pending-jobs',
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/admin/pending-jobs",
     element: (
       <RequireAuth>
-        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+        <RequireRole allowRoles={["ADMIN", "STAFF_ADMIN"]}>
           <AdminLayout>
             <ListJobs />
           </AdminLayout>
         </RequireRole>
->>>>>>> 0382762 (💄 Update avatar logic, UI fixes, jobListSlice added)
       </RequireAuth>
     ),
   },
