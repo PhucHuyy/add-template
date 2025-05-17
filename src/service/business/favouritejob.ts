@@ -1,4 +1,4 @@
-import axiosPrivateProfileServcie from "../../api/axiosPrivateProfileServcie";
+import axiosRecruitment from "../../api/recruitment/axiosRecruitment";
 import { ApiResponse } from "../../features/auth/authType";
 
 interface JobAddFavorite {
@@ -10,7 +10,7 @@ export class favouritejob {
 
         const jobAddFavorite: JobAddFavorite = { jobId: idjob };
         try {
-            const response = await axiosPrivateProfileServcie.post<ApiResponse<any>>('/v1/farvouritejob/add', jobAddFavorite);
+            const response = await axiosRecruitment.post<ApiResponse<any>>('farvouritejob/add', jobAddFavorite);
 
             if (response.data && response.data.code === 200) {
                 return true;  // true hoặc false trả về từ backend
@@ -29,7 +29,7 @@ export class favouritejob {
 
         const jobAddFavorite: JobAddFavorite = { jobId: idjob };
         try {
-            const response = await axiosPrivateProfileServcie.post<ApiResponse<any>>('/v1/farvouritejob/remove', jobAddFavorite);
+            const response = await axiosRecruitment.put<ApiResponse<any>>('farvouritejob/remove', jobAddFavorite);
 
             if (response.data && response.data.code === 200) {
                 return true;  // true hoặc false trả về từ backend
