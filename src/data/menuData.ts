@@ -9,44 +9,43 @@ export interface MegaMenuColumn {
   title: string;
   items: MenuItem[];
   tag?: string;
-  roles?: string[]; 
+  roles?: string[];
 }
 export const megaMenu: MegaMenuColumn[] = [
   {
-    title: "Main Pages",
+    title: 'Main Pages',
     items: [
-      { label: "Home", href: "/" },
+      { label: 'Home', href: '/' },
       // { label: "Sign In / Sign Up", href: "/login" },
-      { label: "Search Jobs", href: "/list-jobs" },
+      { label: 'Search Jobs', href: '/list-jobs' },
     ],
   },
   {
-    title: "For Candidate",
-    roles: ["STUDENT", "ADMIN", "STAFF_ADMIN"],
+    title: 'For Candidate',
+    roles: ['STUDENT', 'ADMIN', 'STAFF_ADMIN'],
     items: [
-      { label: "Student Profile", href: "/studentprofile" },
-      { label: "Manage CV", href: "/cv" },
-      { label: "Applied Jobs", href: "/student/applied-jobs-list" },
-      { label: "Interviews", href: "/student/list-interview" },
+      { label: 'Student Profile', href: '/studentprofile' },
+      { label: 'Manage CV', href: '/cv' },
+      { label: 'Applied Jobs', href: '/student/applied-jobs-list' },
+      { label: 'Interviews', href: '/student/list-interview' },
     ],
   },
   {
-    title: "For Business",
-    roles: ["BUSINESS", "ADMIN", "STAFF_ADMIN"],
+    title: 'For Business',
+    roles: ['BUSINESS', 'ADMIN', 'STAFF_ADMIN'],
     items: [
-      { label: "Create Job", href: "/business/create-job" },
-      { label: "Manage Jobs", href: "/business/list-job-created" },
-      { label: "Applicants", href: "/business/list-apply-jobs" },
-      { label: "Interviews", href: "/business/job-interview-list" },
-      { label: "Business Profile", href: "/businessprofile" },
+      { label: 'Create Job', href: '/business/create-job' },
+      { label: 'Manage Jobs', href: '/business/list-job-created' },
+      { label: 'Applicants', href: '/business/public-job-list' },
+      { label: 'Interviews', href: '/business/job-interview-list' },
+      { label: 'Business Profile', href: '/businessprofile' },
     ],
   },
   {
-    title: "More",
+    title: 'More',
     items: [
-      { label: "About Us", href: "/about" },
-      { label: "Contact", href: "/contact" },
+      { label: 'About Us', href: '/about' },
+      { label: 'Contact', href: '/contact' },
     ],
   },
 ];
-

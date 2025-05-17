@@ -14,6 +14,9 @@ import Swal from 'sweetalert2';
 import { getJobRecommendations } from '../../../service/business/job-categories/JobCategoriesService';
 import { favouritejob } from '../../../service/business/favouritejob';
 
+import { RootState } from '../../../app/store';
+
+
 const renderStatus = (status: number) => {
   switch (status) {
     case 0:
@@ -796,7 +799,7 @@ export default function JobDetail() {
           </div>
         </div>
       </section>
-      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} />}
+      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />}
     </>
   );
 }

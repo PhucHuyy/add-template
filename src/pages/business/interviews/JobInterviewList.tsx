@@ -1,7 +1,62 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import './JobInterviewList.css';
+import { getInterviewScheduleList } from '../../../service/business/interviews/InterviewService';
+import { useNavigate, useParams } from 'react-router-dom';
+import { getCvByCvIdAndStudentId } from '../../../service/business/apply-jobs/ApplyJobsService';
+
+const getStatusStyle = (status) => {
+  switch (status) {
+    case 'scheduled':
+      return { color: '#007bff' };
+    case 'completed':
+      return { color: '#28a745' };
+    case 'cancelled':
+      return { color: '#dc3545' };
+    default:
+      return { color: '#6c757d' };
+  }
+};
 
 export default function JobInterviewList() {
+  const navigate = useNavigate();
+  const { jobId } = useParams();
+  const [interviewList, setInterviewList] = useState([]);
+  const [page, setPage] = useState(1);
+  const [totalPage, setTotalPage] = useState(1);
+  const [limit] = useState(10);
+  const [cvData, setCvData] = useState(null);
+
+  useEffect(() => {
+    const offset = (page - 1) * limit;
+
+    fetchInterviewSchedules(offset, jobId);
+  }, [page]);
+
+  const fetchInterviewSchedules = async (offset: number, jobId: string) => {
+    try {
+      const response = await getInterviewScheduleList(offset, limit, jobId);
+      console.log('Interview schedules:', response);
+      setInterviewList(response.data);
+      setTotalPage(response.totalPages);
+    } catch (error) {
+      console.error('Error fetching interview schedules:', error);
+    }
+  };
+
+  const viewCV = async (cvId: string, studentId: string) => {
+    try {
+      const response = await getCvByCvIdAndStudentId(cvId, studentId);
+      console.log('CV data:', response);
+      setCvData(response.data);
+    } catch (error) {
+      console.error('Error fetching CV data:', error);
+    }
+  };
+
+  console.log('interviewList', interviewList);
+  console.log('page', totalPage);
+  console.log('cvData', cvData);
+
   return (
     <>
       {/* Title Header Start */}
@@ -58,203 +113,117 @@ export default function JobInterviewList() {
           </div>
           {/* Company Searrch Filter End */}
 
-          <a href="resume-detail.html" className="item-click">
-            <article>
-              <div className="brows-resume">
-                <div className="row no-mrg align-items-center">
-                  {/* Avatar */}
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-resume-pic">
-                      <img
-                        src="/assets/img/can-2.png"
-                        className="img-responsive resume-avatar"
-                        alt="{interview.studentName}"
-                      />
+          {interviewList.map((interview) => (
+            <a key={interview.interviewId} className="item-click">
+              <article>
+                <div
+                  className="brows-resume"
+                  onClick={() =>
+                    navigate(`/business/detail-apply-job/${interview.applyId}`)
+                  }
+                >
+                  <div className="row no-mrg align-items-center">
+                    <div className="col-md-2 col-sm-2">
+                      <div className="brows-resume-pic">
+                        <img
+                          src={
+                            interview.studentAvatarUrl ||
+                            '/assets/img/default-avatar.png'
+                          }
+                          className="img-responsive"
+                          alt={interview.studentName}
+                        />
+                      </div>
                     </div>
-                  </div>
-
-                  {/* University + name */}
-                  <div className="col-md-3 col-sm-4">
-                    <div className="brows-resume-name">
-                      <h4>University</h4>
-                      <span className="brows-resume-designation">
-                        University Name
-                      </span>
-                    </div>
-                  </div>
-
-                  {/* Job Title */}
-                  <div className="col-md-3 col-sm-4">
-                    <div className="brows-resume-location">
-                      <p>
-                        <i className="fa fa-briefcase"></i> Job Title
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Schedule */}
-                  <div className="col-md-2 col-sm-4">
-                    <div className="brows-resume-location">
-                      <p>
-                        <i className="fa-solid fa-calendar"></i> 2023-10-12
-                        {/* {new Date(interview.scheduledAt).toLocaleString()} */}
-                      </p>
-                    </div>
-                  </div>
-
-                  {/* Status */}
-                  <div className="col-md-2 col-sm-4">
-                    <div className="browse-resume-rate">
-                      <span
-                      // className={`status-label status-${interview.interviewStatus.toLowerCase()}`}
-                      >
-                        {/* {interview.interviewStatus} */}
-                      </span>
-                    </div>
-                  </div>
-                </div>
-
-                {/* View CV */}
-                <div className="row extra-mrg row-skill">
-                  <div className="browse-resume-skills">
                     <div className="col-md-3 col-sm-4">
-                      <div className="browse-resume-exp">
-                        <button
-                          className="resume-exp"
-                          //   onClick={() => viewCV(interview.cvId)}
-                        >
-                          View CV
-                        </button>
+                      <div className="brows-resume-name">
+                        <h4>{interview.studentName}</h4>
+                        <span className="brows-resume-designation">
+                          {interview.studentUniversity}
+                        </span>
+                      </div>
+                    </div>
+                    <div className="col-md-3 col-sm-4">
+                      <div className="brows-resume-location">
+                        <p>
+                          <i className="fa fa-briefcase"></i>{' '}
+                          {interview.jobTitle}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-2 col-sm-4">
+                      <div className="brows-resume-location">
+                        <p>
+                          <i className="fa-solid fa-calendar" />{' '}
+                          {new Date(interview.scheduledAt).toLocaleString()}
+                        </p>
+                      </div>
+                    </div>
+                    <div className="col-md-2 col-sm-4">
+                      <div className="browse-resume-rate">
+                        <span style={getStatusStyle(interview.interviewStatus)}>
+                          <i className="fa fa-money" />{' '}
+                          {interview.interviewStatus}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="row extra-mrg row-skill">
+                    <div className="browse-resume-skills">
+                      <div className="col-md-3 col-sm-4">
+                        <div className="browse-resume-exp">
+                          <button
+                            className="resume-exp"
+                            onClick={() =>
+                              viewCV(interview.cvId, interview.studentId)
+                            }
+                          >
+                            View CV
+                          </button>
+                        </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            </article>
-          </a>
+              </article>
+            </a>
+          ))}
 
-          <a href="resume-detail.html" className="item-click">
-            <article>
-              <div className="brows-resume">
-                <div className="row no-mrg">
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-resume-pic">
-                      <img
-                        src="/assets/img/can-2.png"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4 col-sm-4">
-                    <div className="brows-resume-name">
-                      <h4>Taylah Axon</h4>
-                      <span className="brows-resume-designation">
-                        University
-                      </span>
-                    </div>
-                  </div>
-                  <div className="col-md-4 col-sm-4">
-                    <div className="brows-resume-location">
-                      <p>
-                        <i className="fa-solid fa-calendar" /> 2023-10-12 10:00
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-2 col-sm-2">
-                    <div className="browse-resume-rate">
-                      <span>
-                        <i className="fa fa-money" />
-                        interview status
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="row extra-mrg row-skill">
-                  <div className="browse-resume-skills">
-                    <div className="col-md-3 col-sm-4">
-                      <div className="browse-resume-exp">
-                        <span className="resume-exp">Exp. 4.5 Year</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </a>
-          <a href="resume-detail.html" className="item-click">
-            <article>
-              <div className="brows-resume">
-                <div className="row no-mrg">
-                  <div className="col-md-2 col-sm-2">
-                    <div className="brows-resume-pic">
-                      <img
-                        src="/assets/img/can-3.png"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </div>
-                  </div>
-                  <div className="col-md-4 col-sm-4">
-                    <div className="brows-resume-name">
-                      <h4>Adam Gillwist</h4>
-                      <span className="brows-resume-designation">
-                        University
-                      </span>
-                    </div>
-                  </div>
-                  <div className="col-md-4 col-sm-4">
-                    <div className="brows-resume-location">
-                      <p>
-                        <i className="fa-solid fa-calendar" /> 2023-10-12 10:00
-                      </p>
-                    </div>
-                  </div>
-                  <div className="col-md-2 col-sm-2">
-                    <div className="browse-resume-rate">
-                      <span>
-                        <i className="fa fa-money" />
-                        interview status
-                      </span>
-                    </div>
-                  </div>
-                </div>
-                <div className="row extra-mrg row-skill">
-                  <div className="browse-resume-skills">
-                    <div className="col-md-3 col-sm-4">
-                      <div className="browse-resume-exp">
-                        <span className="resume-exp">Exp. 3 Year</span>
-                      </div>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </a>
           <div className="row">
             <ul className="pagination">
               <li>
-                <a href="#">«</a>
-              </li>
-              <li className="active">
-                <a href="#">1</a>
-              </li>
-              <li>
-                <a href="#">2</a>
-              </li>
-              <li>
-                <a href="#">3</a>
-              </li>
-              <li>
-                <a href="#">4</a>
-              </li>
-              <li>
-                <a href="#">
-                  <i className="fa fa-ellipsis-h" />
+                <a
+                  href="#"
+                  onClick={() => page > 1 && setPage(page - 1)}
+                  className={page === 1 ? 'disabled' : ''}
+                >
+                  «
                 </a>
               </li>
+
+              {[...Array(totalPage)].map((_, index) => {
+                const current = index + 1;
+                return (
+                  <li
+                    key={current}
+                    className={page === current ? 'active' : ''}
+                  >
+                    <a href="#" onClick={() => setPage(current)}>
+                      {current}
+                    </a>
+                  </li>
+                );
+              })}
+
               <li>
-                <a href="#">»</a>
+                <a
+                  href="#"
+                  onClick={() => page < totalPage && setPage(page + 1)}
+                  className={page === totalPage ? 'disabled' : ''}
+                >
+                  »
+                </a>
               </li>
             </ul>
           </div>

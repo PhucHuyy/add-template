@@ -36,7 +36,7 @@ import StaffAdmin from '../pages/staff-admin/StaffAdmin';
 import CreateJobPosting from '../pages/business/job-postings/CreateJobPosting';
 import ListJobPosting from '../pages/business/job-postings/ListJobPosting';
 import ListJobPublic from '../pages/business/job-postings/ListJobPublic';
-import JobDetail from '../pages/business/job-postings/JobDetail';
+import JobDetail from '../pages/business/job-postings/Job-Detail';
 import AppliedJobsList from '../pages/business/apply-jobs/AppliedJobsList';
 import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
 import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
@@ -48,7 +48,11 @@ import ListUsers from '../pages/admin/ListUsers';
 import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
 import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
 import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
+
 import ListJobfavorites from '../pages/business/job-postings/ListJobfavorites';
+
+import ListJobs from '../pages/admin/Jobs/ListJobs';
+
 
 interface RouteConfig {
   path: string;
@@ -291,7 +295,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/job-interview-list',
+    path: '/business/job-interview-list/:jobId',
     element: (
       <RequireAuth>
         <RequireRole allowRoles={['BUSINESS']}>
@@ -341,7 +345,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/detail-apply-job',
+    path: '/business/detail-apply-job/:applyId',
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -468,12 +472,24 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: "/BusinessDetail/:id",
+    path: '/BusinessDetail/:id',
     element: (
       <RequireAuth>
         <DefaultLayout>
           <BusinessDetail />
         </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/admin/pending-jobs',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <ListJobs />
+          </AdminLayout>
+        </RequireRole>
       </RequireAuth>
     ),
   },

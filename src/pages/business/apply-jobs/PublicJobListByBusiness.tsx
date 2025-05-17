@@ -7,11 +7,11 @@ const viewStyle = {
   backgroundColor: '#f8f9fa',
   color: '#000',
   border: '1px solid #ccc',
-  padding: '10px 20px',
+  padding: '10px 15px',
   borderRadius: '4px',
-  minWidth: '120px',
   transition: 'background-color 0.3s ease, color 0.3s ease',
   cursor: 'pointer',
+  flex: 1,
 };
 
 export default function PublicJobListByBusiness() {
@@ -219,18 +219,46 @@ export default function PublicJobListByBusiness() {
                           className="btn"
                           style={viewStyle}
                           onMouseOver={(e) => {
-                            e.target.style.backgroundColor = '#07b107';
-                            e.target.style.color = '#fff';
+                            e.currentTarget.style.backgroundColor = '#07b107';
+                            e.currentTarget.style.color = '#fff';
                           }}
                           onMouseOut={(e) => {
-                            e.target.style.backgroundColor = '#f8f9fa';
-                            e.target.style.color = '#000';
+                            e.currentTarget.style.backgroundColor = '#f8f9fa';
+                            e.currentTarget.style.color = '#000';
                           }}
                           onClick={() =>
                             navigate(`/business/list-apply-jobs/${job.jobId}`)
                           }
                         >
-                          View Apply List
+                          Apply List
+                        </button>
+                        <button
+                          className="btn"
+                          style={{
+                            backgroundColor: '#2c2f33',
+                            color: '#ffffff',
+                            border: '2px solid #444',
+                            padding: '10px',
+                            borderRadius: '50%',
+                            width: '42px',
+                            height: '42px',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'border-color 0.3s ease',
+                            cursor: 'pointer',
+                          }}
+                          title="Save Job"
+                          onClick={() =>
+                            navigate(
+                              `/business/job-interview-list/${job.jobId}`,
+                            )
+                          }
+                        >
+                          <i
+                            className="fa-solid fa-calendar"
+                            style={{ color: '#fff' }}
+                          />
                         </button>
                       </>
                     </div>
