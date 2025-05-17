@@ -37,3 +37,12 @@
   font-size: 12px;
   cursor: pointer;
 }
+
+.brows-resume-location p,
+.browse-resume-rate span {
+  margin: 0;
+  line-height: 1.4;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}

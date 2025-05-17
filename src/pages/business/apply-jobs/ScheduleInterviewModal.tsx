@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import './ScheduleInterviewModal.css';
 
-const ScheduleInterviewModal = ({ onClose, onConfirm }) => {
+const ScheduleInterviewModal = ({ onClose, onConfirm, applyId }) => {
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
 
@@ -11,6 +11,7 @@ const ScheduleInterviewModal = ({ onClose, onConfirm }) => {
       return;
     }
     onConfirm({ date, time });
+    // console.log(applyId);
   };
 
   return (
