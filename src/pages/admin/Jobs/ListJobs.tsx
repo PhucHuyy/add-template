@@ -1,30 +1,30 @@
-import React, { useEffect, useState } from "react";
-import { useAppDispatch } from "../../../app/hook";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../app/store";
+import React, { useEffect, useState } from 'react';
+import { useAppDispatch } from '../../../app/hook';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../../app/store';
 import {
   fetchJobPostingsByStatus,
   acceptJobPosting,
   rejectJobPosting,
   JobPostingsResponseDTO,
-} from "../../../features/admin/jobListSlice";
-import Modal from "../../Modal";
-import "./listjob.css";
-import Swal from "sweetalert2";
-import withReactContent from "sweetalert2-react-content";
+} from '../../../features/admin/jobListSlice';
+import Modal from '../../Modal';
+import './listjob.css';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
 
 export default function ListJobs() {
   const dispatch = useAppDispatch();
   const { jobsByStatus, pagination, loading } = useSelector(
-    (state: RootState) => state.job
+    (state: RootState) => state.job,
   );
   const MySwal = withReactContent(Swal);
-  const [keyword, setKeyword] = useState("");
+  const [keyword, setKeyword] = useState('');
 
   const [status, setStatus] = useState<number>(0);
   const [page, setPage] = useState(0);
   const [selectedJob, setSelectedJob] = useState<JobPostingsResponseDTO | null>(
-    null
+    null,
   );
   const pageSize = 10;
   const totalPages = pagination?.totalPages || 1;
@@ -35,8 +35,8 @@ export default function ListJobs() {
         status,
         offset: page * pageSize,
         limit: pageSize,
-        keyword: keyword.trim() !== "" ? keyword.trim() : undefined,
-      })
+        keyword: keyword.trim() !== '' ? keyword.trim() : undefined,
+      }),
     );
   }, [dispatch, status, page, keyword]);
 
@@ -47,8 +47,8 @@ export default function ListJobs() {
         <section
           className="inner-header-title rounded-xl overflow-hidden shadow-lg w-full max-w-6xl bg-cover bg-center"
           style={{
-            backgroundImage: "url(/assets/img/banner-10.jpg)",
-            height: "350px",
+            backgroundImage: 'url(/assets/img/banner-10.jpg)',
+            height: '350px',
           }}
         >
           <div className="w-full h-full flex flex-col justify-center items-center backdrop-brightness-50 text-white px-6">
@@ -69,7 +69,7 @@ export default function ListJobs() {
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               onKeyDown={(e) => {
-                if (e.key === "Enter") {
+                if (e.key === 'Enter') {
                   setPage(0);
                 }
               }}
@@ -119,17 +119,17 @@ export default function ListJobs() {
                     className="hover:bg-indigo-50 transition-colors duration-200 cursor-pointer"
                   >
                     <td className="px-4 py-3 text-center align-middle">
-                      {" "}
+                      {' '}
                       <div
                         style={{
-                          width: "40px",
-                          height: "40px",
-                          display: "flex",
-                          alignItems: "center",
-                          justifyContent: "center",
-                          overflow: "hidden",
-                          borderRadius: "50%",
-                          backgroundColor: "#f3f4f6",
+                          width: '40px',
+                          height: '40px',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          overflow: 'hidden',
+                          borderRadius: '50%',
+                          backgroundColor: '#f3f4f6',
                         }}
                       >
                         {job.avatarUrl ? (
@@ -137,9 +137,9 @@ export default function ListJobs() {
                             src={job.avatarUrl}
                             alt="avatar"
                             style={{
-                              width: "100%",
-                              height: "100%",
-                              objectFit: "cover",
+                              width: '100%',
+                              height: '100%',
+                              objectFit: 'cover',
                             }}
                           />
                         ) : (
@@ -166,7 +166,7 @@ export default function ListJobs() {
                                     status,
                                     offset: page * pageSize,
                                     limit: pageSize,
-                                  })
+                                  }),
                                 );
                               });
                             }
@@ -181,46 +181,46 @@ export default function ListJobs() {
                           onClick={(e) => {
                             e.stopPropagation();
                             MySwal.fire({
-                              title: "Reject Job Posting",
-                              input: "textarea",
-                              inputLabel: "Reason for rejection",
-                              inputPlaceholder: "Enter your reason here...",
+                              title: 'Reject Job Posting',
+                              input: 'textarea',
+                              inputLabel: 'Reason for rejection',
+                              inputPlaceholder: 'Enter your reason here...',
                               inputAttributes: {
-                                "aria-label": "Reason",
+                                'aria-label': 'Reason',
                               },
                               customClass: {
-                                input: "swal-input-textarea",
-                                popup: "swal-wide-popup",
+                                input: 'swal-input-textarea',
+                                popup: 'swal-wide-popup',
                               },
                               showCancelButton: true,
-                              confirmButtonText: "Reject",
-                              confirmButtonColor: "#d33",
+                              confirmButtonText: 'Reject',
+                              confirmButtonColor: '#d33',
                             }).then((result) => {
                               if (result.isConfirmed && result.value?.trim()) {
                                 dispatch(
                                   rejectJobPosting({
                                     jobId: job.jobId,
                                     reasonReject: result.value.trim(),
-                                  })
+                                  }),
                                 ).then(() => {
                                   dispatch(
                                     fetchJobPostingsByStatus({
                                       status,
                                       offset: page * pageSize,
                                       limit: pageSize,
-                                    })
+                                    }),
                                   );
                                   Swal.fire(
-                                    "Rejected!",
-                                    "Job posting has been rejected.",
-                                    "success"
+                                    'Rejected!',
+                                    'Job posting has been rejected.',
+                                    'success',
                                   );
                                 });
                               } else if (result.isConfirmed) {
                                 Swal.fire(
-                                  "Error",
-                                  "Reason is required!",
-                                  "error"
+                                  'Error',
+                                  'Reason is required!',
+                                  'error',
                                 );
                               }
                             });
@@ -258,7 +258,7 @@ export default function ListJobs() {
                     key={i}
                     onClick={() => setPage(i)}
                     className={`pagination-number ${
-                      i === page ? "pagination-active" : ""
+                      i === page ? 'pagination-active' : ''
                     }`}
                   >
                     {i + 1}
@@ -311,21 +311,21 @@ export default function ListJobs() {
               <span
                 className={`modal-job-status-badge ${
                   selectedJob.status === 1
-                    ? "status-active"
+                    ? 'status-active'
                     : selectedJob.status === 2
-                    ? "status-closed"
-                    : "status-pending"
+                    ? 'status-closed'
+                    : 'status-pending'
                 }`}
               >
                 {selectedJob.status === -1
-                  ? "Draft"
+                  ? 'Draft'
                   : selectedJob.status === 0
-                  ? "Pending"
+                  ? 'Pending'
                   : selectedJob.status === 1
-                  ? "Approved"
+                  ? 'Approved'
                   : selectedJob.status === 2
-                  ? "Rejected"
-                  : "Unknown"}
+                  ? 'Rejected'
+                  : 'Unknown'}
               </span>
             </div>
 
