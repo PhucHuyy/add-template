@@ -1,6 +1,38 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
+import { viewListApplyJob } from '../../../service/business/apply-jobs/ApplyJobsService';
+
+const statusColors: Record<string, string> = {
+  pending: '#FFC107', // Vàng
+  viewed: '#17A2B8', // Xanh dương nhạt
+  accepted: '#4CAF50', // Xanh lá
+  rejected: '#F44336', // Đỏ
+};
 
 export default function ListApplyJobs() {
+  const navigate = useNavigate();
+  const { jobId } = useParams();
+  const [applyJobs, setApplyJobs] = useState<any[]>([]);
+  const [cursor, setCursor] = useState<string | null>(null);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
+  useEffect(() => {
+    fetchJobs();
+  }, [jobId]);
+
+  const fetchJobs = async () => {
+    try {
+      const res = await viewListApplyJob(jobId, cursor);
+      console.log(res, 'res');
+
+      setApplyJobs((prev) => [...prev, ...res.listApplyJob]);
+      setCursor(res.nextCursor);
+      setHasMore(res.nextCursor !== null);
+    } catch (err) {
+      console.error('Failed to fetch jobs', err);
+    }
+  };
+
   return (
     <>
       <>
@@ -54,7 +86,7 @@ export default function ListApplyJobs() {
             </div>
             {/* search filter End */}
             <div className="row">
-              <div className="col-md-4 col-sm-4">
+              {/* <div className="col-md-4 col-sm-4">
                 <div className="manage-cndt">
                   <div className="cndt-status pending">Pending</div>
                   <div className="cndt-caption">
@@ -102,7 +134,12 @@ export default function ListApplyJobs() {
               </div>
               <div className="col-md-4 col-sm-4">
                 <div className="manage-cndt">
-                  <div className="cndt-status pending">Pending</div>
+                  <div
+                    className="cndt-status pending"
+                    style={{ backgroundColor: 'red', color: 'white' }}
+                  >
+                    Rejected
+                  </div>
                   <div className="cndt-caption">
                     <div className="cndt-pic">
                       <img
@@ -122,81 +159,105 @@ export default function ListApplyJobs() {
                     View Detail Apply
                   </a>
                 </div>
-              </div>
-              <div className="col-md-4 col-sm-4">
-                <div className="manage-cndt">
-                  <div className="cndt-status pending">Pending</div>
-                  <div className="cndt-caption">
-                    <div className="cndt-pic">
-                      <img
-                        src="/assets/img/client-4.jpg"
-                        className="img-responsive"
-                        alt=""
-                      />
+              </div> */}
+
+              {applyJobs.length === 0 ? (
+                <div
+                  className="no-data-message"
+                  style={{
+                    textAlign: 'center',
+                    padding: '40px 20px',
+                    backgroundColor: '#f8fff8',
+                    border: '2px dashed #4CAF50',
+                    borderRadius: '12px',
+                    color: '#4CAF50',
+                    fontSize: '18px',
+                    fontWeight: '500',
+                  }}
+                >
+                  <i
+                    className="fas fa-leaf"
+                    style={{ fontSize: '24px', marginBottom: '10px' }}
+                  ></i>
+                  <p>There is no application data.</p>
+                </div>
+              ) : (
+                applyJobs.map((job, idx) => {
+                  const backgroundColor = statusColors[job.status] || '#9E9E9E';
+
+                  return (
+                    <div key={job.applyId || idx} className="col-md-4 col-sm-4">
+                      <div className="manage-cndt">
+                        <div
+                          className="cndt-status"
+                          style={{
+                            backgroundColor,
+                            color: '#fff',
+                            padding: '6px 12px',
+                            display: 'inline-block',
+                            fontWeight: 'bold',
+                            fontSize: '14px',
+                            marginBottom: '10px',
+                          }}
+                        >
+                          {job.status.charAt(0).toUpperCase() +
+                            job.status.slice(1)}
+                        </div>
+
+                        <div className="cndt-caption">
+                          <div className="cndt-pic">
+                            <img
+                              src={
+                                job.studentAvatarUrl ||
+                                '/assets/img/client-1.jpg'
+                              }
+                              className="img-responsive"
+                              alt={job.studentName}
+                            />
+                          </div>
+                          <h4>{job.studentName}</h4>
+                          <span>{job.studentUniversity}</span>
+                          <p>
+                            Applied At:{' '}
+                            {(() => {
+                              const d = new Date(job.appliedAt);
+                              const day = String(d.getDate()).padStart(2, '0');
+                              const month = String(d.getMonth() + 1).padStart(
+                                2,
+                                '0',
+                              );
+                              const year = d.getFullYear();
+                              return `${day}-${month}-${year}`;
+                            })()}
+                          </p>
+                        </div>
+
+                        <a
+                          onClick={() =>
+                            navigate(
+                              `/business/detail-apply-job/${job.applyId}`,
+                            )
+                          }
+                          title=""
+                          className="cndt-profile-btn"
+                        >
+                          View Detail Apply
+                        </a>
+                      </div>
                     </div>
-                    <h4>Henry Crooks</h4>
-                    <span>PHP Developer</span>
-                    <p>
-                      Our analysis team at Megriosft use end to end innovation
-                      proces
-                    </p>
-                  </div>
-                  <a href="#" title="" className="cndt-profile-btn">
-                    View Detail Apply
-                  </a>
+                  );
+                })
+              )}
+            </div>
+            {hasMore && (
+              <div className="row mt-3">
+                <div className="col-12 text-center">
+                  <button className="btn btn-primary" onClick={fetchJobs}>
+                    Load More
+                  </button>
                 </div>
               </div>
-              <div className="col-md-4 col-sm-4">
-                <div className="manage-cndt">
-                  <div className="cndt-status available">Accepted</div>
-                  <div className="cndt-caption">
-                    <div className="cndt-pic">
-                      <img
-                        src="/assets/img/client-5.jpg"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </div>
-                    <h4>Joseph Macfarlan</h4>
-                    <span>App Developer</span>
-                    <p>
-                      Our analysis team at Megriosft use end to end innovation
-                      proces
-                    </p>
-                  </div>
-                  <a href="#" title="" className="cndt-profile-btn">
-                    View Detail Apply
-                  </a>
-                </div>
-              </div>
-            </div>
-            <div className="row">
-              <ul className="pagination">
-                <li>
-                  <a href="#">«</a>
-                </li>
-                <li className="active">
-                  <a href="#">1</a>
-                </li>
-                <li>
-                  <a href="#">2</a>
-                </li>
-                <li>
-                  <a href="#">3</a>
-                </li>
-                <li>
-                  <a href="#">4</a>
-                </li>
-                <li>
-                  <a href="#">
-                    <i className="fa fa-ellipsis-h" />
-                  </a>
-                </li>
-                <li>
-                  <a href="#">»</a>
-                </li>
-              </ul>
-            </div>
+            )}
           </div>
         </section>
       </>

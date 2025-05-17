@@ -281,7 +281,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/job-interview-list',
+    path: '/business/job-interview-list/:jobId',
     element: (
       <RequireAuth>
         <RequireRole allowRoles={['BUSINESS']}>
@@ -331,7 +331,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: '/business/detail-apply-job',
+    path: '/business/detail-apply-job/:applyId',
     element: (
       <RequireAuth>
         <DefaultLayout>
@@ -458,7 +458,7 @@ const routes: RouteConfig[] = [
     ),
   },
   {
-    path: "/BusinessDetail/:id",
+    path: '/BusinessDetail/:id',
     element: (
       <RequireAuth>
         <DefaultLayout>
