@@ -8,20 +8,30 @@ import requestSliceReducer from '../features/admin/requestSlice';
 import storage from 'redux-persist/lib/storage';
 import { persistReducer, persistStore } from 'redux-persist';
 import { combineReducers } from 'redux';
-
+import  cvSlice  from '../services/user/ManageCv/ManageCv';
+import applyJobsReducer from '../features/applyjobs/applyJobsSlice';
+import jobListReducer from '../features/admin/jobListSlice';
 const persistConfig = {
   key: 'root',
   storage,
 };
 
-const rootReducer = combineReducers({
+const appReducer = combineReducers({
   auth: authReducer,
   business: businessReducer,
   admin: adminReducer,
   noti: notificationReducer,
   request: requestSliceReducer,
+  cv: cvSlice,
+  applyJob: applyJobsReducer,
+  job: jobListReducer,
 });
-
+const rootReducer = (state: any, action: any) => {
+  if (action.type === 'auth/resetStore') {
+    state = undefined; // reset toàn bộ store
+  }
+  return appReducer(state, action);
+};
 const persistedReducer = persistReducer(persistConfig, rootReducer);
 
 export const store = configureStore({
@@ -33,7 +43,8 @@ export const store = configureStore({
 });
 
 
-export const persistor = persistStore(store);
+
+export const persistor = persistStore(store); 
 
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

@@ -271,7 +271,7 @@ export default function Header() {
                             </a>
                           </li>
                           <li>
-                            <a href="/jobs/applied">
+                            <a href="/student/applied-jobs-list">
                               <i className="fa fa-paper-plane" /> Applied Jobs
                             </a>
                           </li>

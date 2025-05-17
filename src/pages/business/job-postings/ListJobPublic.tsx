@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react';
-import { getListPublicJob } from '../../../service/business/jobpostings/JobPostingsService';
-import JobApplicationForm from '../apply-jobs/JobApplicationForm';
+import React, { useEffect, useState } from "react";
+import { getListPublicJob } from "../../../service/business/jobpostings/JobPostingsService";
+import JobApplicationForm from "../apply-jobs/JobApplicationForm";
 
 export default function ListJobPublic() {
   const [jobs, setJobs] = React.useState([]);
   const [showModal, setShowModal] = useState(false);
+  const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
 
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
@@ -19,13 +20,13 @@ export default function ListJobPublic() {
   const fetchPublicJob = async (offset: number) => {
     try {
       const response = await getListPublicJob(offset, limit);
-      console.log('Response:', response.data);
+      console.log("Response:", response.data);
       setJobs(response.data.data);
       setTotalPage(response.data.totalPages);
     } catch (error) {
-      console.error('Error fetching categories:', error);
+      console.error("Error fetching categories:", error);
       throw new Error(
-        (error as any).response?.data?.message || 'Something went wrong',
+        (error as any).response?.data?.message || "Something went wrong"
       );
     }
   };
@@ -36,8 +37,8 @@ export default function ListJobPublic() {
     return expiration < now;
   };
 
-  console.log('Jobs:', jobs);
-  console.log('Total Page:', totalPage);
+  console.log("Jobs:", jobs);
+  console.log("Total Page:", totalPage);
 
   return (
     <>
@@ -46,7 +47,7 @@ export default function ListJobPublic() {
         {/* Title Header Start */}
         <section
           className="inner-header-title"
-          style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}
+          style={{ backgroundImage: "url(/assets/img/banner-10.jpg)" }}
         >
           <div className="container">
             <h1>All Jobs</h1>
@@ -102,8 +103,8 @@ export default function ListJobPublic() {
                     className="brows-job-list row"
                     key={job.jobId}
                     style={{
-                      padding: '15px 0',
-                      borderBottom: '1px solid #eee',
+                      padding: "15px 0",
+                      borderBottom: "1px solid #eee",
                     }}
                   >
                     {/* Ảnh công ty */}
@@ -112,7 +113,7 @@ export default function ListJobPublic() {
                         <a href={`/detail-job/${job.jobId}`}>
                           <img
                             src={
-                              job.avatarUrl || '/assets/img/default-company.jpg'
+                              job.avatarUrl || "/assets/img/default-company.jpg"
                             }
                             className="img-responsive"
                             alt={job.companyName}
@@ -129,33 +130,33 @@ export default function ListJobPublic() {
                         </a>
 
                         <p>
-                          <span style={{ fontWeight: 'bold' }}>
+                          <span style={{ fontWeight: "bold" }}>
                             {job.companyName}
                           </span>
                           <span
                             className="brows-job-sallery"
-                            style={{ marginLeft: '15px' }}
+                            style={{ marginLeft: "15px" }}
                           >
                             <i className="fa fa-money" /> {job.salary}
                           </span>
                           {job.urgentRecruitment && (
                             <span
                               className="job-type cl-danger bg-trans-danger"
-                              style={{ marginLeft: '15px' }}
+                              style={{ marginLeft: "15px" }}
                             >
                               Urgent
                             </span>
                           )}
                           <span
                             style={{
-                              marginLeft: '25px',
-                              color: '#666',
-                              fontStyle: 'italic',
+                              marginLeft: "25px",
+                              color: "#666",
+                              fontStyle: "italic",
                             }}
                           >
-                            Expiration:{' '}
+                            Expiration:{" "}
                             {new Date(job.expirationDate).toLocaleDateString(
-                              'vi-VN',
+                              "vi-VN"
                             )}
                           </span>
                         </p>
@@ -163,21 +164,21 @@ export default function ListJobPublic() {
                         {/* Hiển thị các category */}
                         <div
                           style={{
-                            display: 'flex',
-                            flexWrap: 'wrap',
-                            gap: '8px',
-                            marginTop: '8px',
+                            display: "flex",
+                            flexWrap: "wrap",
+                            gap: "8px",
+                            marginTop: "8px",
                           }}
                         >
                           {job.categoryNames?.map((cat, idx) => (
                             <span
                               key={idx}
                               style={{
-                                backgroundColor: '#e9ecef',
-                                color: '#333',
-                                fontSize: '12px',
-                                padding: '4px 8px',
-                                borderRadius: '12px',
+                                backgroundColor: "#e9ecef",
+                                color: "#333",
+                                fontSize: "12px",
+                                padding: "4px 8px",
+                                borderRadius: "12px",
                               }}
                             >
                               {cat}
@@ -202,21 +203,21 @@ export default function ListJobPublic() {
                       <div
                         className="brows-job-link"
                         style={{
-                          display: 'flex',
-                          justifyContent: 'space-between',
-                          alignItems: 'center',
-                          gap: '10px',
+                          display: "flex",
+                          justifyContent: "space-between",
+                          alignItems: "center",
+                          gap: "10px",
                         }}
                       >
                         {isExpired(job.expirationDate) ? (
                           <span
                             style={{
-                              padding: '10px 15px',
-                              backgroundColor: '#dc3545',
-                              color: '#fff',
-                              borderRadius: '4px',
-                              fontWeight: 'bold',
-                              textAlign: 'center',
+                              padding: "10px 15px",
+                              backgroundColor: "#dc3545",
+                              color: "#fff",
+                              borderRadius: "4px",
+                              fontWeight: "bold",
+                              textAlign: "center",
                               flex: 1,
                             }}
                           >
@@ -227,28 +228,29 @@ export default function ListJobPublic() {
                             <button
                               className="btn"
                               style={{
-                                backgroundColor: '#f8f9fa',
-                                color: '#000',
-                                border: '1px solid #ccc',
-                                padding: '10px 15px',
-                                borderRadius: '4px',
+                                backgroundColor: "#f8f9fa",
+                                color: "#000",
+                                border: "1px solid #ccc",
+                                padding: "10px 15px",
+                                borderRadius: "4px",
                                 transition:
-                                  'background-color 0.3s ease, color 0.3s ease',
-                                cursor: 'pointer',
+                                  "background-color 0.3s ease, color 0.3s ease",
+                                cursor: "pointer",
                                 flex: 1,
                               }}
                               onMouseOver={(e) => {
                                 e.currentTarget.style.backgroundColor =
-                                  '#07b107';
-                                e.currentTarget.style.color = '#fff';
+                                  "#07b107";
+                                e.currentTarget.style.color = "#fff";
                               }}
                               onMouseOut={(e) => {
                                 e.currentTarget.style.backgroundColor =
-                                  '#f8f9fa';
-                                e.currentTarget.style.color = '#000';
+                                  "#f8f9fa";
+                                e.currentTarget.style.color = "#000";
                               }}
                               onClick={(e) => {
                                 e.preventDefault();
+                                setSelectedJobId(job.jobId);
                                 setShowModal(true);
                               }}
                             >
@@ -258,21 +260,21 @@ export default function ListJobPublic() {
                             <button
                               className="btn"
                               style={{
-                                backgroundColor: '#fff',
-                                color: '#dc3545',
-                                border: '2px solid #dc3545',
-                                padding: '10px',
-                                borderRadius: '50%',
-                                width: '42px',
-                                height: '42px',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                transition: 'border-color 0.3s ease',
-                                cursor: 'pointer',
+                                backgroundColor: "#fff",
+                                color: "#dc3545",
+                                border: "2px solid #dc3545",
+                                padding: "10px",
+                                borderRadius: "50%",
+                                width: "42px",
+                                height: "42px",
+                                display: "flex",
+                                alignItems: "center",
+                                justifyContent: "center",
+                                transition: "border-color 0.3s ease",
+                                cursor: "pointer",
                               }}
                               title="Save Job"
-                              onClick={() => alert('Saved!')}
+                              onClick={() => alert("Saved!")}
                             >
                               <i className="fa fa-heart" />
                             </button>
@@ -291,7 +293,7 @@ export default function ListJobPublic() {
                 <a
                   href="#"
                   onClick={() => page > 1 && setPage(page - 1)}
-                  className={page === 1 ? 'disabled' : ''}
+                  className={page === 1 ? "disabled" : ""}
                 >
                   «
                 </a>
@@ -302,7 +304,7 @@ export default function ListJobPublic() {
                 return (
                   <li
                     key={current}
-                    className={page === current ? 'active' : ''}
+                    className={page === current ? "active" : ""}
                   >
                     <a href="#" onClick={() => setPage(current)}>
                       {current}
@@ -315,7 +317,7 @@ export default function ListJobPublic() {
                 <a
                   href="#"
                   onClick={() => page < totalPage && setPage(page + 1)}
-                  className={page === totalPage ? 'disabled' : ''}
+                  className={page === totalPage ? "disabled" : ""}
                 >
                   »
                 </a>
@@ -324,7 +326,15 @@ export default function ListJobPublic() {
           </div>
         </section>
       </div>
-      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} />}
+      {showModal && selectedJobId && (
+        <JobApplicationForm
+          jobId={selectedJobId}
+          onClose={() => {
+            setShowModal(false);
+            setSelectedJobId(null); 
+          }}
+        />
+      )}
     </>
   );
 }
