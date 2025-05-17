@@ -36,7 +36,7 @@ import StaffAdmin from '../pages/staff-admin/StaffAdmin';
 import CreateJobPosting from '../pages/business/job-postings/CreateJobPosting';
 import ListJobPosting from '../pages/business/job-postings/ListJobPosting';
 import ListJobPublic from '../pages/business/job-postings/ListJobPublic';
-import JobDetail from '../pages/business/job-postings/JobDetail';
+import JobDetail from '../pages/business/job-postings/Job-Detail';
 import AppliedJobsList from '../pages/business/apply-jobs/AppliedJobsList';
 import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
 import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
@@ -48,6 +48,7 @@ import ListUsers from '../pages/admin/ListUsers';
 import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
 import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
 import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
+import ListJobs from '../pages/admin/Jobs/ListJobs';
 
 interface RouteConfig {
   path: string;
@@ -464,6 +465,18 @@ const routes: RouteConfig[] = [
         <DefaultLayout>
           <BusinessDetail />
         </DefaultLayout>
+      </RequireAuth>
+    ),
+  },
+  {
+    path: '/admin/pending-jobs',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['ADMIN', 'STAFF_ADMIN']}>
+          <AdminLayout>
+            <ListJobs />
+          </AdminLayout>
+        </RequireRole>
       </RequireAuth>
     ),
   },

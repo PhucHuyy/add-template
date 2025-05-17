@@ -1,23 +1,50 @@
-import { useState } from 'react';
-import './JobApplicationForm.css';
+import { useEffect, useState } from "react";
+import "./JobApplicationForm.css";
+import { RootState } from "../../../app/store";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../../../app/hook";
+import { fetchCvByUserId } from "../../../services/user/ManageCv/ManageCv";
+import Swal from "sweetalert2";
+import { sendApplyJob } from "../../../features/applyjobs/applyJobsSlice";
 
-const JobApplicationForm = ({ onClose }) => {
-  const [selectedCVOption, setSelectedCVOption] = useState('existing');
+const JobApplicationForm = ({ onClose, jobId }) => {
+  const dispatch = useAppDispatch();
+  const [selectedCVOption, setSelectedCVOption] = useState("existing");
   const [selectedCV, setSelectedCV] = useState(null);
+  const [attemptedFetch, setAttemptedFetch] = useState(false);
 
-  const [cvList] = useState([
-    'Nguyễn Huy Phúc - Intern Software Developer',
-    'JavaDeveloper_Nguyễn Huy Phúc',
-    'NguyenHuyPhuc_Java Developer',
-  ]);
+  const cvList = useSelector((state: RootState) => state.cv.cvs);
+  const userId = useSelector((state: RootState) => state.auth.user?.id);
+
+  useEffect(() => {
+    if (cvList.length === 0 && !attemptedFetch) {
+      dispatch(fetchCvByUserId());
+      setAttemptedFetch(true);
+    }
+  }, [cvList, attemptedFetch, dispatch]);
 
   const handleCVOptionChange = (option) => {
     setSelectedCVOption(option);
   };
 
-  const handleSubmit = () => {
-    // Handle submission logic
-    console.log('Submitted application');
+  const handleSubmit = async () => {
+    if (!selectedCV) {
+      Swal.fire("Error", "Please select a CV to apply.", "error");
+      return;
+    }
+
+    try {
+      await dispatch(
+        sendApplyJob({
+          jobId,
+          cvId: selectedCV.cvId,
+        })
+      ).unwrap();
+      Swal.fire("Success", "You have successfully applied to this job!", "success");
+      onClose();
+    } catch (error) {
+      Swal.fire("Error", error || "Failed to apply for the job.", "error");
+    }
   };
 
   return (
@@ -26,16 +53,16 @@ const JobApplicationForm = ({ onClose }) => {
         className="job-application-container"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header cố định */}
         <div className="application-header sticky-header">
           <h1>
             <span className="text-normal">Apply </span>
-            <span className="text-green">Intership Job</span>
+            <span className="text-green">Internship Job</span>
           </h1>
           <button className="close-button" onClick={onClose}>
             <span>&times;</span>
           </button>
         </div>
+
         <div className="application-body-scrollable">
           <div className="section">
             <div className="section-header">
@@ -50,11 +77,11 @@ const JobApplicationForm = ({ onClose }) => {
                 <div className="radio-container">
                   <div
                     className={`radio-button ${
-                      selectedCVOption === 'existing' ? 'selected' : ''
+                      selectedCVOption === "existing" ? "selected" : ""
                     }`}
-                    onClick={() => handleCVOptionChange('existing')}
+                    onClick={() => handleCVOptionChange("existing")}
                   >
-                    {selectedCVOption === 'existing' && (
+                    {selectedCVOption === "existing" && (
                       <div className="radio-inner"></div>
                     )}
                   </div>
@@ -66,15 +93,15 @@ const JobApplicationForm = ({ onClose }) => {
                   <p className="cv-online-label">CV Online</p>
 
                   <div className="cv-list">
-                    {cvList.map((cv, index) => (
+                    {cvList.map((cv) => (
                       <div
-                        key={index}
+                        key={cv.cvId}
                         className={`cv-item ${
-                          selectedCV === cv ? 'selected-cv' : ''
+                          selectedCV?.cvId === cv.cvId ? "selected-cv" : ""
                         }`}
                         onClick={() => setSelectedCV(cv)}
                       >
-                        {cv}
+                        {cv.title}
                       </div>
                     ))}
                   </div>
@@ -93,19 +120,11 @@ const JobApplicationForm = ({ onClose }) => {
                   <p className="warning-title">Note:</p>
                   <ol className="warning-list">
                     <li>
-                      JobStock recommends that all of you should always be
-                      careful in the job search process and proactively research
-                      information about the company and the job position before
-                      applying. Candidates need to be responsible for their
-                      application behavior. If you encounter a job posting or
-                      receive suspicious contact from a recruiter, please report
-                      it immediately to TopCV via email{' '}
-                      <span className="text-green">hotro@jobstock.vn</span> for
-                      timely support.
+                      Be cautious during your job search. If anything seems suspicious,
+                      report it to <span className="text-green">hotro@jobstock.vn</span>.
                     </li>
                     <li>
-                      Learn more about fraud prevention{' '}
-                      <span className="text-green">at here</span>.
+                      Learn more about fraud prevention <span className="text-green">here</span>.
                     </li>
                   </ol>
                 </div>
@@ -113,6 +132,7 @@ const JobApplicationForm = ({ onClose }) => {
             </div>
           </div>
         </div>
+
         <div className="action-buttons sticky-footer">
           <button className="cancel-button" onClick={onClose}>
             Cancel

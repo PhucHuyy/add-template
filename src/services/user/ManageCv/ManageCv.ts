@@ -1,3 +1,4 @@
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axiosPrivateProfileServcie from "../../../api/axiosPrivateProfileServcie";
 import { ApiResponse } from "../../../features/auth/authType";
 
@@ -110,17 +111,17 @@ export class CvDTO {
 
 
 export class ManageCv {
-    async getCvByUserId(search?: string): Promise<CvDTO[]| null> {
-        try {
-            const response = await axiosPrivateProfileServcie.get<ApiResponse<CvDTO[]>>("/cv/getcvByid", {
-                params: { search: search || "" },
-            });
-            return response.data.data;
-        } catch (error) {
-            console.error("❌ Failed to fetch CVs:", error);
-            return null;
-        }
-    }
+    // async getCvByUserId(search?: string): Promise<CvDTO[]| null> {
+    //     try {
+    //         const response = await axiosPrivateProfileServcie.get<ApiResponse<CvDTO[]>>("/cv/getcvByid", {
+    //             params: { search: search || "" },
+    //         });
+    //         return response.data.data;
+    //     } catch (error) {
+    //         console.error("❌ Failed to fetch CVs:", error);
+    //         return null;
+    //     }
+    // }
 
     async createCv(dto: CvDTOForCreate): Promise<boolean> {
         try {
@@ -179,3 +180,68 @@ export class ManageCv {
         }
     }
 }
+
+
+interface CvState {
+  cvs: CvDTO[];
+  loading: boolean;
+  error: string | null;
+}
+
+const initialState: CvState = {
+  cvs: [],
+  loading: false,
+  error: null,
+};
+export const fetchCvByUserId = createAsyncThunk<CvDTO[], string | undefined>(
+  "cv/fetchByUserId",
+  async (search, { rejectWithValue }) => {
+    try {
+      const response = await axiosPrivateProfileServcie.get<ApiResponse<any[]>>(
+        "/cv/getcvByid",
+        {
+          params: { search: search || "" },
+        }
+      );
+
+      const rawData = response.data.data;
+      const mappedData: CvDTO[] = rawData.map((item) => ({
+        cvId: item.cvId,
+        studentId: item.studentId,
+        title: item.title,
+        cvDetail: item.cvDetail,
+        createdAt: item.createdAt,
+        status: item.status,
+        isDeleted: item.deleted,
+      }));
+
+      return mappedData;
+    } catch (err: any) {
+      return rejectWithValue(err.response?.data?.message || "Failed to load CVs");
+    }
+  }
+);
+
+const cvSlice = createSlice({
+  name: "cv",
+  initialState,
+  reducers: {},
+  extraReducers: (builder) => {
+    builder
+      .addCase(fetchCvByUserId.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(fetchCvByUserId.fulfilled, (state, action) => {
+        state.loading = false;
+        state.cvs = action.payload;
+      })
+      .addCase(fetchCvByUserId.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.payload as string;
+      });
+  },
+});
+
+export default cvSlice.reducer;
+

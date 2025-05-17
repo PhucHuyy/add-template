@@ -12,6 +12,7 @@ import { getBusinessById } from '../../../service/business/MyBusinessService';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { getJobRecommendations } from '../../../service/business/job-categories/JobCategoriesService';
+import { RootState } from '../../../app/store';
 
 const renderStatus = (status: number) => {
   switch (status) {
@@ -736,7 +737,7 @@ export default function JobDetail() {
           </div>
         </div>
       </section>
-      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} />}
+      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />}
     </>
   );
 }
