@@ -48,6 +48,7 @@ import ListUsers from '../pages/admin/ListUsers';
 import ListProfiles from '../pages/admin/ListProfiles/ListProfiles';
 import PublicJobListByBusiness from '../pages/business/apply-jobs/PublicJobListByBusiness';
 import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
+import ListJobfavorites from '../pages/business/job-postings/ListJobfavorites';
 
 interface RouteConfig {
   path: string;
@@ -169,6 +170,15 @@ const routes: RouteConfig[] = [
     element: (
       <RequireAuth>
         <ManageCv />
+      </RequireAuth>
+    ),
+    layout: DefaultLayout,
+  },
+  {
+    path: '/listjobfavorite',
+    element: (
+      <RequireAuth>
+        <ListJobfavorites />
       </RequireAuth>
     ),
     layout: DefaultLayout,

@@ -12,6 +12,7 @@ import { getBusinessById } from '../../../service/business/MyBusinessService';
 import { useSelector } from 'react-redux';
 import Swal from 'sweetalert2';
 import { getJobRecommendations } from '../../../service/business/job-categories/JobCategoriesService';
+import { favouritejob } from '../../../service/business/favouritejob';
 
 const renderStatus = (status: number) => {
   switch (status) {
@@ -330,6 +331,65 @@ export default function JobDetail() {
     }
   };
 
+
+  const handleAddFavourite = async (jobId: string) => {
+
+    if (jobId === "") {
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: 'Are you sure you want to add to favorites?',
+      icon: 'question',
+      showCancelButton: true,
+      confirmButtonText: 'Yes',
+      cancelButtonText: 'Cancel',
+      background: '#ffffff',
+      color: '#333333',
+      confirmButtonColor: '#07b107',
+      cancelButtonColor: '#d33',
+    });
+
+    if (result.isConfirmed) {
+      try {
+        const service = new favouritejob();
+        const response = await service.createFavoriteJob(jobId);
+        console.log(response, 'response.data');
+        if (response) {
+
+
+          Swal.fire({
+            title: 'Add favorites successfully!',
+            icon: 'success',
+            background: '#ffffff',
+            color: '#333333',
+            confirmButtonColor: '#07b107',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            willClose: () => {
+              window.location.reload();
+            },
+          });
+        } else {
+          Swal.fire({
+            title: 'Error Add favorites !',
+            icon: 'error',
+            confirmButtonColor: '#d33',
+          });
+        }
+      } catch (error) {
+        console.error('Error Add favorites:', error);
+        Swal.fire({
+          title: 'Error Add favorites !',
+          icon: 'error',
+          confirmButtonColor: '#d33',
+        });
+      }
+    }
+  };
+
+
   return (
     <>
       <div className="clearfix" />
@@ -363,7 +423,7 @@ export default function JobDetail() {
           <div className="row bottom-mrg">
             <div className="col-md-8 col-sm-8">
               <div className="detail-desc-caption">
-                <h4><a href={'http://localhost:5173/BusinessDetail/'+businessId}>{businessInfo.companyName}</a></h4>
+                <h4><a href={'http://localhost:5173/BusinessDetail/' + businessId}>{businessInfo.companyName}</a></h4>
                 <span className="designation">{businessInfo.industry}</span>
                 <p>{businessInfo.companyInfo}</p>
                 <div className="category-tags" style={{ marginTop: '8px' }}>
@@ -435,7 +495,7 @@ export default function JobDetail() {
                       >
                         Quick Apply
                       </a>
-                      <a href="#" className="footer-btn blu-btn">
+                      <a href="" onClick={(e) => { e.preventDefault(); handleAddFavourite(jobId ?? "") }} className="footer-btn blu-btn">
                         Add favorite
                       </a>
                     </>
