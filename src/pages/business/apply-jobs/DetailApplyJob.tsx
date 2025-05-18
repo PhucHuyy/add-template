@@ -161,7 +161,6 @@ export default function DetailApplyJob() {
               style={{
                 alignItems: 'center',
                 flexDirection: 'column',
-                alignItems: 'center',
                 justifyContent: 'center',
                 textAlign: 'center',
               }}

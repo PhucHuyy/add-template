@@ -266,7 +266,7 @@ export default function Header() {
                           }`}
                         >
                           <li>
-                            <a href="/jobs/saved">
+                            <a href="/listjobfavorite">
                               <i className="fa fa-bookmark" /> Saved Jobs
                             </a>
                           </li>
