@@ -11,6 +11,7 @@ import { combineReducers } from 'redux';
 import  cvSlice  from '../services/user/ManageCv/ManageCv';
 import applyJobsReducer from '../features/applyjobs/applyJobsSlice';
 import jobListReducer from '../features/admin/jobListSlice';
+import interviewReducer from '../service/business/interviews/interviewSlice';
 const persistConfig = {
   key: 'root',
   storage,
@@ -25,6 +26,7 @@ const appReducer = combineReducers({
   cv: cvSlice,
   applyJob: applyJobsReducer,
   job: jobListReducer,
+  interview: interviewReducer
 });
 const rootReducer = (state: any, action: any) => {
   if (action.type === 'auth/resetStore') {

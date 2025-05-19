@@ -1,13 +1,101 @@
-import React from 'react';
+import React, { useEffect, useState } from "react";
+import { Calendar, Button, Badge } from "rsuite";
+import moment from "moment";
+import { useAppDispatch } from "../../../app/hook";
+import { useSelector } from "react-redux";
+import { RootState } from "../../../app/store";
+import {
+  fetchInterviews,
+  setSelectedDateInterviews,
+  updateInterviewStatusThunk,
+} from "../../../service/business/interviews/interviewSlice";
+import "./InterviewCalendar.css";
+import "rsuite/Calendar/styles/index.css";
+import withReactContent from "sweetalert2-react-content";
+import Swal from "sweetalert2";
 
 export default function StudentInterviewList() {
+  const dispatch = useAppDispatch();
+  const { interviews, loading, error, selectedDateInterviews } = useSelector(
+    (state: RootState) => state.interview
+  );
+
+  const [selectedDate, setSelectedDate] = useState<Date | null>(null);
+  const MySwal = withReactContent(Swal);
+
+  useEffect(() => {
+    dispatch(fetchInterviews({ page: 1, pageSize: 10 }));
+  }, [dispatch]);
+
+  const renderCell = (date: Date) => {
+    const hasInterview = interviews.some((interview) =>
+      moment(interview.interviewTime).isSame(date, "day")
+    );
+    return hasInterview ? (
+      <Badge content="!" className="interview-badge" />
+    ) : null;
+  };
+
+  const handleSelect = (date: Date) => {
+    setSelectedDate(date);
+    const dayInterviews = interviews.filter((interview) =>
+      moment(interview.interviewTime).isSame(date, "day")
+    );
+    dispatch(setSelectedDateInterviews(dayInterviews));
+  };
+
+  const refreshSelectedDateInterviews = (
+    updatedInterviews: typeof interviews
+  ) => {
+    if (selectedDate) {
+      const filtered = updatedInterviews.filter((interview) =>
+        moment(interview.interviewTime).isSame(selectedDate, "day")
+      );
+      dispatch(setSelectedDateInterviews(filtered));
+    }
+  };
+
+  const handleUpdate = async (
+    interviewId: string,
+    status: "COMPLETED" | "CANCELLED",
+    successMessage: string
+  ) => {
+    try {
+      const confirm = await MySwal.fire({
+        title: `Confirm ${status === "COMPLETED" ? "Accept" : "Refuse"}`,
+        text: `Are you sure you want to ${
+          status === "COMPLETED" ? "accept" : "refuse"
+        } this interview?`,
+        icon: status === "COMPLETED" ? "question" : "warning",
+        showCancelButton: true,
+        confirmButtonText: `Yes, ${
+          status === "COMPLETED" ? "accept" : "refuse"
+        }`,
+        confirmButtonColor: status === "CANCELLED" ? "#d33" : undefined,
+      });
+
+      if (confirm.isConfirmed) {
+        await dispatch(
+          updateInterviewStatusThunk({ interviewId, status })
+        ).unwrap();
+        await MySwal.fire("Success", successMessage, "success");
+
+        const fetchResult = await dispatch(
+          fetchInterviews({ page: 1, pageSize: 10 })
+        ).unwrap();
+        refreshSelectedDateInterviews(fetchResult.data.data);
+      }
+    } catch (err: any) {
+      await MySwal.fire("Error", err.message || "Operation failed", "error");
+    }
+  };
+
   return (
     <>
       <div className="clearfix" />
-      {/* Title Header Start */}
       <section
         className="inner-header-title"
-        style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}
+        style={{ backgroundImage: "url(/assets/img/banner-10.jpg)" }}
       >
         <div className="container">
           <h1>Schedule Interview List</h1>
@@ -15,278 +103,99 @@ export default function StudentInterviewList() {
       </section>
       <div className="clearfix" />
 
-      <section className="browse-company">
-        <div className="container">
-          {/* Company Searrch Filter Start */}
-          <div className="row extra-mrg">
-            <div className="wrap-search-filter">
-              <form>
-                <div className="col-md-4 col-sm-4">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Keyword: Name, Tag"
-                  />
-                </div>
-                <div className="col-md-3 col-sm-3">
-                  <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Location: City, State, Zip"
-                  />
-                </div>
-                <div className="col-md-3 col-sm-3">
-                  <select
-                    className="selectpicker form-control"
-                    multiple=""
-                    title="All Categories"
-                  >
-                    <option>Information Technology</option>
-                    <option>Mechanical</option>
-                    <option>Hardware</option>
-                  </select>
-                </div>
-                <div className="col-md-2 col-sm-2">
-                  <button type="submit" className="btn btn-success full-width">
-                    Filter
-                  </button>
-                </div>
-              </form>
-            </div>
+      <section className="browse-company" style={{ marginLeft: "50px" }}>
+        <div className="calendar-wrapper">
+          <div className="calendar">
+            <Calendar
+              bordered
+              value={selectedDate || new Date()}
+              onSelect={handleSelect}
+              renderCell={renderCell}
+              isoWeek
+              className="custom-calendar"
+            />
           </div>
-          {/* Company Searrch Filter End */}
-
-          {/* Single Browse Company */}
-          <div className="item-click">
-            <article>
-              <div className="brows-company">
-                <div className="col-md-2 col-sm-2">
-                  <div className="brows-company-pic">
-                    <a href="company-detail.html">
-                      <img
-                        src="/assets/img/com-2.jpg"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-name">
-                    <a href="company-detail.html">
-                      <h4>Virtue</h4>
-                    </a>
-                    <span className="brows-company-tagline">
-                      Software Company
-                    </span>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-location">
-                    <p>
-                      <i className="fa-solid fa-calendar" /> 2023-10-10 10:00
-                    </p>
-                  </div>
-                </div>
-                <div className="col-md-2 col-sm-2">
-                  <div
-                    className="brows-company-position"
-                    style={{
-                      display: 'flex',
-                      gap: '8px',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#22c55e',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
+          <div className="interview-list">
+            <h3>Meetings</h3>
+            {selectedDate && (
+              <div>
+                {loading && <p>Loading...</p>}
+                {error && <p>{error}</p>}
+                {interviews.length === 0 && !loading && (
+                  <p>No interviews scheduled.</p>
+                )}
+                {selectedDateInterviews.length > 0 ? (
+                  selectedDateInterviews.map((interview) => (
+                    <div key={interview.interviewId} className="interview-item">
+                      <h4 style={{ fontSize: "1.5rem", lineHeight: "1.5" }}>{interview.jobTitle}</h4>
+                      <p style={{ fontSize: "1.3rem", lineHeight: "1.5" }}>
+                        {moment(interview.interviewTime).format(
+                          "MMMM D, YYYY, h:mm A"
+                        )}
+                      </p>
+                      <p style={{ fontSize: "1.3rem", lineHeight: "1.5" }}>
+                        Company: {interview.companyName}
+                      </p>
+                      <p style={{ fontSize: "1.3rem", lineHeight: "1.5" }}>
+                        Location: {interview.location}
+                      </p>
+                      {interview.status === "scheduled" ? (
+                        <div className="interview-actions">
+                          <Button
+                            appearance="primary"
+                            size="sm"
+                            onClick={() =>
+                              handleUpdate(
+                                interview.interviewId,
+                                "COMPLETED",
+                                "Interview accepted successfully!"
+                              )
+                            }
+                          >
+                            Accept
+                          </Button>
+                          <Button
+                            appearance="default"
+                            size="sm"
+                            color="red"
+                            onClick={() =>
+                              handleUpdate(
+                                interview.interviewId,
+                                "CANCELLED",
+                                "Interview refused successfully!"
+                              )
+                            }
+                          >
+                            Refuse
+                          </Button>
+                        </div>
+                      ) : (
+                        <p
+                          style={{
+                            color:
+                              interview.status === "completed"
+                                ? "green"
+                                : "red",
+                            fontWeight: "bold",
+                            fontSize: "1.3rem", 
+                          }}
+                        >
+                          {interview.status === "completed"
+                            ? "✅ You accepted this interview"
+                            : "❌ You declined this interview"}
+                        </p>
+                      )}
+                    </div>
+                  ))
+                ) : (
+                  <p>
+                    No interviews on{" "}
+                    {moment(selectedDate).format("MMMM D, YYYY")}.
+                  </p>
+                )}
               </div>
-            </article>
-          </div>
-          {/* Single Browse Company */}
-          <div className="item-click">
-            <article>
-              <div className="brows-company">
-                <div className="col-md-2 col-sm-2">
-                  <div className="brows-company-pic">
-                    <a href="company-detail.html">
-                      <img
-                        src="/assets/img/com-6.jpg"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-name">
-                    <a href="company-detail.html">
-                      <h4>Twitter</h4>
-                    </a>
-                    <span className="brows-company-tagline">
-                      Software Company
-                    </span>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-location">
-                    <p>
-                      <i className="fa-solid fa-calendar" /> 2023-10-11 10:00
-                    </p>
-                  </div>
-                </div>
-                <div className="col-md-2 col-sm-2">
-                  <div
-                    className="brows-company-position"
-                    style={{
-                      display: 'flex',
-                      gap: '8px',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#22c55e',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-          {/* Single Browse Company */}
-          <div className="item-click">
-            <article>
-              <div className="brows-company">
-                <div className="col-md-2 col-sm-2">
-                  <div className="brows-company-pic">
-                    <a href="company-detail.html">
-                      <img
-                        src="/assets/img/com-7.jpg"
-                        className="img-responsive"
-                        alt=""
-                      />
-                    </a>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-name">
-                    <a href="company-detail.html">
-                      <h4>Autodesk</h4>
-                    </a>
-                    <span className="brows-company-tagline">
-                      Software Company
-                    </span>
-                  </div>
-                </div>
-                <div className="col-md-4 col-sm-4">
-                  <div className="brows-company-location">
-                    <p>
-                      <i className="fa-solid fa-calendar" /> 2023-10-12 10:00
-                    </p>
-                  </div>
-                </div>
-                <div className="col-md-2 col-sm-2">
-                  <div
-                    className="brows-company-position"
-                    style={{
-                      display: 'flex',
-                      gap: '8px',
-                      justifyContent: 'center',
-                    }}
-                  >
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#22c55e',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Accept
-                    </button>
-                    <button
-                      style={{
-                        padding: '6px 12px',
-                        backgroundColor: '#ef4444',
-                        color: 'white',
-                        border: 'none',
-                        borderRadius: '4px',
-                      }}
-                    >
-                      Reject
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </article>
-          </div>
-
-          <div className="row">
-            <ul className="pagination">
-              <li>
-                <a href="#">«</a>
-              </li>
-              <li className="active">
-                <a href="#">1</a>
-              </li>
-              <li>
-                <a href="#">2</a>
-              </li>
-              <li>
-                <a href="#">3</a>
-              </li>
-              <li>
-                <a href="#">4</a>
-              </li>
-              <li>
-                <a href="#">
-                  <i className="fa fa-ellipsis-h" />
-                </a>
-              </li>
-              <li>
-                <a href="#">»</a>
-              </li>
-            </ul>
+            )}
+            {!selectedDate && <p>Click a date to view interviews.</p>}
           </div>
         </div>
       </section>

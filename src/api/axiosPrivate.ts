@@ -4,7 +4,7 @@ import { RefreshResponse } from '../features/auth/authType';
 const axiosPrivate = axios.create({
 
   // baseURL: 'http://localhost:8080/api/v1/',
-  baseURL: "http://localhost:8080/api/v1/",
+  baseURL: "http://localhost:8088/api/v1/",
 
 });
 

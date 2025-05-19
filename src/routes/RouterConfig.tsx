@@ -178,7 +178,7 @@ const routes: RouteConfig[] = [
     layout: DefaultLayout,
   },
   {
-    path: '/listjobfavorite',
+    path: '/student/listjobfavorite',
     element: (
       <RequireAuth>
         <ListJobfavorites />
@@ -322,6 +322,18 @@ const routes: RouteConfig[] = [
     element: (
       <RequireAuth>
         <RequireRole allowRoles={['BUSINESS']}>
+          <DefaultLayout>
+            <PublicJobListByBusiness />
+          </DefaultLayout>
+        </RequireRole>
+      </RequireAuth>
+    ),
+  },
+    {
+    path: '/student/interview-list',
+    element: (
+      <RequireAuth>
+        <RequireRole allowRoles={['STUDENT']}>
           <DefaultLayout>
             <PublicJobListByBusiness />
           </DefaultLayout>

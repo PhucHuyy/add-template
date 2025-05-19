@@ -12,6 +12,7 @@ import {
 } from "../../features/noti/notiSlice";
 import MegaMenuWrapper from "./MegaMenuWrapper";
 import { megaMenu as fullMenu, MegaMenuColumn } from "../../data/menuData";
+import useNotificationSocket from "../../hook/useNotificationSocket";
 
 export default function Header() {
   console.log("[App render]");
@@ -64,6 +65,8 @@ export default function Header() {
     localStorage.clear();
     navigate("/");
   };
+  // const userId = useSelector((state: RootState) => state.auth.user?.id);
+  // useNotificationSocket(userId || "");
 
   return (
     <>
@@ -266,7 +269,7 @@ export default function Header() {
                           }`}
                         >
                           <li>
-                            <a href="/listjobfavorite">
+                            <a href="/student/listjobfavorite">
                               <i className="fa fa-bookmark" /> Saved Jobs
                             </a>
                           </li>
@@ -276,8 +279,8 @@ export default function Header() {
                             </a>
                           </li>
                           <li>
-                            <a href="/jobs/matches">
-                              <i className="fa fa-lightbulb-o" /> Matching Jobs
+                            <a href="/student/list-interview">
+                              <i className="fa fa-lightbulb-o" /> List Interview
                             </a>
                           </li>
                           <li>
