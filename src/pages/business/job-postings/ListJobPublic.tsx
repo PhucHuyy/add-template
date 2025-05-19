@@ -1,25 +1,85 @@
 import React, { useEffect, useState } from "react";
 import { getListPublicJob } from "../../../service/business/jobpostings/JobPostingsService";
 import JobApplicationForm from "../apply-jobs/JobApplicationForm";
+import { getAllCategoriesPublic } from "../../../service/business/categories/CategoryService";
+import './ListJobPublic.css';
+import Select from 'react-select';
+const styles = {
+  selectMultiple: {
+    height: '150px',
+    padding: '10px',
+    borderRadius: '6px',
+    border: '1px solid #ced4da',
+    backgroundColor: '#fff',
+    fontSize: '14px',
+    color: '#495057',
+    boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.075)',
+    transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
+  }
+}
+
+
+// @RequestParam(defaultValue = "") String searchkeyword,
+//             @RequestParam(defaultValue = "") String location,
+//             @RequestParam(defaultValue = "") String company_name,
+//             @RequestParam(defaultValue = "-1") int isurgen,
+//             @RequestParam(required = false) int [] categoryid,
+//             @RequestParam(required = false) boolean sortByexpirationDate
 
 export default function ListJobPublic() {
   const [jobs, setJobs] = React.useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
-
+  const [listcategory, setlistcategory] = useState([]);
+  const [selectedCategories, setSelectedCategories] = React.useState([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
   const [limit] = useState(10);
 
+  //sang
+  const [searchKeyword, setSearchKeyword] = useState("");
+  const [location, setLocation] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [isUrgent, setIsUrgent] = useState(-1);
+  const [sortByExpirationDate, setSortByExpirationDate] = useState(false);
+
+
+  const getDynamicHeight = () => {
+    const baseHeight = 40; // Chiều cao cơ bản (khi không có lựa chọn)
+    const itemHeight = 30; // Chiều cao mỗi thẻ đã chọn
+    const maxHeight = 150; // Giới hạn tối đa
+    const minHeight = 40; // Giới hạn tối thiểu
+    const calculatedHeight = baseHeight + selectedCategories.length * itemHeight;
+
+    return Math.min(Math.max(calculatedHeight, minHeight), maxHeight) + 'px';
+  };
+
+  const handleChange = (e) => {
+    // e.target.selectedOptions là HTMLCollection, chuyển thành mảng value
+    const values = Array.from(e.target.selectedOptions, option => option.value);
+    setSelectedCategories(values);
+    console.log(selectedCategories);
+  };
+
   useEffect(() => {
     const offset = (page - 1) * limit;
-
+    fetchCategories();
     fetchPublicJob(offset);
   }, [page]);
 
+  const options = listcategory.map(category => ({
+    value: category.categoryId,
+    label: category.name,
+  }));
+
+  const fetchCategories = async () => {
+    const response = await getAllCategoriesPublic();
+    setlistcategory(response.data);
+  }
+
   const fetchPublicJob = async (offset: number) => {
     try {
-      const response = await getListPublicJob(offset, limit);
+      const response = await getListPublicJob(offset, limit, searchKeyword, location, companyName, isUrgent, sortByExpirationDate, selectedCategories);
       console.log("Response:", response.data);
       setJobs(response.data.data);
       setTotalPage(response.data.totalPages);
@@ -31,14 +91,38 @@ export default function ListJobPublic() {
     }
   };
 
+  const buttonSearch = async () => {
+    console.log(selectedCategories);
+    try {
+      const response = await getListPublicJob(0, limit, searchKeyword, location, companyName, isUrgent, sortByExpirationDate, selectedCategories);
+      console.log("Response:", response.data);
+      setJobs(response.data.data);
+      setTotalPage(response.data.totalPages);
+    } catch (error) {
+      console.error("Error fetching categories:", error);
+      throw new Error(
+        (error as any).response?.data?.message || "Something went wrong"
+      );
+    }
+  }
+
   const isExpired = (expirationDate: any) => {
     const now = new Date();
     const expiration = new Date(expirationDate);
     return expiration < now;
   };
 
-  console.log("Jobs:", jobs);
-  console.log("Total Page:", totalPage);
+  // console.log("Jobs:", jobs);
+  // console.log("Total Page:", totalPage);
+
+  const handleCheckboxChange = () => {
+    setSortByExpirationDate(!sortByExpirationDate);
+  };
+
+
+  const clearFilter = () => {
+    console.log(selectedCategories);
+  }
 
   return (
     <>
@@ -62,34 +146,112 @@ export default function ListJobPublic() {
               <div className="wrap-search-filter">
                 <form>
                   <div className="col-md-4 col-sm-4">
+                    <label>Keyword:</label>
                     <input
                       type="text"
                       className="form-control"
                       placeholder="Keyword: Name, Tag"
+                      value={searchKeyword}
+                      onChange={(e) => { setSearchKeyword(e.target.value) }}
                     />
                   </div>
-                  <div className="col-md-3 col-sm-3">
+                  <div className="col-md-4 col-sm-4">
+                    <label>Location:</label>
                     <input
                       type="text"
                       className="form-control"
                       placeholder="Location: City, State, Zip"
+                      value={location}
+                      onChange={(e) => { setLocation(e.target.value) }}
                     />
                   </div>
-                  <div className="col-md-3 col-sm-3">
-                    <select
-                      className="selectpicker form-control"
-                      multiple=""
-                      title="All Categories"
-                    >
-                      <option>Information Technology</option>
-                      <option>Mechanical</option>
-                      <option>Hardware</option>
+                  <div className="col-md-4 col-sm-4">
+                    <label>Company Name:</label>
+                    <input
+                      type="text"
+                      className="form-control"
+                      placeholder="Company Name: City, State, Zip"
+                      value={companyName}
+                      onChange={(e) => { setCompanyName(e.target.value) }}
+                    />
+                  </div>
+                  <div className="col-md-4 col-sm-4" >
+                    <label style={{ marginRight: "5px" }}>UrgentRecruitment </label>
+                    <select className="form-control" value={isUrgent} onChange={(e) => {
+                      const num = parseInt(e.target.value)
+                      setIsUrgent(num)
+                    }}>
+                      <option value={-1} >All</option>
+                      <option value={1} >UrgentRecruitment</option>
+                      <option value={0} >Not UrgentRecruitment</option>
                     </select>
                   </div>
-                  <div className="col-md-2 col-sm-2">
-                    <button type="submit" className="btn btn-primary">
-                      Filter
-                    </button>
+
+                  <div className="col-md-4 col-sm-4">
+                    <label style={{ marginRight: "5px" }}>Category </label>
+                    <Select
+                      isMulti
+                      options={options}
+                      value={selectedCategories}
+                      onChange={setSelectedCategories}
+                      placeholder="Choose category..."
+                      styles={{
+                        control: (provided) => ({
+                          ...provided,
+                          height: getDynamicHeight(), // Chiều cao động
+                          minHeight: '50px', // Đảm bảo chiều cao tối thiểu
+                          borderRadius: '0px',
+                          border: '1px solid #ced4da',
+                          boxShadow: 'inset 0 1px 2px rgba(0,0,0,0.075)',
+                          transition: 'border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out',
+                          overflowY: 'auto', // Cho phép cuộn dọc khi vượt quá chiều cao
+                          display: 'flex', // Đảm bảo layout đúng
+                          flexWrap: 'wrap', // Cho phép thẻ xuống dòng
+                          alignContent: 'flex-start', // Đẩy nội dung lên trên
+                        }),
+                        multiValue: (provided) => ({
+                          ...provided,
+                          backgroundColor: '#007bff',
+                          color: '#fff',
+                          borderRadius: '4px',
+                        }),
+                        multiValueLabel: (provided) => ({
+                          ...provided,
+                          color: '#fff',
+                        }),
+                        multiValueRemove: (provided) => ({
+                          ...provided,
+                          color: '#fff',
+                          ':hover': {
+                            backgroundColor: '#0056b3',
+                            color: '#fff',
+                          },
+                        }),
+                        menu: (provided) => ({
+                          ...provided,
+                          maxHeight: '400px', // Giới hạn chiều cao dropdown
+                          // overflowY: 'auto',
+                        }),
+                      }}
+                    />
+                  </div>
+                  <div className="col-md-4 col-sm-4" >
+                    <label style={{ marginRight: '5px' }}>Sort By expiration</label>
+                    <input checked={sortByExpirationDate}
+                      onChange={handleCheckboxChange} style={{ marginTop: '10px' }} type="checkbox" id="sort-expiration" className="custom-checkbox" />
+                    <label htmlFor="sort-expiration"></label>
+                  </div>
+                  <div className="col-md-12 col-sm-12">
+                    <div className="col-md-2 col-sm-2" style={{ justifyContent: 'left', padding: '0px' }}>
+                      <button onClick={buttonSearch} type="button" className="btn btn-primary">
+                        Filter
+                      </button>
+                    </div>
+                    <div className="col-md-3 col-sm-3">
+                      <button type="button" className="btn btn-primary" style={{ backgroundColor: 'red' }} onClick={clearFilter}>
+                        Clear filter
+                      </button>
+                    </div>
                   </div>
                 </form>
               </div>
@@ -331,7 +493,7 @@ export default function ListJobPublic() {
           jobId={selectedJobId}
           onClose={() => {
             setShowModal(false);
-            setSelectedJobId(null); 
+            setSelectedJobId(null);
           }}
         />
       )}

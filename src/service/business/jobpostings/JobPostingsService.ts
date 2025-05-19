@@ -1,7 +1,7 @@
 import axiosRecruitment from '../../../api/recruitment/axiosRecruitment';
 import axiosRecruitmentPublic from '../../../api/recruitment/axiosRecruitmentPublic';
 import { AxiosResponse } from 'axios';
-
+import qs from 'qs';
 export const sendRequestCreateJob = async (jobPostingsRequestDTO: any) => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitment.post(
@@ -132,7 +132,10 @@ export const bannedJob = async (jobId: string): Promise<any> => {
   }
 };
 
-export const getListPublicJob = async (offset: number, limit: number) => {
+export const getListPublicJob = async (offset: number, limit: number, searchKeyword: string, location: string, companyName: string, isUrgent: number, sortByExpirationDate: boolean, categoryIds: any[]) => {
+  const categoryid = categoryIds.map(e => {
+    return e.value;
+  });
   try {
     const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
       `job-postings/view-all-public-job`,
@@ -140,6 +143,15 @@ export const getListPublicJob = async (offset: number, limit: number) => {
         params: {
           offset,
           limit,
+          searchkeyword: searchKeyword,
+          location: location,
+          company_name: companyName,
+          isurgen: isUrgent,
+          sortByexpirationDate: sortByExpirationDate,
+          categoryid,
+        },
+        paramsSerializer: (params) => {
+          return qs.stringify(params, { arrayFormat: 'repeat' }); // Removes [] and repeats the key
         },
       },
     );
