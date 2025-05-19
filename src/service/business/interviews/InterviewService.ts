@@ -17,23 +17,13 @@ export const setupInterviewSchedule = async (
   }
 };
 
-export const getInterviewScheduleList = async (
-  offset: number,
-  limit: number,
-  jobId: string,
-): Promise<any> => {
+export const getInterviewScheduleListByBusinessId = async (): Promise<any> => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitment.get(
-      `interviews/get-interviews-schedules/${jobId}`,
-      {
-        params: {
-          offset,
-          limit,
-        },
-      },
+      `interviews/get-interviews-schedules/business`,
     );
 
-    return response.data.data;
+    return response;
   } catch (error: any) {
     console.error('Error fetching categories:', error);
     throw new Error(error.response?.data?.message || 'Something went wrong');

@@ -41,7 +41,6 @@ import AppliedJobsList from '../pages/business/apply-jobs/AppliedJobsList';
 import ListApplyJobs from '../pages/business/apply-jobs/ListApplyJobs';
 import DetailApplyJob from '../pages/business/apply-jobs/DetailApplyJob';
 import StudentInterviewList from '../pages/business/interviews/StudentInterviewList';
-import JobInterviewList from '../pages/business/interviews/JobInterviewList';
 import UpdateJobPosting from '../pages/business/job-postings/UpdateJobPosting';
 import CategoriesList from '../pages/business/categories/CategoriesList';
 import ListUsers from '../pages/admin/ListUsers';
@@ -52,7 +51,7 @@ import BusinessDetail from '../pages/identity/user/business/BusinessDetail';
 import ListJobfavorites from '../pages/business/job-postings/ListJobfavorites';
 
 import ListJobs from '../pages/admin/Jobs/ListJobs';
-
+import InterviewCalendar from '../pages/business/interviews/InterviewCalendar';
 
 interface RouteConfig {
   path: string;
@@ -294,13 +293,25 @@ const routes: RouteConfig[] = [
       </RequireAuth>
     ),
   },
+  // {
+  //   path: '/business/job-interview-list/:jobId',
+  //   element: (
+  //     <RequireAuth>
+  //       <RequireRole allowRoles={['BUSINESS']}>
+  //         <DefaultLayout>
+  //           <JobInterviewList />
+  //         </DefaultLayout>
+  //       </RequireRole>
+  //     </RequireAuth>
+  //   ),
+  // },
   {
-    path: '/business/job-interview-list/:jobId',
+    path: '/business/job-interview-list',
     element: (
       <RequireAuth>
         <RequireRole allowRoles={['BUSINESS']}>
           <DefaultLayout>
-            <JobInterviewList />
+            <InterviewCalendar />
           </DefaultLayout>
         </RequireRole>
       </RequireAuth>

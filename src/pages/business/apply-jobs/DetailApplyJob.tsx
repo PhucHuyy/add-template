@@ -38,6 +38,7 @@ export default function DetailApplyJob() {
       try {
         await setupInterviewSchedule(interviewScheduleDTO);
         await acceptApplyJob(applyId);
+
         Swal.fire({
           title: 'Success!',
           text: 'Interview schedule has been set.',
