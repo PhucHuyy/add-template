@@ -13,6 +13,20 @@ type UpdateCategoryResponse = {
   };
 };
 
+
+export const getAllCategoriesPublic = async () => {
+  try {
+    const response: AxiosResponse<any[]> = await axiosRecruitment.get(
+      `categories/getAllCategoriespublic`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
 export const getAllCategories = async () => {
   try {
     const response: AxiosResponse<any[]> = await axiosRecruitment.get(

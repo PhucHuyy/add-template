@@ -124,7 +124,7 @@ export default function ListBussinessAccount() {
             </div>
 
             {/* Nội dung chính trong khung trắng */}
-            <div className="white-shadow px-12 py-8">
+            <div className="white-shadow px-12 py-8" >
 
                 <div className="search-container" style={{ padding: '20px', textAlign: 'center' }}>
                     <div className="search-box" style={{
@@ -189,7 +189,7 @@ export default function ListBussinessAccount() {
                         <table className="simple-table">
                             <thead>
                                 <tr>
-                                    <th>Profile Id</th>
+                                    <th>Avatar</th>
                                     <th>Company Name</th>
                                     <th>Industry</th>
                                     <th>taxCode</th>
@@ -203,7 +203,8 @@ export default function ListBussinessAccount() {
                             <tbody>
                                 {businesslist?.map((business) => (
                                     <tr>
-                                        <td onClick={() => clickdetails(business.profileId)}>{business.profileId}</td>
+                                        <td onClick={() => clickdetails(business.profileId)} ><img src={business.image_Avatar_url} style={{width: '100px' ,height: "100px", borderRadius: '15px'}} alt="" /></td>
+                                        {/* <td >{business.profileId}</td> */}
                                         <td>{business.companyName}</td>
                                         <td>{business.industry}</td>
                                         <td>{business.taxCode}</td>
@@ -309,10 +310,11 @@ export default function ListBussinessAccount() {
                             overflowY: 'auto' // Cho phép cuộn dọc
                         }}
                     >
-                        <h2>Student Details</h2>
+                        <h2>Business Details</h2>
                         <table>
                             <tbody>
                                 <tr key="profileId"><td>Profile Id</td><td>{selectedBusiness.profileId}</td></tr>
+                                <tr key="avatar"><td>Avatar</td><td> <img style={{width: '100px', height: '100px'}} src={selectedBusiness.image_Avatar_url} alt="" /></td></tr>
                                 <tr key="fullName"><td>Company Name</td><td>{selectedBusiness.companyName}</td></tr>
                                 <tr key="major"><td>Industry</td><td>{selectedBusiness.industry}</td></tr>
                                 <tr key="dob"><td>Company Info</td><td>{selectedBusiness.companyInfo}</td></tr>
