@@ -72,7 +72,7 @@ export default function JobDetail() {
   const [isDeleted, setIsDeleted] = useState(false);
   const [expirationDate, setExpirationDate] = useState('');
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
-
+  const [Locationjob, setLocation] = useState<String>("");
   const [businessId, setbusinessId] = useState<string>("");
 
   const [businessInfo, setBusinessInfo] = useState({
@@ -98,7 +98,7 @@ export default function JobDetail() {
         setIsDeleted(informationJobResponse?.data?.deleted);
         setExpirationDate(informationJobResponse?.data?.expirationDate);
         setCategoryNames(informationJobResponse?.data?.categoryNames);
-
+        setLocation(informationJobResponse?.data?.location);
         const businessId = informationJobResponse?.data?.businessId;
         setbusinessId(businessId);
         const businessInfoResponse = await getBusinessById(businessId);
@@ -402,7 +402,8 @@ export default function JobDetail() {
         style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}
       >
         <div className="container">
-          <h1>Job Detail</h1>
+          {/* <h4>Job Detail</h4> */}
+          <h2>{jobTitle}</h2>
         </div>
       </section>
       <div className="clearfix" />
@@ -424,11 +425,10 @@ export default function JobDetail() {
             </div>
           </div>
           <div className="row bottom-mrg">
-            <div className="col-md-8 col-sm-8">
+            <div className="col-md-6 col-sm-6">
               <div className="detail-desc-caption">
-                <h4><a href={'http://localhost:5173/BusinessDetail/' + businessId}>{businessInfo.companyName}</a></h4>
-                <span className="designation">{businessInfo.industry}</span>
-                <p>{businessInfo.companyInfo}</p>
+                <h3>{jobTitle}</h3>
+                <h3>Company: <a href={'http://localhost:5173/BusinessDetail/' + businessId}>{businessInfo.companyName}</a></h3>
                 <div className="category-tags" style={{ marginTop: '8px' }}>
                   {categoryNames.map((name, index) => (
                     <span
@@ -450,25 +450,26 @@ export default function JobDetail() {
                 </div>
               </div>
             </div>
-            <div className="col-md-4 col-sm-4">
+            <div className="col-md-6 col-sm-6">
               <div className="get-touch">
-                <h4>Get in Touch</h4>
+                <h4>Job Description</h4>
                 <ul>
+                  <li>Address: {Locationjob}</li>
                   <li>
-                    <i className="fa fa-map-marker" />
-                    <span>{businessInfo.address}</span>
+                    Salary: <span>{salary}</span>
                   </li>
                   <li>
-                    <i className="fa fa-envelope" />
-                    <span>{businessInfo.email}</span>
+                    Number of positions: <span>{numberOfPositions} Positions</span>
                   </li>
                   <li>
-                    <i className="fa fa-globe" />
-                    <span>{businessInfo.websiteUrl}</span>
-                  </li>
-                  <li>
-                    <i className="fa fa-phone" />
-                    <span>{businessInfo.phoneNumber}</span>
+                    Expiration Date:{' '}
+                    <span>
+                      {new Date(expirationDate).toLocaleDateString('en-GB', {
+                        year: 'numeric',
+                        month: '2-digit',
+                        day: '2-digit',
+                      })}
+                    </span>
                   </li>
                 </ul>
               </div>
@@ -583,25 +584,8 @@ export default function JobDetail() {
         <div className="container">
           <div className="row row-bottom">
             <h2 className="detail-title">Job Description</h2>
-            <p>{jobTitle}</p>
             <ul className="detail-list">
               <li>{jobDescription}</li>
-              <li>
-                Salary: <span>{salary}</span>
-              </li>
-              <li>
-                Number of positions: <span>{numberOfPositions} Positions</span>
-              </li>
-              <li>
-                Expiration Date:{' '}
-                <span>
-                  {new Date(expirationDate).toLocaleDateString('en-GB', {
-                    year: 'numeric',
-                    month: '2-digit',
-                    day: '2-digit',
-                  })}
-                </span>
-              </li>
             </ul>
           </div>
           <div className="row row-bottom">
