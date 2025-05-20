@@ -15,7 +15,7 @@ import { getJobRecommendations } from '../../../service/business/job-categories/
 import { favouritejob } from '../../../service/business/favouritejob';
 
 import { RootState } from '../../../app/store';
-
+import Loading from '../../../common/Loading';
 
 const renderStatus = (status: number) => {
   switch (status) {
@@ -72,8 +72,8 @@ export default function JobDetail() {
   const [isDeleted, setIsDeleted] = useState(false);
   const [expirationDate, setExpirationDate] = useState('');
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
-  const [Locationjob, setLocation] = useState<String>("");
-  const [businessId, setbusinessId] = useState<string>("");
+  const [Locationjob, setLocation] = useState<string>('');
+  const [businessId, setbusinessId] = useState<string>('');
 
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
@@ -334,10 +334,8 @@ export default function JobDetail() {
     }
   };
 
-
   const handleAddFavourite = async (jobId: string) => {
-
-    if (jobId === "") {
+    if (jobId === '') {
       return;
     }
 
@@ -359,8 +357,6 @@ export default function JobDetail() {
         const response = await service.createFavoriteJob(jobId);
         console.log(response, 'response.data');
         if (response) {
-
-
           Swal.fire({
             title: 'Add favorites successfully!',
             icon: 'success',
@@ -392,6 +388,9 @@ export default function JobDetail() {
     }
   };
 
+  if (!jobRecommendation || jobRecommendation.length === 0) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -428,7 +427,14 @@ export default function JobDetail() {
             <div className="col-md-6 col-sm-6">
               <div className="detail-desc-caption">
                 <h3>{jobTitle}</h3>
-                <h3>Company: <a href={'http://localhost:5173/BusinessDetail/' + businessId}>{businessInfo.companyName}</a></h3>
+                <h3>
+                  Company:{' '}
+                  <a
+                    href={'http://localhost:5173/BusinessDetail/' + businessId}
+                  >
+                    {businessInfo.companyName}
+                  </a>
+                </h3>
                 <div className="category-tags" style={{ marginTop: '8px' }}>
                   {categoryNames.map((name, index) => (
                     <span
@@ -459,7 +465,8 @@ export default function JobDetail() {
                     Salary: <span>{salary}</span>
                   </li>
                   <li>
-                    Number of positions: <span>{numberOfPositions} Positions</span>
+                    Number of positions:{' '}
+                    <span>{numberOfPositions} Positions</span>
                   </li>
                   <li>
                     Expiration Date:{' '}
@@ -499,7 +506,14 @@ export default function JobDetail() {
                       >
                         Quick Apply
                       </a>
-                      <a href="" onClick={(e) => { e.preventDefault(); handleAddFavourite(jobId ?? "") }} className="footer-btn blu-btn">
+                      <a
+                        href=""
+                        onClick={(e) => {
+                          e.preventDefault();
+                          handleAddFavourite(jobId ?? '');
+                        }}
+                        className="footer-btn blu-btn"
+                      >
                         Add favorite
                       </a>
                     </>
@@ -783,7 +797,9 @@ export default function JobDetail() {
           </div>
         </div>
       </section>
-      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />}
+      {showModal && (
+        <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />
+      )}
     </>
   );
 }
