@@ -1,5 +1,6 @@
 import HomePage from '../pages/HomePage';
 import Error404 from '../pages/Error404';
+import ErrorBan from '../pages/ErrorBan';
 import Login from '../pages/identity/login/Login';
 import SignUp from '../pages/identity/register/SignUp';
 
@@ -67,6 +68,11 @@ const routes: RouteConfig[] = [
   {
     path: '/404',
     element: <Error404 />,
+    layout: DefaultLayout,
+  },
+  {
+    path: '/401',
+    element: <ErrorBan />,
     layout: DefaultLayout,
   },
   {

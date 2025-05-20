@@ -5,6 +5,7 @@ import { StudentVerifycationService } from '../../../../services/user/StudentVer
 import { StudentVerifycation as StudentVerifycationModel } from '../../../../services/user/StudentVerifycation/StudentVerifycation';
 import Swal from 'sweetalert2';
 import { useNavigate } from 'react-router-dom';
+import { StudentProfileService } from '../../../../services/user/StudentProfile/StudentProfileService';
 export default function StudentVerifycation() {
     const navigate = useNavigate();
 
@@ -33,11 +34,16 @@ export default function StudentVerifycation() {
     //setAvatarUrl(user?.picture??'');
     useEffect(() => {
         const checkProfileExists = async () => {
+
+
             const service = new StudentVerifycationService();
             const check = await service.checkProfileExists();
+
             console.log("thanh " + check);
-            if (check) {
+            if (check === 1) {
                 navigate("/studentprofile");
+            } else if (check === 0) {
+                navigate("/401")
             }
         }
 
@@ -47,7 +53,7 @@ export default function StudentVerifycation() {
         const token = localStorage.getItem('accessToken');
         console.log(token);
 
-        setAvatarUrl(user?.picture??"");
+        setAvatarUrl(user?.picture ?? "");
 
         console.log(avatarUrl);
 
