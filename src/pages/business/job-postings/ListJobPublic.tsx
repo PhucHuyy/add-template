@@ -5,6 +5,8 @@ import { getAllCategoriesPublic } from '../../../service/business/categories/Cat
 import './ListJobPublic.css';
 import Select from 'react-select';
 import Loading from '../../../common/Loading';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 const styles = {
   selectMultiple: {
     height: '150px',
@@ -27,6 +29,8 @@ const styles = {
 //             @RequestParam(required = false) boolean sortByexpirationDate
 
 export default function ListJobPublic() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
   const [jobs, setJobs] = React.useState([]);
   const [showModal, setShowModal] = useState(false);
   const [selectedJobId, setSelectedJobId] = useState<string | null>(null);
@@ -154,6 +158,14 @@ export default function ListJobPublic() {
     setPage(1);
     fetchPublicJob(0);
     window.location.reload();
+  };
+
+  const handleClickFavorite = () => {
+    if (!user) {
+      navigate('/login');
+    } else {
+      alert('Saved!');
+    }
   };
 
   if (loading) {
@@ -507,7 +519,7 @@ export default function ListJobPublic() {
                                   cursor: 'pointer',
                                 }}
                                 title="Save Job"
-                                onClick={() => alert('Saved!')}
+                                onClick={handleClickFavorite}
                               >
                                 <i className="fa fa-heart" />
                               </button>
