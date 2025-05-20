@@ -136,14 +136,14 @@ export class StudentVerifycationService {
     }
 
 
-    async checkProfileExists(): Promise<Boolean> {
+    async checkProfileExists(): Promise<number> {
         try {
-            const response = await axiosPrivateProfileServcie.get<ApiResponse<Boolean>>("/student_profiles/checkprofileexits");
+            const response = await axiosPrivateProfileServcie.get<ApiResponse<number>>("/student_profiles/checkprofileexits");
             console.log("Profile exists:", response.data);
             return response.data.data; // true hoặc false
         } catch (error) {
             console.error("Error checking profile existence:", error);
-            return false;
+            return -1;
         }
     };
 
