@@ -72,8 +72,13 @@ export default function VerifyBusinessForm() {
       try {
         const getInfoBusiness = await getMyBusiness();
         console.log(getInfoBusiness);
+        console.log(getInfoBusiness.data.status === "inactive");
+        if (getInfoBusiness.data.status === 'inactive') {
+          navigate('/401');
+          return;
+        }
 
-        if (getInfoBusiness) {
+        if (getInfoBusiness&& getInfoBusiness.data.status === 'active') {
           navigate('/businessprofile', { replace: true });
         } else {
           setLoading(false); // đã có business
