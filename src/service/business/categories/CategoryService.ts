@@ -1,5 +1,9 @@
+import path from 'node:path';
+import axiosBusiness from '../../../api/axiosBusiness';
 import axiosRecruitment from '../../../api/recruitment/axiosRecruitment';
 import { AxiosResponse } from 'axios';
+import { promises } from 'node:dns';
+import { ApiResponse } from '../../../features/auth/authType';
 
 type UpdateCategoryResponse = {
   code: number;
@@ -13,6 +17,25 @@ type UpdateCategoryResponse = {
   };
 };
 
+<<<<<<< HEAD
+
+export const getCompanyName = async (): Promise<string> =>{
+  try {
+    const response: AxiosResponse<any[]> = await axiosBusiness.get<ApiResponse<string>>(
+      `business/getCompanyname`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+    return "";
+  }
+}
+
+
+=======
+>>>>>>> 3c9fe6f83bd7b22df7f8c9ef2542688bc144d100
 export const getAllCategoriesPublic = async () => {
   try {
     const response: AxiosResponse<any[]> = await axiosRecruitment.get(

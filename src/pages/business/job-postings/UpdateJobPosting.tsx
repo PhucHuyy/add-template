@@ -135,8 +135,9 @@ export default function UpdateJobPosting() {
 
       try {
         const response = await getAllCategories();
-        const data = response.data.data;
-
+        const data = response.data;
+        console.log('Response:', response);
+        console.log('Response.data:', response.data);
         const formattedOptions = data.map(
           (category: { name: string; id: string }) => ({
             label: category.name,
