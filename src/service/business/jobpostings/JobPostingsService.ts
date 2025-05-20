@@ -132,8 +132,17 @@ export const bannedJob = async (jobId: string): Promise<any> => {
   }
 };
 
-export const getListPublicJob = async (offset: number, limit: number, searchKeyword: string, location: string, companyName: string, isUrgent: number, sortByExpirationDate: boolean, categoryIds: any[]) => {
-  const categoryid = categoryIds.map(e => {
+export const getListPublicJob = async (
+  offset: number,
+  limit: number,
+  searchKeyword: string,
+  location: string,
+  companyName: string,
+  isUrgent: number,
+  sortByExpirationDate: boolean,
+  categoryIds: any[],
+) => {
+  const categoryid = categoryIds.map((e) => {
     return e.value;
   });
   try {
@@ -202,6 +211,19 @@ export const getPublicJobListByBusinessId = async (
           limit,
         },
       },
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const getRandomJob = async () => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
+      `job-postings/get-random-jobs`,
     );
 
     return response.data;

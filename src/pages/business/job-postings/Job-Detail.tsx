@@ -15,7 +15,7 @@ import { getJobRecommendations } from '../../../service/business/job-categories/
 import { favouritejob } from '../../../service/business/favouritejob';
 
 import { RootState } from '../../../app/store';
-
+import Loading from '../../../common/Loading';
 
 const renderStatus = (status: number) => {
   switch (status) {
@@ -47,11 +47,18 @@ export default function JobDetail() {
   const [showModal, setShowModal] = useState(false);
   const user = useSelector((state: RootState) => state.auth.user);
   const [nameRole, setNameRole] = useState<string>('');
-  const role = user?.roleNames?.join(', ') || '-';
-  const trimmedRole = role.trim();
+
   const [jobRecommendation, setJobRecommendation] = useState([]);
 
   useEffect(() => {
+    if (!user) {
+      setNameRole('-');
+      return;
+    }
+
+    const role = user?.roleNames?.join(', ') || '-';
+    const trimmedRole = role.trim();
+
     if (trimmedRole.includes('STUDENT')) {
       setNameRole('STUDENT');
     } else if (trimmedRole.includes('BUSINESS')) {
@@ -61,7 +68,7 @@ export default function JobDetail() {
     } else {
       setNameRole('-');
     }
-  }, [trimmedRole]);
+  }, [user]);
 
   const [salary, setSalary] = useState('');
   const [avatarUrl, setAvatarUrl] = useState('');
@@ -72,8 +79,8 @@ export default function JobDetail() {
   const [isDeleted, setIsDeleted] = useState(false);
   const [expirationDate, setExpirationDate] = useState('');
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
-  const [Locationjob, setLocation] = useState<String>("");
-  const [businessId, setbusinessId] = useState<string>("");
+  const [Locationjob, setLocation] = useState<string>('');
+  const [businessId, setbusinessId] = useState<string>('');
 
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
@@ -85,49 +92,104 @@ export default function JobDetail() {
     address: '',
   });
 
+  // useEffect(() => {
+  //   const fetchBusinessInfo = async () => {
+  //     try {
+  //       const informationJobResponse = await getDetailJob(jobId);
+  //       setSalary(informationJobResponse?.data?.salary);
+  //       setAvatarUrl(informationJobResponse?.data?.avatarUrl);
+  //       setJobTitle(informationJobResponse?.data?.title);
+  //       setJobDescription(informationJobResponse?.data?.description);
+  //       setNumberOfPositions(informationJobResponse?.data?.numberEmployees);
+  //       setStatus(informationJobResponse?.data?.status);
+  //       setIsDeleted(informationJobResponse?.data?.deleted);
+  //       setExpirationDate(informationJobResponse?.data?.expirationDate);
+  //       setCategoryNames(informationJobResponse?.data?.categoryNames);
+  //       setLocation(informationJobResponse?.data?.location);
+  //       const businessId = informationJobResponse?.data?.businessId;
+  //       setbusinessId(businessId);
+  //       const businessInfoResponse = await getBusinessById(businessId);
+  //       setBusinessInfo({
+  //         companyName: businessInfoResponse?.data?.companyName,
+  //         industry: businessInfoResponse?.data?.industry,
+  //         companyInfo: businessInfoResponse?.data?.companyInfo,
+  //         websiteUrl: businessInfoResponse?.data?.websiteUrl,
+  //         phoneNumber: businessInfoResponse?.data?.phoneNumber,
+  //         email: businessInfoResponse?.data?.email,
+  //         address: businessInfoResponse?.data?.address,
+  //       });
+
+  //       const jobRecommendationResponse = await getJobRecommendations(jobId);
+  //       console.log(
+  //         jobRecommendationResponse.data,
+  //         'jobRecommendationResponse',
+  //       );
+  //       setJobRecommendation(jobRecommendationResponse.data);
+  //     } catch (error: any) {
+  //       console.error('Error fetching job details:', error);
+  //       throw new Error(
+  //         error?.response?.data?.message || 'Something went wrong',
+  //       );
+  //     }
+  //   };
+
+  //   fetchBusinessInfo();
+  // }, [jobId]);
+
+  // useEffect 1 - gọi API public
+
   useEffect(() => {
-    const fetchBusinessInfo = async () => {
+    const fetchJobDetail = async () => {
       try {
         const informationJobResponse = await getDetailJob(jobId);
-        setSalary(informationJobResponse?.data?.salary);
-        setAvatarUrl(informationJobResponse?.data?.avatarUrl);
-        setJobTitle(informationJobResponse?.data?.title);
-        setJobDescription(informationJobResponse?.data?.description);
-        setNumberOfPositions(informationJobResponse?.data?.numberEmployees);
-        setStatus(informationJobResponse?.data?.status);
-        setIsDeleted(informationJobResponse?.data?.deleted);
-        setExpirationDate(informationJobResponse?.data?.expirationDate);
-        setCategoryNames(informationJobResponse?.data?.categoryNames);
-        setLocation(informationJobResponse?.data?.location);
-        const businessId = informationJobResponse?.data?.businessId;
-        setbusinessId(businessId);
-        const businessInfoResponse = await getBusinessById(businessId);
-        setBusinessInfo({
-          companyName: businessInfoResponse?.data?.companyName,
-          industry: businessInfoResponse?.data?.industry,
-          companyInfo: businessInfoResponse?.data?.companyInfo,
-          websiteUrl: businessInfoResponse?.data?.websiteUrl,
-          phoneNumber: businessInfoResponse?.data?.phoneNumber,
-          email: businessInfoResponse?.data?.email,
-          address: businessInfoResponse?.data?.address,
-        });
+        const data = informationJobResponse?.data;
+        console.log(data, 'data');
+
+        setSalary(data.salary);
+        setAvatarUrl(data.avatarUrl);
+        setJobTitle(data.title);
+        setJobDescription(data.description);
+        setNumberOfPositions(data.numberEmployees);
+        setStatus(data.status);
+        setIsDeleted(data.deleted);
+        setExpirationDate(data.expirationDate);
+        setCategoryNames(data.categoryNames);
+        setLocation(data.location);
+        setbusinessId(data.businessId);
 
         const jobRecommendationResponse = await getJobRecommendations(jobId);
-        console.log(
-          jobRecommendationResponse.data,
-          'jobRecommendationResponse',
-        );
         setJobRecommendation(jobRecommendationResponse.data);
-      } catch (error: any) {
-        console.error('Error fetching job details:', error);
-        throw new Error(
-          error?.response?.data?.message || 'Something went wrong',
-        );
+      } catch (error) {
+        console.error('Error fetching job detail:', error);
       }
     };
 
-    fetchBusinessInfo();
+    fetchJobDetail();
   }, [jobId]);
+
+  useEffect(() => {
+    const fetchPrivateData = async () => {
+      try {
+        if (!user || !businessId) return;
+
+        const businessInfoResponse = await getBusinessById(businessId);
+        const businessData = businessInfoResponse?.data;
+        setBusinessInfo({
+          companyName: businessData.companyName,
+          industry: businessData.industry,
+          companyInfo: businessData.companyInfo,
+          websiteUrl: businessData.websiteUrl,
+          phoneNumber: businessData.phoneNumber,
+          email: businessData.email,
+          address: businessData.address,
+        });
+      } catch (error) {
+        console.error('Error fetching private job data:', error);
+      }
+    };
+
+    fetchPrivateData();
+  }, [user, businessId, jobId]);
 
   const handlePreAccept = async (jobId: string) => {
     Swal.fire({
@@ -334,10 +396,8 @@ export default function JobDetail() {
     }
   };
 
-
   const handleAddFavourite = async (jobId: string) => {
-
-    if (jobId === "") {
+    if (jobId === '') {
       return;
     }
 
@@ -359,8 +419,6 @@ export default function JobDetail() {
         const response = await service.createFavoriteJob(jobId);
         console.log(response, 'response.data');
         if (response) {
-
-
           Swal.fire({
             title: 'Add favorites successfully!',
             icon: 'success',
@@ -392,6 +450,18 @@ export default function JobDetail() {
     }
   };
 
+  const handleClickFavorite = (jobId: string) => {
+    if (!user) {
+      navigate('/login');
+      return;
+    } else {
+      handleAddFavourite(jobId ?? '');
+    }
+  };
+
+  if (!jobRecommendation || jobRecommendation.length === 0) {
+    return <Loading />;
+  }
 
   return (
     <>
@@ -428,7 +498,14 @@ export default function JobDetail() {
             <div className="col-md-6 col-sm-6">
               <div className="detail-desc-caption">
                 <h3>{jobTitle}</h3>
-                <h3>Company: <a href={'http://localhost:5173/BusinessDetail/' + businessId}>{businessInfo.companyName}</a></h3>
+                <h3>
+                  Company:{' '}
+                  <a
+                    href={'http://localhost:5173/BusinessDetail/' + businessId}
+                  >
+                    {businessInfo.companyName}
+                  </a>
+                </h3>
                 <div className="category-tags" style={{ marginTop: '8px' }}>
                   {categoryNames.map((name, index) => (
                     <span
@@ -459,7 +536,8 @@ export default function JobDetail() {
                     Salary: <span>{salary}</span>
                   </li>
                   <li>
-                    Number of positions: <span>{numberOfPositions} Positions</span>
+                    Number of positions:{' '}
+                    <span>{numberOfPositions} Positions</span>
                   </li>
                   <li>
                     Expiration Date:{' '}
@@ -487,19 +565,34 @@ export default function JobDetail() {
                     gap: '15px',
                   }}
                 >
-                  {nameRole === 'STUDENT' && (
+                  {(nameRole === 'STUDENT' || !user) && (
                     <>
                       <a
                         href="#"
                         className="footer-btn grn-btn"
                         onClick={(e) => {
                           e.preventDefault();
-                          setShowModal(true);
+                          if (!user) {
+                            navigate('/login');
+                          } else {
+                            setShowModal(true);
+                          }
                         }}
                       >
                         Quick Apply
                       </a>
-                      <a href="" onClick={(e) => { e.preventDefault(); handleAddFavourite(jobId ?? "") }} className="footer-btn blu-btn">
+                      <a
+                        href="#"
+                        className="footer-btn blu-btn"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          if (!user) {
+                            navigate('/login');
+                          } else {
+                            handleAddFavourite(jobId ?? '');
+                          }
+                        }}
+                      >
                         Add favorite
                       </a>
                     </>
@@ -768,7 +861,10 @@ export default function JobDetail() {
                                 cursor: 'pointer',
                               }}
                               title="Save Job"
-                              onClick={() => alert('Saved!')}
+                              onClick={handleClickFavorite.bind(
+                                null,
+                                job.jobId,
+                              )}
                             >
                               <i className="fa fa-heart" />
                             </button>
@@ -783,7 +879,9 @@ export default function JobDetail() {
           </div>
         </div>
       </section>
-      {showModal && <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />}
+      {showModal && (
+        <JobApplicationForm onClose={() => setShowModal(false)} jobId={jobId} />
+      )}
     </>
   );
 }

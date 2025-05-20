@@ -1,4 +1,10 @@
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
+
 export default function Footer() {
+  const user = useSelector((state: RootState) => state.auth.user);
+  const navigate = useNavigate();
+
   return (
     <>
       <footer className="footer">
@@ -190,9 +196,15 @@ export default function Footer() {
                       type="text"
                     />
                     <textarea className="form-control" placeholder="Message" />
-                    <button className="btn btn-primary" type="submit">
-                      Login
-                    </button>
+                    {!user && (
+                      <button
+                        className="btn btn-primary"
+                        type="submit"
+                        onClick={() => navigate('/login')}
+                      >
+                        Login
+                      </button>
+                    )}
                   </form>
                 </div>
               </div>
