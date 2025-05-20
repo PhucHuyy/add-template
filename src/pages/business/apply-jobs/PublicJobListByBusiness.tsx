@@ -250,9 +250,7 @@ export default function PublicJobListByBusiness() {
                           }}
                           title="Save Job"
                           onClick={() =>
-                            navigate(
-                              `/business/job-interview-list/${job.jobId}`,
-                            )
+                            navigate(`/business/job-interview-list`)
                           }
                         >
                           <i
