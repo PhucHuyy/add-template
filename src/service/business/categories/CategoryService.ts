@@ -13,7 +13,6 @@ type UpdateCategoryResponse = {
   };
 };
 
-
 export const getAllCategoriesPublic = async () => {
   try {
     const response: AxiosResponse<any[]> = await axiosRecruitment.get(
@@ -98,6 +97,32 @@ export const createCategory = async (name: string, description: string) => {
     return response.data;
   } catch (error: any) {
     console.error('Error creating category:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const deleteCategory = async (categoryId: number) => {
+  try {
+    const response: AxiosResponse<any[]> = await axiosRecruitment.put(
+      `categories/delete/${categoryId}`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error deleting category:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};
+
+export const restoreCategory = async (categoryId: number) => {
+  try {
+    const response: AxiosResponse<any[]> = await axiosRecruitment.put(
+      `categories/restore/${categoryId}`,
+    );
+
+    return response.data;
+  } catch (error: any) {
+    console.error('Error restoring category:', error);
     throw new Error(error.response?.data?.message || 'Something went wrong');
   }
 };
