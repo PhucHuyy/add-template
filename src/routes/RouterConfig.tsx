@@ -397,9 +397,11 @@ const routes: RouteConfig[] = [
     path: '/admin/categories',
     element: (
       <RequireAuth>
-        <DefaultLayout>
+        <RequireRole allowRoles={['ADMIN']}>
+        <AdminLayout>
           <CategoriesList />
-        </DefaultLayout>
+        </AdminLayout>
+        </RequireRole>
       </RequireAuth>
     ),
   },

@@ -191,65 +191,10 @@ export default function AdminDashboard() {
         <div className="dashboard-row">
           {/* Recent Registrations */}
           <div className="dashboard-card">
-            <h3 className="card-title">Recent Registrations</h3>
-            <table className="simple-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Role</th>
-                  <th>Status</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>John Doe</td>
-                  <td>Student</td>
-                  <td className="status-active">Active</td>
-                </tr>
-                <tr>
-                  <td>Jane Smith</td>
-                  <td>Business</td>
-                  <td className="status-pending">Pending</td>
-                </tr>
-                <tr>
-                  <td>Alice Johns</td>
-                  <td>Student</td>
-                  <td className="status-active">Active</td>
-                </tr>
-              </tbody>
-            </table>
+            
           </div>
 
-          {/* Staff Admin Overview */}
-          <div className="dashboard-card">
-            <h3 className="card-title">Staff Admin Overview</h3>
-            <table className="simple-table">
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Actions</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>Michael Brown</td>
-                  <td>
-                    <a href="#" className="view-link">
-                      View Details
-                    </a>
-                  </td>
-                </tr>
-                <tr>
-                  <td>Sarah Lee</td>
-                  <td>
-                    <a href="#" className="view-link">
-                      View Details
-                    </a>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
+          
         </div>
       </div>
     </div>

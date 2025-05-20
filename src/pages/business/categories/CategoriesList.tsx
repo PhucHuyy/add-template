@@ -206,7 +206,7 @@ export default function CategoriesList() {
       </section>
       <div className="clearfix" />
 
-      <section className="manage-company gray">
+      <section className="manage-company gray" style={{paddingLeft: '70px'}}>
         <div className="container">
           {/* search filter */}
           <div className="row">
