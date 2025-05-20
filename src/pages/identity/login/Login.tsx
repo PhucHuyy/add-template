@@ -1,12 +1,21 @@
-import React from "react";
-import { useLoginForm } from "./useLoginForm";
-import backgroundImage from "/assets/img/banner-10.jpg";
-import logoImage from "/assets/img/logo.png";
-import googleIcon from "../../../assets/img/google-icon.svg";
-import { Button } from "@mui/material";
-import { OAuthConfig } from "../../../config/configuration";
+import React, { useEffect, useState } from 'react';
+import { useLoginForm } from './useLoginForm';
+import backgroundImage from '/assets/img/banner-10.jpg';
+import logoImage from '/assets/img/logo.png';
+import googleIcon from '../../../assets/img/google-icon.svg';
+import { Button } from '@mui/material';
+import { OAuthConfig } from '../../../config/configuration';
+import Loading from '../../../common/Loading';
 
 const Login: React.FC = () => {
+  const [showComp, setShowComp] = useState(false);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setShowComp(true);
+    }, 1000);
+
+    return () => clearTimeout(timer);
+  }, []);
   const {
     email,
     setEmail,
@@ -24,40 +33,43 @@ const Login: React.FC = () => {
     const googleClientId = OAuthConfig.clientId;
 
     const targetUrl = `${authUrl}?redirect_uri=${encodeURIComponent(
-      callbackUrl
+      callbackUrl,
     )}&response_type=code&client_id=${googleClientId}&scope=openid%20email%20profile`;
 
     console.log(targetUrl);
     window.location.href = targetUrl;
   };
   const googleButtonStyle = {
-    marginTop: "15px",
-    padding: "10px 20px",
-    borderRadius: "4px",
-    border: "1px solid #dadce0",
-    backgroundColor: "#ffffff", // trắng tinh
-    color: "#3c4043",            // màu chữ mặc định của Google
-    fontSize: "14px",
+    marginTop: '15px',
+    padding: '10px 20px',
+    borderRadius: '4px',
+    border: '1px solid #dadce0',
+    backgroundColor: '#ffffff', // trắng tinh
+    color: '#3c4043', // màu chữ mặc định của Google
+    fontSize: '14px',
     fontWeight: 600,
-    fontFamily: "Roboto, sans-serif",
-    textTransform: "none",
-    display: "flex",
-    alignItems: "center",
-    justifyContent: "center",
-    gap: "10px",
-    boxShadow: "0 1px 2px rgba(0, 0, 0, 0.1)",
-    "&:hover": {
-      backgroundColor: "#f7f8f8",     // nhạt nhẹ khi hover
-      borderColor: "#c6c7c8",
-      boxShadow: "0 1px 3px rgba(60, 64, 67, 0.3)",
+    fontFamily: 'Roboto, sans-serif',
+    textTransform: 'none',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '10px',
+    boxShadow: '0 1px 2px rgba(0, 0, 0, 0.1)',
+    '&:hover': {
+      backgroundColor: '#f7f8f8', // nhạt nhẹ khi hover
+      borderColor: '#c6c7c8',
+      boxShadow: '0 1px 3px rgba(60, 64, 67, 0.3)',
     },
   };
-  
+
+  if (!showComp) {
+    return <Loading />;
+  }
 
   return (
     <div
       className="simple-bg-screen"
-      style={{ backgroundImage: `url(${backgroundImage})`, height: "100vh" }}
+      style={{ backgroundImage: `url(${backgroundImage})`, height: '100vh' }}
     >
       <div className="wrapper">
         <section className="login-screen-sec">
@@ -98,7 +110,7 @@ const Login: React.FC = () => {
                   type="submit"
                   disabled={loading}
                 >
-                  {loading ? "Logging in..." : "LOGIN"}
+                  {loading ? 'Logging in...' : 'LOGIN'}
                 </button>
                 <Button
                   type="button"
