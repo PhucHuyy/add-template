@@ -2,6 +2,11 @@
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import "./sidebar.css";
+import { useSelector } from "react-redux";
+import { RootState } from "../../app/store";
+
+
+
 
 const menuItems = [
   { title: "Dashboard", icon: "fa fa-tachometer-alt", path: "/admin" },
@@ -46,9 +51,40 @@ const menuItems = [
   },
 ];
 
+
+const menuItemsStaff = [
+  { title: "Dashboard", icon: "fa fa-tachometer-alt", path: "/admin" },
+  // { title: 'Users', icon: 'fa fa-users', path: '/admin/users' },
+  // { title: 'Settings', icon: 'fa fa-cogs', path: '/admin/settings' },
+  {
+    title: "Pending Profiles",
+    icon: "fa fa-user-clock",
+    path: "/admin/pending-profiles",
+  },
+  {
+    title: "Pending Jobs",
+    icon: "fa fa-clipboard-list",
+    path: "/admin/pending-jobs",
+  },
+];
+
+
+
 export default function Sidebar() {
   const [collapsed, setCollapsed] = useState(true);
+  const { user } = useSelector((state: RootState) => state.auth);
 
+  const isAdmin = () => {
+    return (
+      user?.roleNames?.includes("ADMIN")
+    );
+  };
+
+  const isStaffAdmin = () => {
+    return (
+      user?.roleNames?.includes("STAFF_ADMIN")
+    )
+  }
   return (
     <div
       className={`custom-sidebar ${collapsed ? "collapsed" : ""}`}
@@ -57,7 +93,7 @@ export default function Sidebar() {
     >
       <div className="sidebar-header"></div>
       <ul className="sidebar-menu">
-        {menuItems.map((item, idx) => (
+        {isAdmin() ? (<>{menuItems.map((item, idx) => (
           <li key={idx}>
             <NavLink to={item.path} className="menu-link">
               <i className={item.icon}></i>
@@ -65,6 +101,19 @@ export default function Sidebar() {
             </NavLink>
           </li>
         ))}
+        </>) : ("")}
+
+        {isStaffAdmin() ? (<>
+          {menuItemsStaff.map((item, idx) => (
+            <li key={idx}>
+              <NavLink to={item.path} className="menu-link">
+                <i className={item.icon}></i>
+                {!collapsed && <span className="menu-title">{item.title}</span>}
+              </NavLink>
+            </li>
+          ))}
+        </>) : ("")}
+
       </ul>
     </div>
   );

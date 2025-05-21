@@ -124,10 +124,8 @@ export default function Header() {
               data-in="fadeInDown"
               data-out="fadeOutUp"
             >
-              <MegaMenuWrapper menu={filteredMegaMenu} />{" "}
-              <li>
-                <a href="/blog">Blog</a>
-              </li>
+              {isAdmin() ? ("") : (<MegaMenuWrapper menu={filteredMegaMenu} />)}
+              {" "}
               {!user ? (
                 <>
                   <li>
@@ -173,9 +171,8 @@ export default function Header() {
                       {notifications.slice(0, 5).map((noti) => (
                         <li
                           key={noti.id}
-                          className={`notification-item ${
-                            noti.read ? "read" : "unread"
-                          }`}
+                          className={`notification-item ${noti.read ? "read" : "unread"
+                            }`}
                         >
                           <a
                             href={noti.redirectUrl}
@@ -244,8 +241,7 @@ export default function Header() {
                         </div>
                       </li>
 
-                      {/* Job Management */}
-                      <li className="dropdown-section-wrapper">
+                      {isAdmin() ? ("") : (<li className="dropdown-section-wrapper">
                         <div
                           className="dropdown-section-title"
                           onClick={() => toggleSection("jobs")}
@@ -257,16 +253,14 @@ export default function Header() {
                           ></i>
                           Job Management
                           <i
-                            className={`fa fa-angle-${
-                              openSections.jobs ? "up" : "down"
-                            }`}
+                            className={`fa fa-angle-${openSections.jobs ? "up" : "down"
+                              }`}
                             style={{ float: "right", marginTop: 4 }}
                           />
                         </div>
                         <ul
-                          className={`collapsible ${
-                            openSections.jobs ? "open" : ""
-                          }`}
+                          className={`collapsible ${openSections.jobs ? "open" : ""
+                            }`}
                         >
                           <li>
                             <a href="/student/listjobfavorite">
@@ -289,10 +283,11 @@ export default function Header() {
                             </a>
                           </li>
                         </ul>
-                      </li>
+                      </li>)}
 
+                      {/* Job Management */}
                       {/* CV & Cover Letter */}
-                      <li className="dropdown-section-wrapper">
+                      {isAdmin() ? ("") : (<li className="dropdown-section-wrapper">
                         <div
                           className="dropdown-section-title"
                           onClick={() => toggleSection("cv")}
@@ -304,16 +299,14 @@ export default function Header() {
                           ></i>
                           CV & Cover Letter
                           <i
-                            className={`fa fa-angle-${
-                              openSections.cv ? "up" : "down"
-                            }`}
+                            className={`fa fa-angle-${openSections.cv ? "up" : "down"
+                              }`}
                             style={{ float: "right", marginTop: 4 }}
                           />
                         </div>
                         <ul
-                          className={`collapsible ${
-                            openSections.cv ? "open" : ""
-                          }`}
+                          className={`collapsible ${openSections.cv ? "open" : ""
+                            }`}
                         >
                           <li>
                             <a href="/cv">
@@ -321,10 +314,10 @@ export default function Header() {
                             </a>
                           </li>
                         </ul>
-                      </li>
+                      </li>)}
 
                       {/* Settings */}
-                      <li className="dropdown-section-wrapper">
+                      {isAdmin() ? ("") : (<li className="dropdown-section-wrapper">
                         <div
                           className="dropdown-section-title"
                           onClick={() => toggleSection("settings")}
@@ -336,16 +329,14 @@ export default function Header() {
                           ></i>
                           Settings
                           <i
-                            className={`fa fa-angle-${
-                              openSections.settings ? "up" : "down"
-                            }`}
+                            className={`fa fa-angle-${openSections.settings ? "up" : "down"
+                              }`}
                             style={{ float: "right", marginTop: 4 }}
                           />
                         </div>
                         <ul
-                          className={`collapsible ${
-                            openSections.settings ? "open" : ""
-                          }`}
+                          className={`collapsible ${openSections.settings ? "open" : ""
+                            }`}
                         >
                           <li>
                             <a href="/settings/notifications">
@@ -353,7 +344,9 @@ export default function Header() {
                             </a>
                           </li>
                         </ul>
-                      </li>
+                      </li>)}
+
+
 
                       {/* Privacy & Security */}
                       <li className="dropdown-section-wrapper">
@@ -368,22 +361,21 @@ export default function Header() {
                           ></i>
                           Privacy & Security
                           <i
-                            className={`fa fa-angle-${
-                              openSections.privacy ? "up" : "down"
-                            }`}
+                            className={`fa fa-angle-${openSections.privacy ? "up" : "down"
+                              }`}
                             style={{ float: "right", marginTop: 4 }}
                           />
                         </div>
                         <ul
-                          className={`collapsible ${
-                            openSections.privacy ? "open" : ""
-                          }`}
+                          className={`collapsible ${openSections.privacy ? "open" : ""
+                            }`}
                         >
-                          <li>
+                          {isAdmin() ? ("") : (<li>
                             <a href="/profile">
                               <i className="fa fa-user" /> Personal Info
                             </a>
-                          </li>
+                          </li>)}
+
                           <li>
                             <a href="/settings/security">
                               <i className="fa fa-shield" /> Security
