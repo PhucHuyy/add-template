@@ -160,6 +160,15 @@ export default function StudentProfile() {
             </div>
           </div>
 
+          {request?.getStatus() === 'reject' ? (<div className="row bottom-mrg">
+            <div className="col-md-12 col-sm-12">
+              <div className="advance-detail detail-desc-caption">
+                <h6 style={{color: 'red'}}>Reason reject: {request.getReason()}</h6>
+              </div>
+            </div>
+          </div>) : ("")}
+
+
           <div className="row no-padd">
             <div className="detail pannel-footer">
               <div className="col-md-5 col-sm-5">

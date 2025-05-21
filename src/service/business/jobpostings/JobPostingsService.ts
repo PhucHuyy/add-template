@@ -1,3 +1,4 @@
+import axiosPrivateProfileServcie from '../../../api/axiosPrivateProfileServcie';
 import axiosRecruitment from '../../../api/recruitment/axiosRecruitment';
 import axiosRecruitmentPublic from '../../../api/recruitment/axiosRecruitmentPublic';
 import { AxiosResponse } from 'axios';
@@ -75,6 +76,17 @@ export const getListJobCreated = async (offset: number, limit: number) => {
     throw new Error(error.response?.data?.message || 'Something went wrong');
   }
 };
+
+
+export const checkStudentProfileApproval = async()=>{
+  try {
+    const response: AxiosResponse<boolean> = await axiosPrivateProfileServcie.get<AxiosResponse<boolean>>("/student_profiles/ckeckapproval")
+    return response.data.data;
+  }catch (error: any) {
+    console.error('Error fetching categories:', error);
+    return false;
+  }
+}
 
 export const getDetailJob = async (jobId: string) => {
   try {

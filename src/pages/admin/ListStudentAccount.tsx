@@ -8,7 +8,7 @@ export default function ListStudentAccount() {
     const [search, setsearch] = useState<string>("");
     const [isApproved, SetisApproved] = useState<number>(-1);
     const [pageIndex, SetpageIndex] = useState<number>(1);
-    const [pageSize, SetpageSize] = useState<number>(2);
+    const [pageSize, SetpageSize] = useState<number>(10);
     const [selectedImages, setSelectedImages] = useState<{ url: string }[]>([]);
     const [studentlist, setstudentlist] = useState<StudentProfile[]>();
     const [selectedImage, setSelectedImage] = useState(String);
