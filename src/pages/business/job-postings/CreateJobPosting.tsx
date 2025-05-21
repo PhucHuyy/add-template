@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 
-import { getAllCategories } from '../../../service/business/categories/CategoryService';
+import { getAllCategories, getCompanyName } from '../../../service/business/categories/CategoryService';
 import {
   saveDraftJob,
   sendRequestCreateJob,
@@ -15,7 +15,7 @@ export default function CreateJobPosting() {
     [],
   );
   const [selectedOptions, setSelectedOptions] = useState<any[]>([]);
-
+  const [CompanyName, setCompanyName] = useState<string>();
   const [formData, setFormData] = useState({
     companyName: '',
     title: '',
@@ -206,6 +206,14 @@ export default function CreateJobPosting() {
   };
 
   useEffect(() => {
+    const fetchCompanyName = async () => {
+      const data = await getCompanyName();
+      console.log(data);
+      setCompanyName(data.data);
+      formData.companyName = data.data;
+    }
+
+
     const fetchCategories = async () => {
       try {
         const response = await getAllCategories();
@@ -225,6 +233,7 @@ export default function CreateJobPosting() {
     };
 
     fetchCategories();
+    fetchCompanyName();
   }, []);
 
   return (
@@ -257,12 +266,7 @@ export default function CreateJobPosting() {
                       className="form-control"
                       placeholder="Company Name"
                       value={formData.companyName}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          companyName: e.target.value,
-                        })
-                      }
+                      readOnly
                     />
                   </div>
                 </div>
