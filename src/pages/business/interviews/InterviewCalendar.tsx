@@ -158,8 +158,6 @@ const InterviewCalendar: React.FC = () => {
     fetchInterviewSchedules();
   }, []);
 
-  console.log('interviewEvents', interviewEvents);
-
   // Generate calendar days based on interview events
   const generateCalendarDays = (year: number, month: number): CalendarDay[] => {
     // Create date for the first day of the month
@@ -331,11 +329,11 @@ const InterviewCalendar: React.FC = () => {
       <div className="container-calendar">
         <div className="calendar-navigation">
           <button className="nav-button" onClick={prevMonth}>
-            <i className="fas fa-chevron-left"></i>
+            &lt; {/* Simple text arrow instead of Font Awesome */}
           </button>
           <h2 className="current-month">{monthYearString}</h2>
           <button className="nav-button" onClick={nextMonth}>
-            <i className="fas fa-chevron-right"></i>
+            &gt; {/* Simple text arrow instead of Font Awesome */}
           </button>
         </div>
 
@@ -388,7 +386,7 @@ const InterviewCalendar: React.FC = () => {
                 {formatDisplayDate(selectedDate)}
               </p>
               <button className="close-button" onClick={closePopup}>
-                <i className="fas fa-times"></i>
+                ×
               </button>
             </div>
 
@@ -408,13 +406,15 @@ const InterviewCalendar: React.FC = () => {
 
                           {event.locationCompany && (
                             <div className="event-location">
-                              <i className="fas fa-map-marker-alt location-icon"></i>
+                              <span>📍</span>{' '}
+                              {/* Unicode map pin instead of Font Awesome */}
                               <span>{event.locationCompany}</span>
                             </div>
                           )}
 
                           <div className="event-time">
-                            <i className="fas fa-clock time-icon"></i>
+                            <span>🕒</span>{' '}
+                            {/* Unicode clock instead of Font Awesome */}
                             <span>{getTimeRange(event.scheduledAt)}</span>
                           </div>
                         </div>
@@ -437,11 +437,11 @@ const InterviewCalendar: React.FC = () => {
                                       '/api/placeholder/30/30'
                                     }
                                     alt={attendee.studentName}
-                                    // onError={(e) => {
-                                    //   // Fallback if the image fails to load
-                                    //   e.currentTarget.src =
-                                    //     '/api/placeholder/30/30';
-                                    // }}
+                                    onError={(e) => {
+                                      // Fallback if the image fails to load
+                                      e.currentTarget.src =
+                                        '/api/placeholder/30/30';
+                                    }}
                                   />
                                 </div>
                               ))}
@@ -469,11 +469,15 @@ const InterviewCalendar: React.FC = () => {
                                 Detail Job
                               </button>
                             </div>
-                            <span
+                            <p
                               className={`status-label ${event.applyStatus}`}
+                              style={{
+                                fontSize: '1.2rem',
+                                fontWeight: 'bold',
+                              }}
                             >
                               Status: {event.applyStatus}
-                            </span>
+                            </p>
                           </div>
                         </>
                       )}
