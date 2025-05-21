@@ -72,7 +72,7 @@ export class RequestStudents {
 
 export class StudentProfileService {
   private token: string;
-  private requestStudentUrl: string = 'http://localhost:8888/api/requeststudent/getrequest';
+  private requestStudentUrl: string = 'http://localhost:8088/api/requeststudent/getrequest';
   constructor() {
     this.token = localStorage.getItem('accessToken') ?? '';
   }

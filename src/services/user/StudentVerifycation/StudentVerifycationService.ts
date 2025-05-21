@@ -4,11 +4,11 @@ import axiosPrivateProfileServcie from "../../../api/axiosPrivateProfileServcie"
 import { ApiResponse } from "../../../features/auth/authType";
 import { promises } from "dns";
 export class StudentVerifycationService {
-    private apiUrl: string = 'http://localhost:8888/api/student_profiles/create';
+    private apiUrl: string = 'http://localhost:8088/api/student_profiles/create';
     //const tokenSTr = localStorage.getItem('accessToken');
     private token: string;;
-    private uploadCardUrl: string = 'http://localhost:8888/api/student_profiles/uploadStudentCard';
-    private sendRequestUrl = 'http://localhost:8888/api/requeststudent/sendrequest';
+    private uploadCardUrl: string = 'http://localhost:8088/api/student_profiles/uploadStudentCard';
+    private sendRequestUrl = 'http://localhost:8088/api/requeststudent/sendrequest';
 
     constructor() {
         this.token = localStorage.getItem('accessToken') ?? '';

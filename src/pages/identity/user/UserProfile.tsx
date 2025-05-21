@@ -45,7 +45,7 @@ export default function UserProfile() {
 
     }
   });
-  //http://localhost:8080/api/v1/users/{userId}/roles/student
+  //http://localhost:8088/api/v1/users/{userId}/roles/student
   //verify-business
 
   const choosebusiness = async () => {
@@ -64,7 +64,7 @@ export default function UserProfile() {
         // Call the API only if confirmed
         const response = await axiosPrivate.post(`/users/${id}/roles/business`);
         const refreshResponse = await axios.post<RefreshResponse>(
-          "http://localhost:8080/api/v1/auth/refresh",
+          "http://localhost:8088/api/v1/auth/refresh",
           {},
           { withCredentials: true }
         );
@@ -106,7 +106,7 @@ export default function UserProfile() {
         // Call the API only if confirmed
         const response = await axiosPrivate.post(`/users/${id}/roles/student`);
         const refreshResponse = await axios.post<RefreshResponse>(
-          "http://localhost:8080/api/v1/auth/refresh",
+          "http://localhost:8088/api/v1/auth/refresh",
           {},
           { withCredentials: true }
         );
