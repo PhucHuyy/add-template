@@ -463,6 +463,8 @@ export default function JobDetail() {
     return <Loading />;
   }
 
+  console.log(expirationDate, 'expirationDate');
+
   return (
     <>
       <div className="clearfix" />
@@ -567,34 +569,40 @@ export default function JobDetail() {
                 >
                   {(nameRole === 'STUDENT' || !user) && (
                     <>
-                      <a
-                        href="#"
-                        className="footer-btn grn-btn"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (!user) {
-                            navigate('/login');
-                          } else {
-                            setShowModal(true);
-                          }
-                        }}
-                      >
-                        Quick Apply
-                      </a>
-                      <a
-                        href="#"
-                        className="footer-btn blu-btn"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (!user) {
-                            navigate('/login');
-                          } else {
-                            handleAddFavourite(jobId ?? '');
-                          }
-                        }}
-                      >
-                        Add favorite
-                      </a>
+                      {new Date(expirationDate) > new Date() ? (
+                        <>
+                          <a
+                            href="#"
+                            className="footer-btn grn-btn"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (!user) {
+                                navigate('/login');
+                              } else {
+                                setShowModal(true);
+                              }
+                            }}
+                          >
+                            Quick Apply
+                          </a>
+                          <a
+                            href="#"
+                            className="footer-btn blu-btn"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              if (!user) {
+                                navigate('/login');
+                              } else {
+                                handleAddFavourite(jobId ?? '');
+                              }
+                            }}
+                          >
+                            Add favorite
+                          </a>
+                        </>
+                      ) : (
+                        <p>This job has expired.</p>
+                      )}
                     </>
                   )}
 

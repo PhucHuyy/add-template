@@ -33,19 +33,19 @@ export const getAllCategoryJobPostings = async (id: string): Promise<any[]> =>{
 }
 
 export const getCompanyName = async (): Promise<string> =>{
+
   try {
-    const response: AxiosResponse<any[]> = await axiosBusiness.get<ApiResponse<string>>(
-      `business/getCompanyname`,
-    );
+    const response: AxiosResponse<any[]> = await axiosBusiness.get<
+      ApiResponse<string>
+    >(`business/getCompanyname`);
 
     return response.data;
   } catch (error: any) {
     console.error('Error fetching categories:', error);
     throw new Error(error.response?.data?.message || 'Something went wrong');
-    return "";
+    return '';
   }
-}
-
+};
 
 export const getAllCategoriesPublic = async () => {
   try {
