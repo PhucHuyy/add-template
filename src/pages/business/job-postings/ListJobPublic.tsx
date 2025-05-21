@@ -192,7 +192,12 @@ export default function ListJobPublic() {
             {/* Company Searrch Filter Start */}
             <div className="row extra-mrg">
               <div className="wrap-search-filter">
-                <form>
+                <form
+                  onSubmit={(e) => {
+                    e.preventDefault();
+                    buttonSearch();
+                  }}
+                >
                   <div className="col-md-4 col-sm-4">
                     <label>Keyword:</label>
                     <input
@@ -317,7 +322,7 @@ export default function ListJobPublic() {
                     >
                       <button
                         onClick={buttonSearch}
-                        type="button"
+                        type="submit" // Đổi từ type="button" thành type="submit"
                         className="btn btn-primary"
                       >
                         Filter
