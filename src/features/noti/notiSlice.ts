@@ -31,7 +31,7 @@ export const fetchNotifications = createAsyncThunk<
 >("notification/fetch", async (userId, { rejectWithValue }) => {
   try {
     const res = await axiosPublic.get<Notification[]>(`/noti/${userId}`);
-    return res.data; 
+    return res.data;
   } catch (error: any) {
     return rejectWithValue(error.response?.data?.message || "Load failed");
   }
@@ -51,7 +51,12 @@ export const markNotificationAsRead = createAsyncThunk<
 const notificationSlice = createSlice({
   name: "notification",
   initialState,
-  reducers: {},
+  reducers: {
+    addNotification: (state, action) => {
+      state.notifications.unshift(action.payload);
+    },
+  },
+
   extraReducers: (builder) => {
     builder
       // FETCH notifications
@@ -77,6 +82,6 @@ const notificationSlice = createSlice({
       });
   },
 });
-
+export const { addNotification } = notificationSlice.actions;
 
 export default notificationSlice.reducer;

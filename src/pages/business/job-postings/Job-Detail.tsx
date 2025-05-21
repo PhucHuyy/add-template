@@ -4,6 +4,7 @@ import { useNavigate, useParams } from 'react-router-dom';
 import {
   acceptJob,
   bannedJob,
+  checkStudentProfileApproval,
   getDetailJob,
   rejectJob,
   sendDraftJob,
@@ -94,7 +95,7 @@ export default function JobDetail() {
   });
 
   // useEffect 1 - gọi API public
-
+  const [reason, setreason] = useState('');
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
@@ -114,6 +115,7 @@ export default function JobDetail() {
         setLocation(data.location);
         setbusinessId(data.businessId);
         setStatusBusiness(data.businessStatus);
+        setreason(data.reasonRejection);
 
         const jobRecommendationResponse = await getJobRecommendations(jobId);
         setJobRecommendation(jobRecommendationResponse.data);
@@ -531,6 +533,15 @@ export default function JobDetail() {
                 </ul>
               </div>
             </div>
+            {nameRole === 'BUSINESS' && status === 2 ? (
+              <div className="col-md-12 col-sm-12">
+                <h5 style={{ marginLeft: '5px', color: 'red' }}>
+                  Reason: {reason}
+                </h5>
+              </div>
+            ) : (
+              ''
+            )}
           </div>
           <div className="row no-padd">
             <div className="detail pannel-footer">
@@ -551,12 +562,23 @@ export default function JobDetail() {
                           <a
                             href="#"
                             className="footer-btn grn-btn"
-                            onClick={(e) => {
+                            onClick={async (e) => {
                               e.preventDefault();
                               if (!user) {
                                 navigate('/login');
                               } else {
-                                setShowModal(true);
+                                const condition =
+                                  await checkStudentProfileApproval();
+                                if (condition) {
+                                  setShowModal(true);
+                                } else {
+                                  Swal.fire({
+                                    title: 'Notification',
+                                    text: 'You have not been accepted for the student profile',
+                                    icon: 'warning',
+                                    confirmButtonText: 'OK',
+                                  });
+                                }
                               }
                             }}
                           >
@@ -823,6 +845,7 @@ export default function JobDetail() {
                               }}
                               onClick={(e) => {
                                 e.preventDefault();
+
                                 setShowModal(true);
                               }}
                             >

@@ -103,9 +103,9 @@ export default function StudentInterviewList() {
       </section>
       <div className="clearfix" />
 
-      <section className="browse-company" style={{ marginLeft: "50px" }}>
-        <div className="calendar-wrapper">
-          <div className="calendar">
+      <section className="browse-company">
+        <div className="calendar-wrapper grid-layout">
+          <div className="calendar-section card-box">
             <Calendar
               bordered
               value={selectedDate || new Date()}
@@ -115,7 +115,7 @@ export default function StudentInterviewList() {
               className="custom-calendar"
             />
           </div>
-          <div className="interview-list">
+          <div className="meeting-section card-box">
             <h3>Meetings</h3>
             {selectedDate && (
               <div>
@@ -127,7 +127,9 @@ export default function StudentInterviewList() {
                 {selectedDateInterviews.length > 0 ? (
                   selectedDateInterviews.map((interview) => (
                     <div key={interview.interviewId} className="interview-item">
-                      <h4 style={{ fontSize: "1.5rem", lineHeight: "1.5" }}>{interview.jobTitle}</h4>
+                      <h4 style={{ fontSize: "1.5rem", lineHeight: "1.5" }}>
+                        {interview.jobTitle}
+                      </h4>
                       <p style={{ fontSize: "1.3rem", lineHeight: "1.5" }}>
                         {moment(interview.interviewTime).format(
                           "MMMM D, YYYY, h:mm A"
@@ -177,7 +179,7 @@ export default function StudentInterviewList() {
                                 ? "green"
                                 : "red",
                             fontWeight: "bold",
-                            fontSize: "1.3rem", 
+                            fontSize: "1.3rem",
                           }}
                         >
                           {interview.status === "completed"

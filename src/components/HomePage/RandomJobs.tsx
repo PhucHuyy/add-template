@@ -54,7 +54,6 @@ export default function RandomJobs() {
                     borderRadius: '10px',
                     boxShadow: '0 0 10px rgba(0,0,0,0.1)',
                     backgroundColor: 'white',
-                    height: '360px',
                     overflow: 'hidden',
                   }}
                 >
