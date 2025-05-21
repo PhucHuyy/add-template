@@ -1,25 +1,25 @@
-import { useEffect, useState } from "react";
-import "./AppliedJobsList.css";
+import { useEffect, useState } from 'react';
+import './AppliedJobsList.css';
 import {
   ApplyJobDTO,
   getMyApplyJobs,
-} from "../../../services/user/Job/JobService";
-import { useNavigate } from "react-router-dom";
-import { getDetailJob } from "../../../service/business/jobpostings/JobPostingsService";
+} from '../../../services/user/Job/JobService';
+import { useNavigate } from 'react-router-dom';
+import { getDetailJob } from '../../../service/business/jobpostings/JobPostingsService';
 
 const AppliedJobsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [appliedJobs, setAppliedJobs] = useState<ApplyJobDTO[]>([]);
-  const [status, setStatus] = useState<string>("");
+  const [status, setStatus] = useState<string>('');
   const [cursor, setCursor] = useState<string | undefined>();
   const [hasMore, setHasMore] = useState<boolean>(true);
   const navigate = useNavigate();
   const handleViewJobDetail = async (jobId: string) => {
     try {
-      const data = await getDetailJob(jobId); 
+      const data = await getDetailJob(jobId);
       navigate(`/detail-job/${jobId}`);
     } catch (error) {
-      console.error("Không thể xem chi tiết công việc", error);
+      console.error('Cannot view job details', error);
     }
   };
   const fetchJobs = async () => {
@@ -30,7 +30,7 @@ const AppliedJobsList = () => {
       setCursor(response.data.nextCursor || undefined);
       if (newJobs.length < 10) setHasMore(false);
     } catch (error) {
-      console.error("Failed to fetch applied jobs", error);
+      console.error('Failed to fetch applied jobs', error);
     }
   };
 
@@ -45,35 +45,35 @@ const AppliedJobsList = () => {
   const recommendedJobs = [
     {
       id: 1,
-      title: "Kỹ Sư Phần Mềm/ Backend Developer/ Lập Trình Viên",
-      company: "CÔNG TY CỔ PHẦN QUANTUM",
-      logo: "/assets/img/banner-10.jpg",
-      salary: "15 - 20 triệu",
-      location: "Hà Nội",
+      title: 'Software Engineer/ Backend Developer/ Programmer',
+      company: 'QUANTUM JOINT STOCK COMPANY',
+      logo: '/assets/img/banner-10.jpg',
+      salary: '15 - 20 million',
+      location: 'Hanoi',
     },
     {
       id: 2,
-      title: ".NET Backend Engineer (Senior), StoreFront",
-      company: "Crossian",
-      logo: "/assets/img/banner-10.jpg",
-      salary: "Tới 55,000 USD",
-      location: "Hà Nội",
+      title: '.NET Backend Engineer (Senior), StoreFront',
+      company: 'Crossian',
+      logo: '/assets/img/banner-10.jpg',
+      salary: 'Up to 55,000 USD',
+      location: 'Hanoi',
     },
     {
       id: 3,
-      title: "Blockchain Backend Developer",
-      company: "CÔNG TY TNHH BULL LABS",
-      logo: "/assets/img/banner-10.jpg",
-      salary: "1,500 - 2,500 USD",
-      location: "Hà Nội",
+      title: 'Blockchain Backend Developer',
+      company: 'BULL LABS LLC',
+      logo: '/assets/img/banner-10.jpg',
+      salary: '1,500 - 2,500 USD',
+      location: 'Hanoi',
     },
     {
       id: 4,
-      title: "Full-Stack Developer With Backend Focused",
-      company: "CÔNG TY TNHH MIWA TECH",
-      logo: "/assets/img/banner-10.jpg",
-      salary: "Thoả thuận",
-      location: "Hồ Chí Minh",
+      title: 'Full-Stack Developer With Backend Focused',
+      company: 'MIWA TECH COMPANY LIMITED',
+      logo: '/assets/img/banner-10.jpg',
+      salary: 'Negotiable',
+      location: 'Ho Chi Minh',
     },
   ];
 
@@ -81,10 +81,10 @@ const AppliedJobsList = () => {
     <>
       <section
         className="inner-header-title"
-        style={{ backgroundImage: "url(/assets/img/banner-10.jpg)" }}
+        style={{ backgroundImage: 'url(/assets/img/banner-10.jpg)' }}
       >
         <div className="container">
-          <h1>Job Detail</h1>
+          <h1>Job Details</h1>
         </div>
       </section>
 
@@ -92,23 +92,23 @@ const AppliedJobsList = () => {
         <div className="applied-jobs-content">
           <div className="applied-jobs-main">
             <div className="applied-jobs-header">
-              <h1 className="title">Việc làm đã ứng tuyển</h1>
+              <h1 className="title">Jobs applied for</h1>
               <div className="status-dropdown">
                 <select
                   className="status-dropdown-select"
                   style={{
-                    width: "130px",
-                    height: "40px",
-                    borderRadius: "5px",
+                    width: '130px',
+                    height: '40px',
+                    borderRadius: '5px',
                   }}
                   value={status}
                   onChange={(e) => setStatus(e.target.value)}
                 >
-                  <option value="">Tất cả</option>
-                  <option value="pending">Chờ duyệt</option>
-                  <option value="viewed">Đã xem</option>
-                  <option value="accepted">Được nhận</option>
-                  <option value="rejected">Từ chối</option>
+                  <option value="">All</option>
+                  <option value="pending">Waiting for approval</option>
+                  <option value="viewed">Viewed</option>
+                  <option value="accepted">Accepted</option>
+                  <option value="rejected">Reject</option>
                 </select>
               </div>
             </div>
@@ -119,11 +119,11 @@ const AppliedJobsList = () => {
                   className="job-item"
                   key={job.applyId}
                   onClick={() => handleViewJobDetail(job.jobId)}
-                  style={{ cursor: "pointer" }}
+                  style={{ cursor: 'pointer' }}
                 >
                   <div className="company-logo">
                     <img
-                      src={job.studentAvatarUrl || "/assets/img/banner-10.jpg"}
+                      src={job.studentAvatarUrl || '/assets/img/banner-10.jpg'}
                       alt={job.companyName}
                     />
                   </div>
@@ -137,10 +137,10 @@ const AppliedJobsList = () => {
                     <div className="company-name">{job.companyName}</div>
                     <div className="application-info">
                       <div className="timestamp">
-                        Thời gian ứng tuyển: {job.applyDate}
+                        Application period: {job.applyDate}
                       </div>
                       <div className="cv-info">
-                        <span>CV đã ứng tuyển: </span>
+                        <span>Applied CV: </span>
                         <span>{job.cvId}</span>
                       </div>
                     </div>
@@ -152,15 +152,15 @@ const AppliedJobsList = () => {
             {hasMore && (
               <div className="pagination">
                 <button className="pagination-next" onClick={fetchJobs}>
-                  <i className="fas fa-chevron-down"></i> Tải thêm
+                  <i className="fas fa-chevron-down"></i> Load more
                 </button>
               </div>
             )}
           </div>
 
           <div className="sidebar">
-            <div className="recommended-jobs" style={{ paddingTop: "0" }}>
-              <h2 className="sidebar-title">Gợi ý việc làm phù hợp</h2>
+            <div className="recommended-jobs" style={{ paddingTop: '0' }}>
+              <h2 className="sidebar-title">Suggested suitable jobs</h2>
 
               <div className="recommended-jobs-list">
                 {recommendedJobs.map((job) => (
