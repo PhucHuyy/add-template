@@ -81,6 +81,7 @@ export default function JobDetail() {
   const [categoryNames, setCategoryNames] = useState<string[]>([]);
   const [Locationjob, setLocation] = useState<string>('');
   const [businessId, setbusinessId] = useState<string>('');
+  const [statusBusiness, setStatusBusiness] = useState<string>('');
 
   const [businessInfo, setBusinessInfo] = useState({
     companyName: '',
@@ -92,50 +93,6 @@ export default function JobDetail() {
     address: '',
   });
 
-  // useEffect(() => {
-  //   const fetchBusinessInfo = async () => {
-  //     try {
-  //       const informationJobResponse = await getDetailJob(jobId);
-  //       setSalary(informationJobResponse?.data?.salary);
-  //       setAvatarUrl(informationJobResponse?.data?.avatarUrl);
-  //       setJobTitle(informationJobResponse?.data?.title);
-  //       setJobDescription(informationJobResponse?.data?.description);
-  //       setNumberOfPositions(informationJobResponse?.data?.numberEmployees);
-  //       setStatus(informationJobResponse?.data?.status);
-  //       setIsDeleted(informationJobResponse?.data?.deleted);
-  //       setExpirationDate(informationJobResponse?.data?.expirationDate);
-  //       setCategoryNames(informationJobResponse?.data?.categoryNames);
-  //       setLocation(informationJobResponse?.data?.location);
-  //       const businessId = informationJobResponse?.data?.businessId;
-  //       setbusinessId(businessId);
-  //       const businessInfoResponse = await getBusinessById(businessId);
-  //       setBusinessInfo({
-  //         companyName: businessInfoResponse?.data?.companyName,
-  //         industry: businessInfoResponse?.data?.industry,
-  //         companyInfo: businessInfoResponse?.data?.companyInfo,
-  //         websiteUrl: businessInfoResponse?.data?.websiteUrl,
-  //         phoneNumber: businessInfoResponse?.data?.phoneNumber,
-  //         email: businessInfoResponse?.data?.email,
-  //         address: businessInfoResponse?.data?.address,
-  //       });
-
-  //       const jobRecommendationResponse = await getJobRecommendations(jobId);
-  //       console.log(
-  //         jobRecommendationResponse.data,
-  //         'jobRecommendationResponse',
-  //       );
-  //       setJobRecommendation(jobRecommendationResponse.data);
-  //     } catch (error: any) {
-  //       console.error('Error fetching job details:', error);
-  //       throw new Error(
-  //         error?.response?.data?.message || 'Something went wrong',
-  //       );
-  //     }
-  //   };
-
-  //   fetchBusinessInfo();
-  // }, [jobId]);
-
   // useEffect 1 - gọi API public
 
   useEffect(() => {
@@ -143,7 +100,7 @@ export default function JobDetail() {
       try {
         const informationJobResponse = await getDetailJob(jobId);
         const data = informationJobResponse?.data;
-        console.log(data, 'data');
+        console.log(informationJobResponse, 'data');
 
         setSalary(data.salary);
         setAvatarUrl(data.avatarUrl);
@@ -156,6 +113,7 @@ export default function JobDetail() {
         setCategoryNames(data.categoryNames);
         setLocation(data.location);
         setbusinessId(data.businessId);
+        setStatusBusiness(data.businessStatus);
 
         const jobRecommendationResponse = await getJobRecommendations(jobId);
         setJobRecommendation(jobRecommendationResponse.data);
@@ -174,6 +132,7 @@ export default function JobDetail() {
 
         const businessInfoResponse = await getBusinessById(businessId);
         const businessData = businessInfoResponse?.data;
+
         setBusinessInfo({
           companyName: businessData.companyName,
           industry: businessData.industry,
@@ -459,11 +418,29 @@ export default function JobDetail() {
     }
   };
 
+  useEffect(() => {
+    if (jobRecommendation && statusBusiness === 'inactive') {
+      Swal.fire({
+        icon: 'warning',
+        title: 'Business has been banned',
+        text: 'Please return to the previous page!',
+        confirmButtonText: 'OK',
+        allowOutsideClick: false,
+        allowEscapeKey: false,
+      }).then((result) => {
+        if (result.isConfirmed) {
+          navigate(-1); // quay lại trang trước
+        }
+      });
+    }
+  }, [jobRecommendation, statusBusiness, navigate]);
+
   if (!jobRecommendation || jobRecommendation.length === 0) {
     return <Loading />;
   }
 
   console.log(expirationDate, 'expirationDate');
+  console.log(statusBusiness, 'statusBusiness');
 
   return (
     <>

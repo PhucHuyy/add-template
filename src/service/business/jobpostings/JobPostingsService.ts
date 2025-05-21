@@ -78,8 +78,8 @@ export const getListJobCreated = async (offset: number, limit: number) => {
 
 export const getDetailJob = async (jobId: string) => {
   try {
-    const response: AxiosResponse<any> = await axiosRecruitment.get(
-      `job-postings/detail-job/${jobId}`,
+    const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
+      `job-postings/view-public-job/${jobId}`,
     );
 
     return response.data;
