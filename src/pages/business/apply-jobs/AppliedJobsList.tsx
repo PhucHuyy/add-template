@@ -6,14 +6,20 @@ import {
 } from '../../../services/user/Job/JobService';
 import { useNavigate } from 'react-router-dom';
 import { getDetailJob } from '../../../service/business/jobpostings/JobPostingsService';
+import JobApplicationForm from './JobApplicationForm';
 
 const AppliedJobsList = () => {
   const [currentPage, setCurrentPage] = useState(1);
+  const [showModal, setShowModal] = useState(false);
   const [appliedJobs, setAppliedJobs] = useState<ApplyJobDTO[]>([]);
   const [status, setStatus] = useState<string>('');
   const [cursor, setCursor] = useState<string | undefined>();
   const [hasMore, setHasMore] = useState<boolean>(true);
+  const [selectedJobForReapply, setSelectedJobForReapply] =
+    useState<ApplyJobDTO | null>(null);
+
   const navigate = useNavigate();
+
   const handleViewJobDetail = async (jobId: string) => {
     try {
       const data = await getDetailJob(jobId);
@@ -22,6 +28,7 @@ const AppliedJobsList = () => {
       console.error('Cannot view job details', error);
     }
   };
+
   const fetchJobs = async () => {
     try {
       const response = await getMyApplyJobs(status, cursor, 10);
@@ -42,40 +49,27 @@ const AppliedJobsList = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [status]);
 
-  const recommendedJobs = [
-    {
-      id: 1,
-      title: 'Software Engineer/ Backend Developer/ Programmer',
-      company: 'QUANTUM JOINT STOCK COMPANY',
-      logo: '/assets/img/banner-10.jpg',
-      salary: '15 - 20 million',
-      location: 'Hanoi',
-    },
-    {
-      id: 2,
-      title: '.NET Backend Engineer (Senior), StoreFront',
-      company: 'Crossian',
-      logo: '/assets/img/banner-10.jpg',
-      salary: 'Up to 55,000 USD',
-      location: 'Hanoi',
-    },
-    {
-      id: 3,
-      title: 'Blockchain Backend Developer',
-      company: 'BULL LABS LLC',
-      logo: '/assets/img/banner-10.jpg',
-      salary: '1,500 - 2,500 USD',
-      location: 'Hanoi',
-    },
-    {
-      id: 4,
-      title: 'Full-Stack Developer With Backend Focused',
-      company: 'MIWA TECH COMPANY LIMITED',
-      logo: '/assets/img/banner-10.jpg',
-      salary: 'Negotiable',
-      location: 'Ho Chi Minh',
-    },
-  ];
+  const handleApplyAgain = (e: React.MouseEvent, job: ApplyJobDTO) => {
+    e.stopPropagation();
+    setSelectedJobForReapply(job);
+    setShowModal(true);
+  };
+
+  const handleCloseModal = () => {
+    setShowModal(false);
+    setSelectedJobForReapply(null);
+  };
+
+  const handleSuccessfulReapply = (jobId: string) => {
+    // Update the status of the job in the list
+    setAppliedJobs((prev) =>
+      prev.map((item) =>
+        item.jobId === jobId ? { ...item, applyStatus: 'pending' } : item,
+      ),
+    );
+    setShowModal(false);
+    setSelectedJobForReapply(null);
+  };
 
   return (
     <>
@@ -143,6 +137,27 @@ const AppliedJobsList = () => {
                         <span>Applied CV: </span>
                         <span>{job.cvId}</span>
                       </div>
+                      {job.applyStatus === 'pending' && (
+                        <button
+                          style={{
+                            backgroundColor: '#4CAF50',
+                            color: 'white',
+                            border: 'none',
+                            padding: '10px 20px',
+                            textAlign: 'center',
+                            textDecoration: 'none',
+                            display: 'inline-block',
+                            fontSize: '16px',
+                            marginTop: '10px',
+                            cursor: 'pointer',
+                            width: '30%',
+                            marginLeft: 'auto',
+                          }}
+                          onClick={(e) => handleApplyAgain(e, job)}
+                        >
+                          Apply Again
+                        </button>
+                      )}
                     </div>
                   </div>
                 </div>
@@ -157,39 +172,18 @@ const AppliedJobsList = () => {
               </div>
             )}
           </div>
-
-          <div className="sidebar">
-            <div className="recommended-jobs" style={{ paddingTop: '0' }}>
-              <h2 className="sidebar-title">Suggested suitable jobs</h2>
-
-              <div className="recommended-jobs-list">
-                {recommendedJobs.map((job) => (
-                  <div className="recommended-job-item" key={job.id}>
-                    <div className="company-logo">
-                      <img src={`${job.logo}`} alt={job.company} />
-                    </div>
-                    <div className="recommended-job-main">
-                      <div className="recommended-job-details">
-                        <h3 className="recommended-job-title">{job.title}</h3>
-                        <p className="recommended-company-name">
-                          {job.company}
-                        </p>
-                        <div className="job-meta">
-                          <span className="salary">{job.salary}</span>
-                          <span className="location">{job.location}</span>
-                        </div>
-                      </div>
-                      <button className="save-job-button">
-                        <i className="far fa-heart"></i>
-                      </button>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </div>
         </div>
       </div>
+
+      {showModal && selectedJobForReapply && (
+        <JobApplicationForm
+          onClose={handleCloseModal}
+          jobId={selectedJobForReapply.jobId}
+          previousCvId={selectedJobForReapply.cvId}
+          applyId={selectedJobForReapply.applyId}
+          onSuccess={() => handleSuccessfulReapply(selectedJobForReapply.jobId)}
+        />
+      )}
     </>
   );
 };

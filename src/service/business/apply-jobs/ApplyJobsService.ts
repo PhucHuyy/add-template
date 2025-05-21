@@ -90,3 +90,19 @@ export const getCvByCvIdAndStudentId = async (
     throw new Error(error.response?.data?.message || 'Something went wrong');
   }
 };
+
+export const updateCvId = async (
+  applyId: string,
+  cvId: string,
+): Promise<void> => {
+  try {
+    const response: AxiosResponse<any> = await axiosRecruitment.put(
+      `apply-jobs/${applyId}/update-cv/${cvId}`,
+    );
+    const data = response.data.data;
+    return data;
+  } catch (error: any) {
+    console.error('Error updating CV ID:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+  }
+};

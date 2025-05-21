@@ -77,16 +77,18 @@ export const getListJobCreated = async (offset: number, limit: number) => {
   }
 };
 
-
-export const checkStudentProfileApproval = async()=>{
+export const checkStudentProfileApproval = async () => {
   try {
-    const response: AxiosResponse<boolean> = await axiosPrivateProfileServcie.get<AxiosResponse<boolean>>("/student_profiles/ckeckapproval")
+    const response: AxiosResponse<boolean> =
+      await axiosPrivateProfileServcie.get<AxiosResponse<boolean>>(
+        '/student_profiles/checkprofileApprove',
+      );
     return response.data.data;
-  }catch (error: any) {
+  } catch (error: any) {
     console.error('Error fetching categories:', error);
     return false;
   }
-}
+};
 
 export const getDetailJob = async (jobId: string) => {
   try {

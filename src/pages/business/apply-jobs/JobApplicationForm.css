@@ -338,3 +338,64 @@
   border: 2px solid #2ecc71;
   background-color: #f9fdf9;
 }
+
+/* Thêm vào file JobApplicationForm.css */
+
+.previously-applied-cv {
+  background-color: #f8f9fa;
+  border-left: 4px solid #17a2b8;
+  padding: 12px 15px;
+  margin-bottom: 15px;
+  border-radius: 4px;
+}
+
+.info-message {
+  color: #495057;
+  margin: 0;
+  font-size: 14px;
+}
+
+.info-message i {
+  color: #17a2b8;
+  margin-right: 8px;
+}
+
+.previous-cv {
+  background-color: #fff3cd;
+  border-left: 3px solid #ffc107;
+}
+
+.previously-used {
+  font-size: 12px;
+  color: #856404;
+  font-style: italic;
+}
+
+.submit-button.disabled {
+  background-color: #cccccc;
+  color: #666666;
+  cursor: not-allowed;
+}
+
+.cv-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 12px 15px;
+  margin-bottom: 8px;
+  border-radius: 4px;
+  border: 1px solid #e9ecef;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.cv-item:hover {
+  background-color: #f8f9fa;
+  border-color: #dee2e6;
+}
+
+.selected-cv {
+  background-color: #e3f2fd;
+  border-color: #90caf9;
+  box-shadow: 0 0 0 2px rgba(33, 150, 243, 0.2);
+}

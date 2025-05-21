@@ -1,17 +1,33 @@
-import { useEffect, useState } from "react";
-import "./JobApplicationForm.css";
-import { RootState } from "../../../app/store";
-import { useSelector } from "react-redux";
-import { useAppDispatch } from "../../../app/hook";
-import { fetchCvByUserId } from "../../../services/user/ManageCv/ManageCv";
-import Swal from "sweetalert2";
-import { sendApplyJob } from "../../../features/applyjobs/applyJobsSlice";
+import { useEffect, useState } from 'react';
+import './JobApplicationForm.css';
+import { RootState } from '../../../app/store';
+import { useSelector } from 'react-redux';
+import { useAppDispatch } from '../../../app/hook';
+import { fetchCvByUserId } from '../../../services/user/ManageCv/ManageCv';
+import Swal from 'sweetalert2';
+import { sendApplyJob } from '../../../features/applyjobs/applyJobsSlice';
+import { updateCvId } from '../../../service/business/apply-jobs/ApplyJobsService';
 
-const JobApplicationForm = ({ onClose, jobId }) => {
+interface JobApplicationFormProps {
+  onClose: () => void;
+  jobId: string;
+  previousCvId?: string;
+  onSuccess?: () => void;
+  applyId?: string; // Thêm applyId để sử dụng trong updateCvId
+}
+
+const JobApplicationForm = ({
+  onClose,
+  jobId,
+  previousCvId,
+  onSuccess,
+  applyId,
+}: JobApplicationFormProps) => {
   const dispatch = useAppDispatch();
-  const [selectedCVOption, setSelectedCVOption] = useState("existing");
-  const [selectedCV, setSelectedCV] = useState(null);
+  const [selectedCVOption, setSelectedCVOption] = useState('existing');
+  const [selectedCV, setSelectedCV] = useState<any>(null);
   const [attemptedFetch, setAttemptedFetch] = useState(false);
+  const [canSubmit, setCanSubmit] = useState(false);
 
   const cvList = useSelector((state: RootState) => state.cv.cvs);
   const userId = useSelector((state: RootState) => state.auth.user?.id);
@@ -23,27 +39,87 @@ const JobApplicationForm = ({ onClose, jobId }) => {
     }
   }, [cvList, attemptedFetch, dispatch]);
 
+  // Set the previously selected CV when the CV list loads
+  useEffect(() => {
+    if (previousCvId && cvList.length > 0) {
+      const previousCV = cvList.find((cv) => cv.cvId === previousCvId);
+      if (previousCV) {
+        setSelectedCV(previousCV);
+      }
+    }
+  }, [previousCvId, cvList]);
+
+  // Determine if submit button should be enabled (only if a different CV is selected)
+  useEffect(() => {
+    if (selectedCV && previousCvId) {
+      setCanSubmit(selectedCV.cvId !== previousCvId);
+    } else if (selectedCV) {
+      setCanSubmit(true);
+    } else {
+      setCanSubmit(false);
+    }
+  }, [selectedCV, previousCvId]);
+
   const handleCVOptionChange = (option) => {
     setSelectedCVOption(option);
   };
 
   const handleSubmit = async () => {
     if (!selectedCV) {
-      Swal.fire("Error", "Please select a CV to apply.", "error");
+      Swal.fire('Error', 'Please select a CV to apply.', 'error');
+      return;
+    }
+
+    if (previousCvId && selectedCV.cvId === previousCvId) {
+      Swal.fire(
+        'Error',
+        'Please select a different CV to apply again.',
+        'error',
+      );
       return;
     }
 
     try {
-      await dispatch(
-        sendApplyJob({
-          jobId,
-          cvId: selectedCV.cvId,
-        })
-      ).unwrap();
-      Swal.fire("Success", "You have successfully applied to this job!", "success");
-      onClose();
+      if (previousCvId && applyId) {
+        await updateCvId(applyId, selectedCV.cvId);
+
+        Swal.fire({
+          title: 'Success',
+          text: 'You have successfully updated your application with a new CV!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        }).then(() => {
+          window.location.reload();
+        });
+      } else {
+        await dispatch(
+          sendApplyJob({
+            jobId,
+            cvId: selectedCV.cvId,
+          }),
+        ).unwrap();
+
+        Swal.fire({
+          title: 'Success',
+          text: 'You have successfully applied to this job!',
+          icon: 'success',
+          showConfirmButton: false,
+          timer: 3000,
+          timerProgressBar: true,
+        }).then(() => {
+          window.location.reload();
+        });
+      }
+
+      if (onSuccess) {
+        onSuccess();
+      } else {
+        onClose();
+      }
     } catch (error) {
-      Swal.fire("Error", error || "Failed to apply for the job.", "error");
+      Swal.fire('Error', error || 'Failed to apply for the job.', 'error');
     }
   };
 
@@ -72,23 +148,35 @@ const JobApplicationForm = ({ onClose, jobId }) => {
               <span>Select CV to apply</span>
             </div>
 
+            {previousCvId && (
+              <div className="previously-applied-cv">
+                <p className="info-message">
+                  <i className="fas fa-info-circle"></i>
+                  You previously applied to this job with CV ID: {previousCvId}.
+                  To apply again, please select a different CV.
+                </p>
+              </div>
+            )}
+
             <div className="cv-option-box active-option">
               <div className="option-row">
                 <div className="radio-container">
                   <div
                     className={`radio-button ${
-                      selectedCVOption === "existing" ? "selected" : ""
+                      selectedCVOption === 'existing' ? 'selected' : ''
                     }`}
-                    onClick={() => handleCVOptionChange("existing")}
+                    onClick={() => handleCVOptionChange('existing')}
                   >
-                    {selectedCVOption === "existing" && (
+                    {selectedCVOption === 'existing' && (
                       <div className="radio-inner"></div>
                     )}
                   </div>
                 </div>
                 <div className="option-content">
                   <p className="text-green">
-                    Select another CV from my CV library
+                    {previousCvId
+                      ? 'Select a different CV from your CV library'
+                      : 'Select a CV from my CV library'}
                   </p>
                   <p className="cv-online-label">CV Online</p>
 
@@ -97,11 +185,21 @@ const JobApplicationForm = ({ onClose, jobId }) => {
                       <div
                         key={cv.cvId}
                         className={`cv-item ${
-                          selectedCV?.cvId === cv.cvId ? "selected-cv" : ""
+                          selectedCV?.cvId === cv.cvId ? 'selected-cv' : ''
+                        } ${
+                          previousCvId && cv.cvId === previousCvId
+                            ? 'previous-cv'
+                            : ''
                         }`}
                         onClick={() => setSelectedCV(cv)}
                       >
                         {cv.title}
+                        {previousCvId && cv.cvId === previousCvId && (
+                          <span className="previously-used">
+                            {' '}
+                            (Previously used)
+                          </span>
+                        )}
                       </div>
                     ))}
                   </div>
@@ -120,11 +218,13 @@ const JobApplicationForm = ({ onClose, jobId }) => {
                   <p className="warning-title">Note:</p>
                   <ol className="warning-list">
                     <li>
-                      Be cautious during your job search. If anything seems suspicious,
-                      report it to <span className="text-green">hotro@jobstock.vn</span>.
+                      Be cautious during your job search. If anything seems
+                      suspicious, report it to{' '}
+                      <span className="text-green">hotro@jobstock.vn</span>.
                     </li>
                     <li>
-                      Learn more about fraud prevention <span className="text-green">here</span>.
+                      Learn more about fraud prevention{' '}
+                      <span className="text-green">here</span>.
                     </li>
                   </ol>
                 </div>
@@ -137,8 +237,12 @@ const JobApplicationForm = ({ onClose, jobId }) => {
           <button className="cancel-button" onClick={onClose}>
             Cancel
           </button>
-          <button className="submit-button" onClick={handleSubmit}>
-            Submit apply
+          <button
+            className={`submit-button ${!canSubmit ? 'disabled' : ''}`}
+            onClick={handleSubmit}
+            disabled={!canSubmit}
+          >
+            {previousCvId ? 'Update Application' : 'Submit Apply'}
           </button>
         </div>
       </div>
