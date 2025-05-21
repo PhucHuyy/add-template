@@ -1,6 +1,8 @@
+import { useNavigate } from 'react-router-dom';
 import { brandImages } from '../../data/brandImages';
 
 export default function Banner() {
+  const navigate = useNavigate();
   //   useEffect(() => {
   //     const loadScripts = async () => {
   //       const scripts = ['/assets/plugins/js/owl.carousel.min.js'];
@@ -22,7 +24,12 @@ export default function Banner() {
         <div className="container">
           <div className="banner-caption">
             <div className="col-md-12 col-sm-12 banner-text">
-              <h1>7,000+ Browse Jobs</h1>
+              <h1
+                style={{ cursor: 'pointer' }}
+                onClick={() => navigate('/list-jobs')}
+              >
+                Discover Your Next Career Move
+              </h1>
               <form className="form-horizontal">
                 <div className="col-md-4 no-padd">
                   <div className="input-group">
@@ -59,7 +66,11 @@ export default function Banner() {
                 </div>
                 <div className="col-md-2 no-padd">
                   <div className="input-group">
-                    <button className="btn btn-primary" type="submit">
+                    <button
+                      className="btn btn-primary"
+                      type="submit"
+                      onClick={() => navigate('/list-jobs')}
+                    >
                       Search Job
                     </button>
                   </div>
