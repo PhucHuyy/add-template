@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import Select from 'react-select';
 
-import { getAllCategories } from '../../../service/business/categories/CategoryService';
+import { getAllCategories, getAllCategoryJobPostings } from '../../../service/business/categories/CategoryService';
 import {
   getDetailJob,
   updateJobPosting,
@@ -62,6 +62,8 @@ export default function UpdateJobPosting() {
     const selectedCategoryIds = selectedOptions.map((option) =>
       String(option.value),
     );
+
+    console.log(selectedCategoryIds);
 
     const jobPostingPayload = {
       jobId: id,
@@ -130,6 +132,13 @@ export default function UpdateJobPosting() {
   };
 
   useEffect(() => {
+    const getAllCategoryJobPostingsU = async () => {
+      const response = await getAllCategoryJobPostings(id ?? "");
+      console.log('All category job postings:', response);
+      setSelectedOptions(response);
+    }
+
+
     const fetchCategories = async () => {
       console.log('Fetching categories...');
 
@@ -177,7 +186,7 @@ export default function UpdateJobPosting() {
         console.error('Error fetching categories:', error);
       }
     };
-
+    getAllCategoryJobPostingsU();
     fetchCategories();
   }, [id]);
 
@@ -251,7 +260,11 @@ export default function UpdateJobPosting() {
                         isMulti
                         placeholder="Select Job Categories"
                         value={selectedOptions}
-                        onChange={(selected) => setSelectedOptions(selected)}
+                        onChange={(selected) => {
+                          console.log('Tùy chọn đã chọn:', selected); // Debug để kiểm tra tùy chọn
+                          setSelectedOptions(selected || []);
+                          console.log(selectedOptions);
+                        }}
                         className="react-select-container"
                         classNamePrefix="react-select"
                         menuPortalTarget={document.body}

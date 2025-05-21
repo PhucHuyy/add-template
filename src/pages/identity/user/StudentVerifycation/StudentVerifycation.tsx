@@ -40,9 +40,9 @@ export default function StudentVerifycation() {
       const check = await service.checkProfileExists();
 
       console.log('thanh ' + check);
-      if (check === true) {
+      if (check === 1) {
         navigate('/studentprofile');
-      } else if (check === false) {
+      } else if (check === 0) {
         navigate('/401');
       } else {
         setIsLoading(false);

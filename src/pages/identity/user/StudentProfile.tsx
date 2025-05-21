@@ -32,7 +32,7 @@ export default function StudentProfile() {
         );
 
         if (!data) {
-          handleNotifycation();
+          //handleNotifycation();
           return;
         }
         setProfile(data);

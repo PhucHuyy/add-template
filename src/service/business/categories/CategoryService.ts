@@ -17,7 +17,20 @@ type UpdateCategoryResponse = {
   };
 };
 
-<<<<<<< HEAD
+
+export const getAllCategoryJobPostings = async (id: string): Promise<any[]> =>{
+  try {
+    const response: AxiosResponse<any[]> = await axiosRecruitment.get<ApiResponse<any>>(
+      `job-postings/getcategory/`+id,
+    );
+
+    return response.data.data;
+  } catch (error: any) {
+    console.error('Error fetching categories:', error);
+    throw new Error(error.response?.data?.message || 'Something went wrong');
+    return [];
+  }
+}
 
 export const getCompanyName = async (): Promise<string> =>{
   try {
@@ -34,8 +47,6 @@ export const getCompanyName = async (): Promise<string> =>{
 }
 
 
-=======
->>>>>>> 3c9fe6f83bd7b22df7f8c9ef2542688bc144d100
 export const getAllCategoriesPublic = async () => {
   try {
     const response: AxiosResponse<any[]> = await axiosRecruitment.get(
