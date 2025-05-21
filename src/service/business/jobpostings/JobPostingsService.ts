@@ -93,7 +93,7 @@ export const checkStudentProfileApproval = async () => {
 export const getDetailJob = async (jobId: string) => {
   try {
     const response: AxiosResponse<any> = await axiosRecruitmentPublic.get(
-      `job-postings/view-public-job/${jobId}`,
+      `job-postings/detail-job/${jobId}`,
     );
 
     return response.data;
