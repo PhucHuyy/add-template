@@ -1,6 +1,52 @@
 /* InterviewCalendar.css */
+.card-box {
+  background-color: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  padding: 1.5rem;
+  box-sizing: border-box;
+}
 
-/* Base styles */
+.grid-layout {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+@media (min-width: 768px) {
+  .grid-layout {
+    flex-direction: row;
+    align-items: flex-start;
+  }
+
+  .calendar-section {
+    flex: 2;
+     margin-left: 50px;
+  }
+
+  .meeting-section {
+    flex: 1;
+    max-width: 450px;
+    height: 600px;
+    overflow-y: auto;
+    padding-right: 1rem;
+  }
+}
+
+.meeting-section::-webkit-scrollbar {
+  width: 8px;
+}
+
+.meeting-section::-webkit-scrollbar-thumb {
+  background-color: #ccc;
+  border-radius: 4px;
+}
+
+.meeting-section::-webkit-scrollbar-thumb:hover {
+  background-color: #aaa;
+}
+
+
 * {
   box-sizing: border-box;
   margin: 0;
@@ -24,10 +70,12 @@ body {
   padding: 1.5rem;
   font-size: 1.1rem;
   box-sizing: border-box;
+   margin-left: 50px;
 }
 
 /* Main container */
 .interview-calendar-container {
+ 
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -85,12 +133,12 @@ body {
 /* Calendar grid */
 .calendar-wrapper {
   width: 100%;
-  /* max-width: 900px; */
-  background-color: white;
-  border-radius: 8px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-  overflow: hidden;
+  background-color: transparent;
+  box-shadow: none;
+  border-radius: 0;
+  overflow: visible;
 }
+
 
 .weekdays-header {
   display: grid;
@@ -312,10 +360,11 @@ body {
   margin-top: 20px;
   display: flex;
   gap: 10px;
-  margin/* InterviewCalendar.css */
+  margin
+  /* InterviewCalendar.css */
 
-/* Base styles */
-* {
+  /* Base styles */
+  * {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
@@ -538,7 +587,8 @@ body {
     justify-content: space-between;
     align-items: center;
     margin-top: 1rem;
-    flex-wrap: wrap; /* Cho responsive nếu cần */
+    flex-wrap: wrap;
+    /* Cho responsive nếu cần */
   }
 
   .button-group {
