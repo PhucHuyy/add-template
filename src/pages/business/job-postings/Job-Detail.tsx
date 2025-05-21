@@ -137,7 +137,7 @@ export default function JobDetail() {
   // }, [jobId]);
 
   // useEffect 1 - gọi API public
-
+  const [reason, setreason] = useState("");
   useEffect(() => {
     const fetchJobDetail = async () => {
       try {
@@ -156,6 +156,7 @@ export default function JobDetail() {
         setCategoryNames(data.categoryNames);
         setLocation(data.location);
         setbusinessId(data.businessId);
+        setreason(data.reasonRejection);
 
         const jobRecommendationResponse = await getJobRecommendations(jobId);
         setJobRecommendation(jobRecommendationResponse.data);
@@ -552,6 +553,10 @@ export default function JobDetail() {
                 </ul>
               </div>
             </div>
+            {nameRole === "BUSINESS"&& status===2? (
+              <div className="col-md-12 col-sm-12"><h5 style={{marginLeft: '5px', color:'red'}}>Reason: {reason}</h5></div>
+              ) : ("")}
+
           </div>
           <div className="row no-padd">
             <div className="detail pannel-footer">
