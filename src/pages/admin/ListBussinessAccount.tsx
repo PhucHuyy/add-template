@@ -100,6 +100,7 @@ export default function ListBussinessAccount() {
                     'error'
                 );
             }
+            window.location.reload();
         }
     };
 

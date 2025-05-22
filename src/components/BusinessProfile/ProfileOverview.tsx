@@ -36,8 +36,8 @@ export default function ProfileOverview({ user, isApproved, status, businessData
               <div className="profile-stats row">
 
               </div>
-
-
+              {businessData?.status==="reject"?(<div style={{color: 'red'}} >{businessData?.reason}</div>):("")}
+              
 
               <div
                 className="button-group"

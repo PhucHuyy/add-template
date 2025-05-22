@@ -15,6 +15,7 @@ import { fetchBusinessInfo } from '../../../../features/auth/businessSlice';
 import { Navigate, useNavigate } from 'react-router-dom';
 import axiosBusiness from '../../../../api/axiosBusiness';
 import { ApiResponse } from '../../../../features/auth/authType';
+import { getRequestBusiness } from '../../../../service/business/verifyBusinessService';
 
 export class RequestBusinesses {
   requestId: string;

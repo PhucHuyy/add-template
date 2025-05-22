@@ -2,7 +2,7 @@ import axios from 'axios';
 import { RefreshResponse } from '../../features/auth/authType';
 
 const axiosRecruitment = axios.create({
-  baseURL: 'http://localhost:8090/api/v1/',
+  baseURL: 'http://localhost:8088/api/v1/',
 });
 
 axiosRecruitment.interceptors.request.use(
