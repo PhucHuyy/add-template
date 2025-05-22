@@ -29,7 +29,7 @@ export default function Authenticate() {
 
 
 
-      `http://localhost:8080/api/v1/auth/outbound/authentication?code=${authCode}`,
+      `http://localhost:8088/api/v1/auth/outbound/authentication?code=${authCode}`,
 
       { method: "POST", credentials: "include" }
     )

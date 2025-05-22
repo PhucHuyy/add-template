@@ -2,7 +2,7 @@ import axios from 'axios';
 import { RefreshResponse } from '../features/auth/authType';
 
 const axiosBusiness = axios.create({
-  baseURL: 'http://localhost:8888/api/v1/',
+  baseURL: 'http://localhost:8088/api/v1/',
 });
 
 axiosBusiness.interceptors.request.use(
@@ -27,7 +27,7 @@ axiosBusiness.interceptors.response.use(
 
       try {
         const refreshResponse = await axios.post<RefreshResponse>(
-          'http://localhost:8080/api/v1/auth/refresh',
+          'http://localhost:8088/api/v1/auth/refresh',
           {},
           { withCredentials: true },
         );
